@@ -1,7 +1,7 @@
 <template>
   <div class="register-wrap">
     <div class="ms-register">
-      <div class="ms-title">图书馆信息管理系统</div>
+      <div class="ms-title">视网膜云平台（一个可以随时替换的标题）</div>
       <el-form
         :model="param"
         :rules="rules"
@@ -133,7 +133,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: url(../assets/img/login.jpg);
+  /* background-image: url(../assets/img/login.jpg); */
   background-size: 100%;
 }
 .ms-title {
