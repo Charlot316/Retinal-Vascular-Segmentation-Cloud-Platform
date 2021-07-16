@@ -61,7 +61,7 @@
             class="handle-input mr10"
           ></el-input>
           <el-input
-           @keyup.enter="handleSearch"
+            @keyup.enter="handleSearch"
             v-model="form.book_id"
             placeholder="请输入图书id"
             class="handle-input mr10"
@@ -96,14 +96,14 @@
           prop="lDate"
           label="借书日期"
           align="center"
-          v-if="searchType==='借书情况'"
+          v-if="searchType === '借书情况'"
         ></el-table-column>
 
         <el-table-column
           prop="dDate"
           label="应还日期"
           align="center"
-          v-if="searchType==='借书情况'"
+          v-if="searchType === '借书情况'"
         ></el-table-column>
 
         <el-table-column label="操作" width="180" align="center">
@@ -231,8 +231,8 @@ export default {
       query: {
         address: "",
         name: "",
-        user_id:"",
-        book_id:"",
+        user_id: "",
+        book_id: "",
         pageIndex: 1,
         pageSize: 10,
       },
@@ -242,12 +242,12 @@ export default {
       addVisible: false,
       pageTotal: 0,
       form: {
-        user_id:"",
-        book_id:"",
+        user_id: "",
+        book_id: "",
       },
-      temp:{},
-      tempforborrow:{},
-      tempforborrow2:{},
+      temp: {},
+      tempforborrow: {},
+      tempforborrow2: {},
       idx: -1,
       id: -1,
       operationType: "",
@@ -269,8 +269,8 @@ export default {
         if (res.status !== 200) return this.$message.error(res.message);
         this.$message.success("获取借阅信息成功");
         this.temp = res.result;
-        this.tableData=[];
-        this.tableData[0]=this.temp;
+        this.tableData = [];
+        this.tableData[0] = this.temp;
       } else if (this.searchType === "预约情况") {
         const { data: res } = await this.$http.post(
           "queryReservedBook",
@@ -279,46 +279,40 @@ export default {
         console.log(res);
         if (res.status !== 200) return this.$message.error(res.message);
         this.$message.success("获取预约信息成功");
-        this.tableData=[];
+        this.tableData = [];
         this.temp = res.result;
-        this.tableData[0]=this.temp;
+        this.tableData[0] = this.temp;
       }
     },
     // 触发搜索按钮
     handleSearch() {
-      if(this.searchType === "借书情况"||this.searchType === "预约情况"){
+      if (this.searchType === "借书情况" || this.searchType === "预约情况") {
         this.getData();
-      }else{
+      } else {
         this.$message.error("请先在下拉框中选择操作");
       }
-      
     },
     //下拉选择修改
-    async selectChanged(){
-      this.tableData= [];
+    async selectChanged() {
+      this.tableData = [];
       if (this.searchType === "借书情况") {
-      const { data: res } = await this.$http.post(
-              "getAllLendingInf",
-            );
-            //this.$message.success(JSON.stringify(this.form));
-            console.log(res);
-            if (res.status !== 200) {
-              return this.$message.error(res.message);
-            } else {
-              this.tableData=res.result;
-            }
-      }
-      else if (this.searchType === "预约情况") {
-            const { data: res } = await this.$http.post(
-              "getAllReserveInf",
-            );
-            //this.$message.success(JSON.stringify(this.form));
-            console.log(res);
-            if (res.status !== 200) {
-              return this.$message.error(res.message);
-            } else {
-              this.tableData=res.result;
-            }
+        const { data: res } = await this.$http.post("getAllLendingInf");
+        //this.$message.success(JSON.stringify(this.form));
+        console.log(res);
+        if (res.status !== 200) {
+          return this.$message.error(res.message);
+        } else {
+          this.tableData = res.result;
+        }
+      } else if (this.searchType === "预约情况") {
+        const { data: res } = await this.$http.post("getAllReserveInf");
+        //this.$message.success(JSON.stringify(this.form));
+        console.log(res);
+        if (res.status !== 200) {
+          return this.$message.error(res.message);
+        } else {
+          this.tableData = res.result;
+        }
       }
     },
     // 删除操作
@@ -385,39 +379,40 @@ export default {
       this.$set(this.query, "pageIndex", val);
       this.getData();
     },
-    async handleReturn(index){
-       this.temp = JSON.parse(JSON.stringify(this.tableData[index]));
-      const { data: res } = await this.$http.post(
-        "addBookReturned",
-        this.temp
-      );
+    async handleReturn(index) {
+      this.temp = JSON.parse(JSON.stringify(this.tableData[index]));
+      const { data: res } = await this.$http.post("addBookReturned", this.temp);
       console.log(res);
       if (res.status !== 200) {
         return this.$message.error(res.message);
       } else {
         this.$message.success("还书成功");
-        this.tableData=[];
-        const { data: res } = await this.$http.post(
-              "getAllLendingInf",
-            );
-            //this.$message.success(JSON.stringify(this.form));
-            console.log(res);
-            if (res.status !== 200) {
-              return this.$message.error(res.message);
-            } else {
-              this.tableData=res.result;
-            }
+        this.tableData = [];
+        const { data: res } = await this.$http.post("getAllLendingInf");
+        //this.$message.success(JSON.stringify(this.form));
+        console.log(res);
+        if (res.status !== 200) {
+          return this.$message.error(res.message);
+        } else {
+          this.tableData = res.result;
+        }
       }
     },
     async handleRB() {
       if (this.operationType === "借书") {
         const { data: userRes } = await this.$http.post("showUserInfo", {
-        user_id: this.query.user_id,
+          user_id: this.query.user_id,
         });
-        this.tempforborrow=userRes;
-        const { data: loginRes } = await this.$http.post("login", this.tempforborrow);
-        this.tempforborrow2=loginRes;
-        if(this.tempforborrow2.role!==1) return this.$message.error("工作人员与管理员不允许借书，请使用私人账号");
+        this.tempforborrow = userRes;
+        const { data: loginRes } = await this.$http.post(
+          "login",
+          this.tempforborrow
+        );
+        this.tempforborrow2 = loginRes;
+        if (this.tempforborrow2.role !== 1)
+          return this.$message.error(
+            "工作人员与管理员不允许借书，请使用私人账号"
+          );
         const { data: res } = await this.$http.post(
           "addBookLending",
           this.query
@@ -427,18 +422,15 @@ export default {
           return this.$message.error(res.message);
         } else {
           this.$message.success(res.message);
-          if (this.searchType === "借书情况") 
-          {
-            const { data: res } = await this.$http.post(
-                  "getAllLendingInf",
-                );
-                //this.$message.success(JSON.stringify(this.form));
-                console.log(res);
-                if (res.status !== 200) {
-                  return this.$message.error(res.message);
-                } else {
-                  this.tableData=res.result;
-                }
+          if (this.searchType === "借书情况") {
+            const { data: res } = await this.$http.post("getAllLendingInf");
+            //this.$message.success(JSON.stringify(this.form));
+            console.log(res);
+            if (res.status !== 200) {
+              return this.$message.error(res.message);
+            } else {
+              this.tableData = res.result;
+            }
           }
         }
       } else if (this.operationType === "还书") {
@@ -451,21 +443,18 @@ export default {
           return this.$message.error(res.message);
         } else {
           this.$message.success(res.message);
-          if (this.searchType === "借书情况") 
-          {
-            const { data: res } = await this.$http.post(
-                  "getAllLendingInf",
-                );
-                //this.$message.success(JSON.stringify(this.form));
-                console.log(res);
-                if (res.status !== 200) {
-                  return this.$message.error(res.message);
-                } else {
-                  this.tableData=res.result;
-                }
+          if (this.searchType === "借书情况") {
+            const { data: res } = await this.$http.post("getAllLendingInf");
+            //this.$message.success(JSON.stringify(this.form));
+            console.log(res);
+            if (res.status !== 200) {
+              return this.$message.error(res.message);
+            } else {
+              this.tableData = res.result;
+            }
           }
         }
-      }else{
+      } else {
         this.$message.error("请先在下拉框中选择操作");
       }
     },

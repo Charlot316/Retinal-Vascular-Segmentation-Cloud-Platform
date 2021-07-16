@@ -34,85 +34,88 @@
             >
           </div>
         </el-card>
-          <div v-if="Role===1">
-            <el-card shadow="hover" style="height: 252px">
-              <template #header>
-                <div class="h2">
-                  <span>已阅图书种类</span>
-                </div>
-              </template>
-              <div
-                v-for="(item, key, i) in progressData"
-                :key="i"
-                style="padding-bottom: 0.625rem"
-              >
-                {{ key
-                }}<el-progress
-                  :percentage="parseInt(item)"
-                  :color="progressColor[i]"
-                ></el-progress>
+        <div v-if="Role === 1">
+          <el-card shadow="hover" style="height: 252px">
+            <template #header>
+              <div class="h2">
+                <span>已阅图书种类</span>
               </div>
-              <div style="margin-top: 50px">
-                <p><img src="../assets/img/搜索.png" /><h class="h">借阅分析</h></p>
-                <p class="font">在所有读者中</p>
-                <p class="font1">
-                  排在<h class="font2">{{ getpercent+'%' }}</h
-                  >的人之前
-                </p>
-                <p class="font3">
-                  <el-progress
-                    :text-inside="true"
-                    :stroke-width="26"
-                    :percentage="getpercent"
-                  ></el-progress>
-                </p>
-              </div>
-            </el-card>
-          </div>
-          <div v-if="Role!==1">
-            <el-card shadow="hover" class="mgb20" style="height: 252px">
-              <template #header>
-                  <h1>发布通知</h1>
-              </template>
-              <el-row>
-                <el-input
-                  v-model="form.message"
-                  placeholder="请输入需要发送的信息"
-                  class="handle-input mr10"
-                  @keyup.enter="sendMessage"
-                ></el-input>
-              </el-row>
-              <el-row>
-                <div>
-                  <el-button
-                      @click="sendMessage"
-                      >发送</el-button
-                    >
-                </div>
-              </el-row>
-            </el-card>
-            <div>
-              <el-card shadow="hover">
-                <template #header>
-                  <h1>借阅情况</h1>
-                </template>
-                <keep-alive>
-                <div class="pie">
-                    <div id="pie1">
-                        <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-                        <div id="main1" class="charts" style="float:left;width:100%;height: 300px"></div>
-                    </div>
-                </div>
-                </keep-alive>
-              </el-card>
+            </template>
+            <div
+              v-for="(item, key, i) in progressData"
+              :key="i"
+              style="padding-bottom: 0.625rem"
+            >
+              {{ key
+              }}<el-progress
+                :percentage="parseInt(item)"
+                :color="progressColor[i]"
+              ></el-progress>
             </div>
+            <div style="margin-top: 50px">
+              <p>
+                <img src="../assets/img/搜索.png" /><h class="h">借阅分析</h>
+              </p>
+              <p class="font">在所有读者中</p>
+              <p class="font1">
+                排在<h class="font2">{{ getpercent + "%" }}</h
+                >的人之前
+              </p>
+              <p class="font3">
+                <el-progress
+                  :text-inside="true"
+                  :stroke-width="26"
+                  :percentage="getpercent"
+                ></el-progress>
+              </p>
+            </div>
+          </el-card>
+        </div>
+        <div v-if="Role !== 1">
+          <el-card shadow="hover" class="mgb20" style="height: 252px">
+            <template #header>
+              <h1>发布通知</h1>
+            </template>
+            <el-row>
+              <el-input
+                v-model="form.message"
+                placeholder="请输入需要发送的信息"
+                class="handle-input mr10"
+                @keyup.enter="sendMessage"
+              ></el-input>
+            </el-row>
+            <el-row>
+              <div>
+                <el-button @click="sendMessage">发送</el-button>
+              </div>
+            </el-row>
+          </el-card>
+          <div>
+            <el-card shadow="hover">
+              <template #header>
+                <h1>借阅情况</h1>
+              </template>
+              <keep-alive>
+                <div class="pie">
+                  <div id="pie1">
+                    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                    <div
+                      id="main1"
+                      class="charts"
+                      style="float: left; width: 100%; height: 300px"
+                    ></div>
+                  </div>
+                </div>
+              </keep-alive>
+            </el-card>
           </div>
+        </div>
       </el-col>
       <el-col :span="16">
-        <el-card  v-if="Role!==1" shadow="hover" style="margin-bottom: 20px" >
+        <el-card v-if="Role !== 1" shadow="hover" style="margin-bottom: 20px">
           <template #header>
             <div class="clearfix">
-                <h1>工作人员处理模块</h1>
+              <h1>工作人员处理模块</h1>
             </div>
           </template>
           <el-row :gutter="20" class="mgb20">
@@ -121,8 +124,8 @@
                 <img fit="fit" src="../assets/img/数据.png" class="image" />
                 <div style="padding: 14px">
                   <h2>图书管理</h2>
-                  <div style="margin-top:20px">
-                  <el-button @click=hrefone>操作</el-button>
+                  <div style="margin-top: 20px">
+                    <el-button @click="hrefone">操作</el-button>
                   </div>
                 </div>
               </el-card>
@@ -132,8 +135,8 @@
                 <img fit="fit" src="../assets/img/借书.png" class="image" />
                 <div style="padding: 14px">
                   <h2>借阅管理</h2>
-                  <div style="margin-top:20px">
-                  <el-button @click=hreftwo>操作</el-button>
+                  <div style="margin-top: 20px">
+                    <el-button @click="hreftwo">操作</el-button>
                   </div>
                 </div>
               </el-card>
@@ -143,141 +146,155 @@
                 <img fit="fit" src="../assets/img/用户管理.png" class="image" />
                 <div style="padding: 14px">
                   <h2>用户管理</h2>
-                  <div style="margin-top:20px">
-                  <el-button @click=hrefthree>操作</el-button>
+                  <div style="margin-top: 20px">
+                    <el-button @click="hrefthree">操作</el-button>
                   </div>
                 </div>
               </el-card>
             </el-col>
           </el-row>
         </el-card>
-        <div v-if="Role===1">
+        <div v-if="Role === 1">
           <el-row :gutter="20" class="mgb20">
-          <el-col :span="8">
-            <el-card
-              shadow="hover"
-              :body-style="{ padding: '0px' }"
-              @click="browseReserved"
-            >
-              <div class="grid-content grid-con-1">
-                <i class="el-icon-reading grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ totalreserved }}</div>
-                  <div>已预约图书</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card
-              shadow="hover"
-              :body-style="{ padding: '0px' }"
-              @click="browseReturned"
-            >
-              <div class="grid-content grid-con-2">
-                <i class="el-icon-reading grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ totalReturned }}</div>
-                  <div>已归还图书</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card
-              shadow="hover"
-              :body-style="{ padding: '0px' }"
-              @click="browseTobe"
-            >
-              <div class="grid-content grid-con-3">
-                <i class="el-icon-reading grid-con-icon"></i>
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ totalTobe }}</div>
-                  <div>在借图书</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-        
-        <div>
-          <el-card shadow="hover" style="height: 100px">
-            <template #header>
-              <div class="clearfix">
-                <span class="h1">超期未归还图书</span>
-                <!-- <el-button style="float: right; padding: 3px 0" type="text">添加</el-button> -->
-              </div>
-            </template>
-            <el-table :show-header="true" :data="todoList" style="width: 100%">
-              <el-table-column type="index"></el-table-column>
-              <el-table-column
-                label="书籍名称"
-                width="200px"
-                prop="bName"
-              ></el-table-column>
-              <el-table-column label="借阅时间" prop="lDate"></el-table-column>
-              <el-table-column label="应还时间" prop="dDate"></el-table-column>
-              <el-table-column width="60">
-                <template>
-                  <i class="el-icon-edit"></i>
-                  <i class="el-icon-delete"></i>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div style="margin-top: 50px">
-              <p>
-                <img src="../assets/img/排行榜.png" /><h class="h"
-                  >借阅时间分布</h
-                >
-              </p>
-              <div id="volume" class="charts"></div>
-            </div>
-          </el-card>
-        </div>
-        </div>
-        <div  v-if="Role!==1"  >
-          <el-card shadow="hover" class="mgb20" >
-              <template #header>
-                  <div class="clearfix">
-                      <h1>热门借阅</h1>
+            <el-col :span="8">
+              <el-card
+                shadow="hover"
+                :body-style="{ padding: '0px' }"
+                @click="browseReserved"
+              >
+                <div class="grid-content grid-con-1">
+                  <i class="el-icon-reading grid-con-icon"></i>
+                  <div class="grid-cont-right">
+                    <div class="grid-num">{{ totalreserved }}</div>
+                    <div>已预约图书</div>
                   </div>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card
+                shadow="hover"
+                :body-style="{ padding: '0px' }"
+                @click="browseReturned"
+              >
+                <div class="grid-content grid-con-2">
+                  <i class="el-icon-reading grid-con-icon"></i>
+                  <div class="grid-cont-right">
+                    <div class="grid-num">{{ totalReturned }}</div>
+                    <div>已归还图书</div>
+                  </div>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="8">
+              <el-card
+                shadow="hover"
+                :body-style="{ padding: '0px' }"
+                @click="browseTobe"
+              >
+                <div class="grid-content grid-con-3">
+                  <i class="el-icon-reading grid-con-icon"></i>
+                  <div class="grid-cont-right">
+                    <div class="grid-num">{{ totalTobe }}</div>
+                    <div>在借图书</div>
+                  </div>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
+          <div>
+            <el-card shadow="hover" style="height: 100px">
+              <template #header>
+                <div class="clearfix">
+                  <span class="h1">超期未归还图书</span>
+                  <!-- <el-button style="float: right; padding: 3px 0" type="text">添加</el-button> -->
+                </div>
               </template>
               <el-table
-              :data="rbInformation.slice(0,5)"
-              style="width: 100%">
-                <el-table-column type="index" label="排名" width="50px"></el-table-column>
+                :show-header="true"
+                :data="todoList"
+                style="width: 100%"
+              >
+                <el-table-column type="index"></el-table-column>
                 <el-table-column
                   label="书籍名称"
+                  width="200px"
                   prop="bName"
-                  width="150px"
-                ></el-table-column
-                ><!--prop用来表明显示数据的名字-->
-                <el-table-column
-                  label="书籍作者"
-                  prop="bAuthor"
-                  width="150px"
-                ></el-table-column
-                ><!--prop用来表明显示数据的名字-->
-                <el-table-column label="书籍类型" prop="bType"></el-table-column
-                ><!--prop用来表明显示数据的名字-->
-                <el-table-column label="书籍出版社" prop="bPublisher"></el-table-column
-                ><!--prop用来表明显示数据的名字-->
-                <el-table-column
-                  label="馆藏数量"
-                  prop="bAllCount"
-                  width="100px"
-                ></el-table-column
-                ><!--prop用来表明显示数据的名字-->
-
-                <el-table-column
-                  label="借阅次数"
-                  prop="bLendCount"
-                  width="100px"
                 ></el-table-column>
+                <el-table-column
+                  label="借阅时间"
+                  prop="lDate"
+                ></el-table-column>
+                <el-table-column
+                  label="应还时间"
+                  prop="dDate"
+                ></el-table-column>
+                <el-table-column width="60">
+                  <template>
+                    <i class="el-icon-edit"></i>
+                    <i class="el-icon-delete"></i>
+                  </template>
+                </el-table-column>
               </el-table>
+              <div style="margin-top: 50px">
+                <p>
+                  <img src="../assets/img/排行榜.png" /><h class="h"
+                    >借阅时间分布</h
+                  >
+                </p>
+                <div id="volume" class="charts"></div>
+              </div>
             </el-card>
+          </div>
         </div>
+        <div v-if="Role !== 1">
+          <el-card shadow="hover" class="mgb20">
+            <template #header>
+              <div class="clearfix">
+                <h1>热门借阅</h1>
+              </div>
+            </template>
+            <el-table :data="rbInformation.slice(0, 5)" style="width: 100%">
+              <el-table-column
+                type="index"
+                label="排名"
+                width="50px"
+              ></el-table-column>
+              <el-table-column
+                label="书籍名称"
+                prop="bName"
+                width="150px"
+              ></el-table-column
+              ><!--prop用来表明显示数据的名字-->
+              <el-table-column
+                label="书籍作者"
+                prop="bAuthor"
+                width="150px"
+              ></el-table-column
+              ><!--prop用来表明显示数据的名字-->
+              <el-table-column label="书籍类型" prop="bType"></el-table-column
+              ><!--prop用来表明显示数据的名字-->
+              <el-table-column
+                label="书籍出版社"
+                prop="bPublisher"
+              ></el-table-column
+              ><!--prop用来表明显示数据的名字-->
+              <el-table-column
+                label="馆藏数量"
+                prop="bAllCount"
+                width="100px"
+              ></el-table-column
+              ><!--prop用来表明显示数据的名字-->
 
+              <el-table-column
+                label="借阅次数"
+                prop="bLendCount"
+                width="100px"
+              ></el-table-column>
+            </el-table>
+          </el-card>
+        </div>
       </el-col>
     </el-row>
 
@@ -432,14 +449,14 @@ export default {
       },
       oldEmail: "",
       newEmail: "",
-      newName:"",
+      newName: "",
       userName: "",
       newSex: "",
       totalreserved: "",
       totalReturned: "",
       totalTobe: "",
       data: [],
-      form:{},
+      form: {},
       userInfo: {},
       options: {
         type: "bar",
@@ -457,8 +474,8 @@ export default {
       reservedList: [],
       returnedList: [],
       tobeList: [],
-      rbInformation:[],
-      lendingTime: []
+      rbInformation: [],
+      lendingTime: [],
     };
   },
   computed: {
@@ -467,12 +484,9 @@ export default {
       return tmp;
     },
     role() {
-      if (this.Role===1)
-      return "普通用户";
-      else if(this.Role===2)
-      return "工作人员";
-      else
-      return "超级管理员" ;
+      if (this.Role === 1) return "普通用户";
+      else if (this.Role === 2) return "工作人员";
+      else return "超级管理员";
     },
     username() {
       let username = this.$store.state.username;
@@ -486,10 +500,10 @@ export default {
       let role = this.$store.state.role;
       return role;
     },
-    getpercent(){
+    getpercent() {
       let per = 100 - parseFloat(this.percentage);
       return per;
-    }
+    },
   },
 
   created() {
@@ -505,16 +519,16 @@ export default {
     // this.drawBar();
     this.initPieData();
   },
-  activated(){
+  activated() {
     this.drawBar();
   },
   methods: {
-    async getrbInformation(){
+    async getrbInformation() {
       const { data: res } = await this.$http.post("showTop50", this.queryInfo);
       this.rbInformation = res.top;
     },
     getUserName() {
-      this.userName = this.$store.state.username
+      this.userName = this.$store.state.username;
     },
     hrefone() {
       this.$router.push({ path: "/adminbook" });
@@ -637,16 +651,20 @@ export default {
         }
       }
     },
-    async sendMessage(){
-      const confirmResult = await this.$confirm("按下确定后所有用户都将收到这条消息，是否确认发布？", "提示", {
+    async sendMessage() {
+      const confirmResult = await this.$confirm(
+        "按下确定后所有用户都将收到这条消息，是否确认发布？",
+        "提示",
+        {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
-        }).catch((err) => err);
-
-        if (confirmResult !== "confirm") {
-          return this.$message.info("已经取消信息发布");
         }
+      ).catch((err) => err);
+
+      if (confirmResult !== "confirm") {
+        return this.$message.info("已经取消信息发布");
+      }
       const { data: res } = await this.$http.post("sendMessage", this.form);
       //this.$message.success(JSON.stringify(this.form));
       if (res.status !== 200) {
@@ -660,9 +678,8 @@ export default {
         user_id: this.userid,
       });
       if (this.newName === "") {
-        alert("用户名不能为空")
-      }
-      else {
+        alert("用户名不能为空");
+      } else {
         const { data: tmp } = await this.$http.post("updateUserInfo", {
           user_id: this.userid,
           username: this.newName,
@@ -672,13 +689,12 @@ export default {
           password: res.password,
         });
         if (tmp.status == 200) {
-          this.$store.commit("changeName",this.newName);
+          this.$store.commit("changeName", this.newName);
           this.getUserName();
           alert("修改个人信息成功！");
           this.editVisible_changeinformation = false;
-        }
-        else if(tmp.status == 422){
-          alert("用户名已存在！")
+        } else if (tmp.status == 422) {
+          alert("用户名已存在！");
         }
       }
     },
@@ -708,73 +724,73 @@ export default {
       console.log(res);
       this.userInfo = res;
     },
-    async getUserInfo(){
+    async getUserInfo() {
       const { data: res } = await this.$http.post("showUserInfo", {
         user_id: this.userid,
       });
-      this.newEmail = res.email
-      this.newName = res.username
-      this.newSex = (res.sex === '男') ? 1 : 0
+      this.newEmail = res.email;
+      this.newName = res.username;
+      this.newSex = res.sex === "男" ? 1 : 0;
     },
     async initPieData() {
-      if(this.Role===1) return;
+      if (this.Role === 1) return;
       // 基于准备好的dom，初始化echarts实例
-      var ele1 = document.getElementById("main1")
-      ele1.removeAttribute('_echarts_instance_')
+      var ele1 = document.getElementById("main1");
+      ele1.removeAttribute("_echarts_instance_");
       let myChart = this.$echarts.init(ele1);
-      const { data: res } = await this.$http.post("getRateByType",this.form);
+      const { data: res } = await this.$http.post("getRateByType", this.form);
       myChart.setOption({
-          title : {
-              text: '分类借阅占比',//主标题
-              x:'center',//x轴方向对齐方式
+        title: {
+          text: "分类借阅占比", //主标题
+          x: "center", //x轴方向对齐方式
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)",
+        },
+        legend: {
+          orient: "vertical",
+          bottom: "bottom",
+        },
+        series: [
+          {
+            name: "借阅分布",
+            type: "pie",
+            radius: "55%",
+            center: ["50%", "60%"],
+            data: [
+              { value: res.result["航空航天"], name: "航空航天" },
+              { value: res.result["数理科学和化学"], name: "数理科学化学" },
+              { value: res.result["文学"], name: "文学" },
+              { value: res.result["历史"], name: "历史" },
+              { value: res.result["计算机"], name: "计算机" },
+              { value: res.result["社会科学"], name: "社科" },
+              { value: res.result["军事"], name: "军事" },
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
           },
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-              orient: 'vertical',
-              bottom: 'bottom',
-          },
-          series : [
-              {
-                  name: '借阅分布',
-                  type: 'pie',
-                  radius : '55%',
-                  center: ['50%', '60%'],
-                  data:[
-                      {value:res.result["航空航天"], name:'航空航天'},
-                      {value:res.result["数理科学和化学"], name:'数理科学化学'},
-                      {value:res.result["文学"], name:'文学'},
-                      {value:res.result["历史"], name:'历史'},
-                      {value:res.result["计算机"], name:'计算机'},
-                      {value:res.result["社会科学"], name:'社科'},
-                      {value:res.result["军事"], name:'军事'},
-                  ],
-                  itemStyle: {
-                      emphasis: {
-                          shadowBlur: 10,
-                          shadowOffsetX: 0,
-                          shadowColor: 'rgba(0, 0, 0, 0.5)'
-                      }
-                  }
-              }
-          ]
+        ],
       });
     },
     async getLendingTime() {
       const { data: res } = await this.$http.post("showLendingTime", {
         user_id: this.userid,
       });
-      this.lendingTime = res.month
-      this.drawBar()
+      this.lendingTime = res.month;
+      this.drawBar();
     },
     async drawBar() {
-      if(this.Role!==1) return;
-      var ele = document.getElementById("volume")
-      ele.removeAttribute('_echarts_instance_')
+      if (this.Role !== 1) return;
+      var ele = document.getElementById("volume");
+      ele.removeAttribute("_echarts_instance_");
       let charts = this.$echarts.init(ele);
-      console.log("绘制")
+      console.log("绘制");
       charts.setOption({
         title: { text: "" },
         tooltip: {},
@@ -798,7 +814,7 @@ export default {
           ],
         },
         yAxis: {
-          type: 'value',
+          type: "value",
           interval: 1,
           // min: 0,
           // max: 10
@@ -809,8 +825,8 @@ export default {
             type: "line",
             data: Object.values(this.lendingTime),
             areaStyle: {
-                normal: {}
-            }
+              normal: {},
+            },
           },
         ],
       });

@@ -66,7 +66,7 @@ export default {
           return;
         }
         const { data: res } = await this.$http.post("login", this.param);
-        if (res.status !== 200){
+        if (res.status !== 200) {
           return this.$message.error("请输入正确的帐号名称或密码");
         }
         this.$message.success("登录成功");

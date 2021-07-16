@@ -131,7 +131,11 @@
             id="selecter"
           >
             <el-option key="1" label="航空航天" value="航空航天"></el-option>
-            <el-option key="2" label="数理科学和化学" value="数理科学和化学"></el-option>
+            <el-option
+              key="2"
+              label="数理科学和化学"
+              value="数理科学和化学"
+            ></el-option>
             <el-option key="3" label="文学" value="文学"></el-option>
             <el-option key="4" label="历史" value="历史"></el-option>
             <el-option key="5" label="计算机" value="计算机"></el-option>
@@ -143,20 +147,32 @@
           <el-input @keyup.enter="saveadd" v-model="form.bPublisher"></el-input>
         </el-form-item>
         <el-form-item label="图书馆藏书量">
-          <el-input-number v-model="form.bAllCount" :min="0" :max="10000" ></el-input-number>
+          <el-input-number
+            v-model="form.bAllCount"
+            :min="0"
+            :max="10000"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="图书在馆数量">
-          <el-input-number v-model="form.bInCount" :min="0" :max="10000" ></el-input-number>
+          <el-input-number
+            v-model="form.bInCount"
+            :min="0"
+            :max="10000"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="图书被借次数">
-          <el-input-number v-model="form.bLendCount" :min="0" :max="10000" ></el-input-number>
+          <el-input-number
+            v-model="form.bLendCount"
+            :min="0"
+            :max="10000"
+          ></el-input-number>
         </el-form-item>
         <el-form-item label="图书简介">
           <el-input
-                @keyup.enter="saveadd"
-                v-model="form.bIntroduction"
-                type="textarea"
-                :rows="7"
+            @keyup.enter="saveadd"
+            v-model="form.bIntroduction"
+            type="textarea"
+            :rows="7"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -185,7 +201,11 @@
             id="selecter"
           >
             <el-option key="1" label="航空航天" value="航空航天"></el-option>
-            <el-option key="2" label="数理科学和化学" value="数理科学和化学"></el-option>
+            <el-option
+              key="2"
+              label="数理科学和化学"
+              value="数理科学和化学"
+            ></el-option>
             <el-option key="3" label="文学" value="文学"></el-option>
             <el-option key="4" label="历史" value="历史"></el-option>
             <el-option key="5" label="计算机" value="计算机"></el-option>
@@ -194,14 +214,17 @@
           </el-select>
         </el-form-item>
         <el-form-item label="图书出版社">
-          <el-input @keyup.enter="saveEdit" v-model="form.bPublisher"></el-input>
+          <el-input
+            @keyup.enter="saveEdit"
+            v-model="form.bPublisher"
+          ></el-input>
         </el-form-item>
         <el-form-item label="图书简介">
           <el-input
-                @keyup.enter="saveEdit"
-                v-model="form.bIntroduction"
-                type="textarea"
-                :rows="7"
+            @keyup.enter="saveEdit"
+            v-model="form.bIntroduction"
+            type="textarea"
+            :rows="7"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -266,11 +289,11 @@ export default {
       addVisible: false,
       pageTotal: 0,
       form: {},
-      tempform:{},
+      tempform: {},
       idx: -1,
       id: -1,
       res: [],
-      tempmessage:"",
+      tempmessage: "",
     };
   },
   created() {
@@ -337,15 +360,18 @@ export default {
     },
     // 保存编辑
     async saveEdit() {
-      if(this.form.bName==="") return this.$message.error("书名不准为空");
-      if(this.form.bAuthor==="") return this.$message.error("作者名不准为空");
-      if(this.form.bType==="") return this.$message.error("书的类型不准为空");
-      if(this.form.bPublisher==="") return this.$message.error("出版社不准为空");
+      if (this.form.bName === "") return this.$message.error("书名不准为空");
+      if (this.form.bAuthor === "")
+        return this.$message.error("作者名不准为空");
+      if (this.form.bType === "")
+        return this.$message.error("书的类型不准为空");
+      if (this.form.bPublisher === "")
+        return this.$message.error("出版社不准为空");
       const { data: res } = await this.$http.post("updateBookInfo", this.form);
       //this.$message.success(JSON.stringify(this.form));
       console.log(res);
       if (res.status !== 200) {
-        if(res.status===422){
+        if (res.status === 422) {
           return this.$message.error("未做任何更改或图书已存在");
         }
         return this.$message.error(res.message);
@@ -365,34 +391,46 @@ export default {
     },
     handleadd() {
       this.form = {};
-      this.form.bName="";
-      this.form.bAuthor="";
-      this.form.bType="";
-      this.form.bPublisher="";
+      this.form.bName = "";
+      this.form.bAuthor = "";
+      this.form.bType = "";
+      this.form.bPublisher = "";
       this.addVisible = true;
     },
     async saveadd() {
-      if(this.form.bName==="") return this.$message.error("书名不准为空");
-      if(this.form.bAuthor==="") return this.$message.error("作者名不准为空");
-      if(this.form.bType==="") return this.$message.error("书的类型不准为空");
-      if(this.form.bPublisher==="") return this.$message.error("出版社不准为空");
-      this.form.bIntroduction="";
-      var numReg = /^[0-9]*$/
-      var numRe = new RegExp(numReg)
-      if (!numRe.test(this.form.bAllCount)||!numRe.test(this.form.bInCount)||!numRe.test(this.form.bLendCount)) {
-        return this.$message.error("请确认“藏书量”、“在馆数量”、“被借次数”输入的是数字");
+      if (this.form.bName === "") return this.$message.error("书名不准为空");
+      if (this.form.bAuthor === "")
+        return this.$message.error("作者名不准为空");
+      if (this.form.bType === "")
+        return this.$message.error("书的类型不准为空");
+      if (this.form.bPublisher === "")
+        return this.$message.error("出版社不准为空");
+      this.form.bIntroduction = "";
+      var numReg = /^[0-9]*$/;
+      var numRe = new RegExp(numReg);
+      if (
+        !numRe.test(this.form.bAllCount) ||
+        !numRe.test(this.form.bInCount) ||
+        !numRe.test(this.form.bLendCount)
+      ) {
+        return this.$message.error(
+          "请确认“藏书量”、“在馆数量”、“被借次数”输入的是数字"
+        );
       }
       const { data: res } = await this.$http.post("addBook", this.form);
       console.log(res);
       if (res.status !== 200) {
-        if(res.status===422){
+        if (res.status === 422) {
           return this.$message.error("图书已存在");
         }
         return this.$message.error(res.message);
       } else {
         this.$message.success("新增图书成功");
-        this.tempmessage="图书馆上新图书：《"+this.form.bName+"》,欢迎大家阅读！";
-        const { data: res } = await this.$http.post("sendMessage", {"message":this.tempmessage});
+        this.tempmessage =
+          "图书馆上新图书：《" + this.form.bName + "》,欢迎大家阅读！";
+        const { data: res } = await this.$http.post("sendMessage", {
+          message: this.tempmessage,
+        });
         //this.$message.success(JSON.stringify(this.form));
         console.log(res);
         this.getBooksList();

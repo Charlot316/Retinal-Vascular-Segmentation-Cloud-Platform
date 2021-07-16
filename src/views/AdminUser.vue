@@ -27,7 +27,7 @@
           >新增用户</el-button
         >
         <el-button
-          v-if="Role===3"
+          v-if="Role === 3"
           type="primary"
           icon="el-icon-circle-plus-outline"
           @click="handleaddStaff"
@@ -54,21 +54,16 @@
           label="用户名"
           align="center"
         ></el-table-column>
-        <el-table-column
-          prop="password"
-          label="密码"
-          align="center"
-        >
-        <template #default="scope">
-            <span v-if="!(Role<=scope.row.role&&userid!==scope.row.user_id)">{{scope.row.password}}</span>
+        <el-table-column prop="password" label="密码" align="center">
+          <template #default="scope">
+            <span
+              v-if="!(Role <= scope.row.role && userid !== scope.row.user_id)"
+              >{{ scope.row.password }}</span
+            >
             <span v-else>无权查看</span>
-        </template>
+          </template>
         </el-table-column>
-        <el-table-column
-          prop="role"
-          label="身份"
-          align="center"
-        >
+        <el-table-column prop="role" label="身份" align="center">
           <template #default="scope">
             <span v-if="scope.row.role == 1">普通用户</span>
             <span v-if="scope.row.role == 2">工作人员</span>
@@ -77,11 +72,7 @@
         </el-table-column>
         <el-table-column prop="email" label="邮箱" align="center">
         </el-table-column>
-        <el-table-column
-          prop="sex"
-          label="性别"
-          align="center"
-        >
+        <el-table-column prop="sex" label="性别" align="center">
           <template #default="scope">
             <span v-if="scope.row.sex == 1">男</span>
             <span v-if="scope.row.sex == 0">女</span>
@@ -111,7 +102,7 @@
           </template>
         </el-table-column>
       </el-table>
-      
+
       <!-- <div class="pagination">
         <el-pagination
           background
@@ -123,7 +114,7 @@
         ></el-pagination>
       </div> -->
     </div>
-   
+
     <!-- 新增弹出框 -->
     <el-dialog title="新增用户" v-model="addVisible" width="30%">
       <el-form ref="form" :model="form" label-width="30%">
@@ -150,7 +141,7 @@
         </span>
       </template>
     </el-dialog>
-      <!-- 新增工作人员弹出框 -->
+    <!-- 新增工作人员弹出框 -->
     <el-dialog title="新增工作人员" v-model="addStaffVisible" width="30%">
       <el-form ref="form" :model="form" label-width="30%">
         <el-form-item label="用户名">
@@ -252,14 +243,16 @@ export default {
       multipleSelection: [],
       editVisible: false,
       addVisible: false,
-      addStaffVisible:false,
+      addStaffVisible: false,
       pageTotal: 0,
       form: {},
       idx: -1,
       id: -1,
     };
   },
-  created() {this.getData();},
+  created() {
+    this.getData();
+  },
   methods: {
     // 获取 easy-mock 的模拟数据
     async getData() {
@@ -273,7 +266,7 @@ export default {
     },
     // 触发搜索按钮
     async handleSearch() {
-       const { data: res } = await this.$http.post(
+      const { data: res } = await this.$http.post(
         "getUserInformation",
         this.searchparam
       );
@@ -285,10 +278,10 @@ export default {
     // 删除操作
     handleDelete(index) {
       this.form = JSON.parse(JSON.stringify(this.tableData[index]));
-      if(this.Role<=this.form.role&&this.userid!==this.form.user_id){
+      if (this.Role <= this.form.role && this.userid !== this.form.user_id) {
         return this.$message.error("无权删除其它工作人员或管理员的信息");
       }
-      if(this.userid===this.form.user_id){
+      if (this.userid === this.form.user_id) {
         return this.$message.error("不允许删除自己");
       }
       // 二次确认删除
@@ -312,7 +305,7 @@ export default {
     async handleEditInfo(index) {
       this.idx = index;
       this.form = JSON.parse(JSON.stringify(this.tableData[index]));
-      if(this.Role<=this.form.role&&this.userid!==this.form.user_id){
+      if (this.Role <= this.form.role && this.userid !== this.form.user_id) {
         return this.$message.error("无权修改其它工作人员或管理员的信息");
       }
       this.editVisible = true;
@@ -323,7 +316,7 @@ export default {
       //this.$message.success(JSON.stringify(this.form));
       console.log(res);
       if (res.status !== 200) {
-        if(res.status===422){
+        if (res.status === 422) {
           return this.$message.error("用户名已存在");
         }
         return this.$message.error(res.message);
@@ -343,27 +336,28 @@ export default {
     },
     handleadd() {
       this.form = {};
-      this.form.username="";
-      this.form.password="";
+      this.form.username = "";
+      this.form.password = "";
       this.addVisible = true;
     },
-    handleaddStaff(){
+    handleaddStaff() {
       this.form = {};
-      this.form.username="";
-      this.form.password="";
+      this.form.username = "";
+      this.form.password = "";
       this.addStaffVisible = true;
     },
     async saveaddStaff() {
-      if(this.form.username==="") return this.$message.error("用户名不能为空");
-      if(this.form.password==="") return this.$message.error("密码不能为空");
+      if (this.form.username === "")
+        return this.$message.error("用户名不能为空");
+      if (this.form.password === "") return this.$message.error("密码不能为空");
       const { data: res } = await this.$http.post("createStaff", this.form);
       //this.$message.success(JSON.stringify(this.form));
       console.log(res);
       if (res.status !== 200) {
-        if(res.status===422){
+        if (res.status === 422) {
           return this.$message.error("用户名已存在");
         }
-        return this.$message.error(res.message+"请勿输入中文字符");
+        return this.$message.error(res.message + "请勿输入中文字符");
       } else {
         this.$message.success("新增工作人员成功");
         this.addStaffVisible = false;
@@ -372,17 +366,18 @@ export default {
       }
     },
     async saveadd() {
-      if(this.form.username==="") return this.$message.error("用户名不能为空");
-      if(this.form.password==="") return this.$message.error("密码不能为空");
+      if (this.form.username === "")
+        return this.$message.error("用户名不能为空");
+      if (this.form.password === "") return this.$message.error("密码不能为空");
       const { data: res } = await this.$http.post("addStaff", this.form);
       //this.$message.success(JSON.stringify(this.form));
       console.log(res);
       if (res.status !== 200) {
-        if(res.status===422){
+        if (res.status === 422) {
           return this.$message.error("用户名已存在");
         }
-        return this.$message.error(res.message+"请勿输入中文字符");
-      }else {
+        return this.$message.error(res.message + "请勿输入中文字符");
+      } else {
         this.$message.success("新增用户成功");
         this.form.user_id = res.user_id;
         this.addVisible = false;
@@ -390,7 +385,7 @@ export default {
       }
     },
   },
-   computed: {
+  computed: {
     Role() {
       let role = this.$store.state.role;
       return role;

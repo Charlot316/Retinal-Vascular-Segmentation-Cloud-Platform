@@ -183,11 +183,13 @@ export default {
       this.form = this.booksList[index];
     },
     async reserveBook1() {
-      if(!this.$store.state.islogin){
-        return this.$message.error("请先登录!")
+      if (!this.$store.state.islogin) {
+        return this.$message.error("请先登录!");
       }
-      if(this.Role!==1){
-        return this.$message.error("工作人员不允许预约图书，请使用私人账号预约");
+      if (this.Role !== 1) {
+        return this.$message.error(
+          "工作人员不允许预约图书，请使用私人账号预约"
+        );
       }
       const confirmResult = await this.$confirm("您是否确定预约本书?", "提示", {
         confirmButtonText: "确定",

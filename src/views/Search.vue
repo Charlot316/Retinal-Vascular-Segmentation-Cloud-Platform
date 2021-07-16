@@ -3,7 +3,7 @@
     <!--卡片视图区-->
     <el-card>
       <el-row :gutter="20">
-          <!--绑定清空键-->
+        <!--绑定清空键-->
         <el-col :span="4">
           <el-select
             v-model="operationType"
@@ -12,15 +12,15 @@
             id="selecter"
             @change="handlechange"
           >
-          <el-option key="1" label="任意词" value="任意词"></el-option>
-          <el-option key="2" label="书名" value="书名"></el-option>
-          <el-option key="3" label="作者" value="作者"></el-option>
-          <el-option key="4" label="出版社" value="出版社"></el-option>
+            <el-option key="1" label="任意词" value="任意词"></el-option>
+            <el-option key="2" label="书名" value="书名"></el-option>
+            <el-option key="3" label="作者" value="作者"></el-option>
+            <el-option key="4" label="出版社" value="出版社"></el-option>
           </el-select>
         </el-col>
         <el-col :span="16">
           <el-input
-            v-if="operationType==='任意词'"
+            v-if="operationType === '任意词'"
             placeholder="请输入书名、作者或出版社的检索关键词"
             v-model="queryInfo.bName"
             clearable
@@ -28,7 +28,7 @@
             @keyup.enter="handleSearch"
           ></el-input>
           <el-input
-            v-if="operationType==='书名'"
+            v-if="operationType === '书名'"
             placeholder="请输入书名检索关键词"
             v-model="queryInfo.bName"
             clearable
@@ -36,7 +36,7 @@
             @keyup.enter="handleSearch"
           ></el-input>
           <el-input
-            v-if="operationType==='作者'"
+            v-if="operationType === '作者'"
             placeholder="请输入作者的关键词"
             v-model="queryInfo.bAuthor"
             clearable
@@ -44,7 +44,7 @@
             @keyup.enter="handleSearch"
           ></el-input>
           <el-input
-            v-if="operationType==='出版社'"
+            v-if="operationType === '出版社'"
             placeholder="请输入出版社的关键词"
             v-model="queryInfo.bPublisher"
             clearable
@@ -57,10 +57,15 @@
         </el-col>
       </el-row>
       <div class="hot">
-        <ul class="myul" >
+        <ul class="myul">
           <li class="li1">热门检索：</li>
-          <li v-for="item in keyWords" :key="item.count" class="li2" @click="searchByKey(item.word)">
-            <a>{{item.word}}</a>
+          <li
+            v-for="item in keyWords"
+            :key="item.count"
+            class="li2"
+            @click="searchByKey(item.word)"
+          >
+            <a>{{ item.word }}</a>
           </li>
         </ul>
       </div>
@@ -188,12 +193,12 @@ export default {
       //查询参数对象，与接口文档中传给后端的参数对应
       queryInfo: {
         bName: "", //搜索的关键词
-        bAuthor:"",
-        bPublisher:"",
+        bAuthor: "",
+        bPublisher: "",
         pageNum: 1, //第几页
         pageSize: 5, //每页显示多少个
       },
-      operationType:"任意词",
+      operationType: "任意词",
       //书籍列表
       booksList: [],
       //总数据条数
@@ -202,8 +207,8 @@ export default {
       form: {},
       reserveDate: "",
       a: "",
-      keyWords:[],
-      result:[],
+      keyWords: [],
+      result: [],
     };
   },
 
@@ -226,33 +231,32 @@ export default {
 
   methods: {
     //点击热门关键词的显示对应的搜索信息
-    async searchByKey(key){
-      if((this.queryInfo.pageNum-1)*this.queryInfo.pageSize>this.total){
+    async searchByKey(key) {
+      if ((this.queryInfo.pageNum - 1) * this.queryInfo.pageSize > this.total) {
         this.queryInfo.pageNum = 1;
         this.pageSize = 5;
       }
-      this.queryInfo.bName = key
-      console.log(this.queryInfo)
+      this.queryInfo.bName = key;
+      console.log(this.queryInfo);
       const { data: res } = await this.$http.post("searchBook", this.queryInfo);
-      this.booksList = res.bookList
-      this.getKeyWords()
-      if(res.status==422){
+      this.booksList = res.bookList;
+      this.getKeyWords();
+      if (res.status == 422) {
         this.total = 0;
-        this.queryInfo.pageSize =  5;
+        this.queryInfo.pageSize = 5;
         this.queryInfo.pageNum = 1;
-      }
-      else{
+      } else {
         this.total = res.total;
       }
     },
-    handlechange(){
-      this.queryInfo.bName="";
-      this.queryInfo.bAuthor="";
-      this.queryInfo.bPublisher="";
+    handlechange() {
+      this.queryInfo.bName = "";
+      this.queryInfo.bAuthor = "";
+      this.queryInfo.bPublisher = "";
     },
     //获取所有书籍的信息
     async getBooksList() {
-      if((this.queryInfo.pageNum-1)*this.queryInfo.pageSize>this.total){
+      if ((this.queryInfo.pageNum - 1) * this.queryInfo.pageSize > this.total) {
         this.queryInfo.pageNum = 1;
         this.pageSize = 5;
       }
@@ -279,59 +283,64 @@ export default {
 
     //搜索函数
     async handleSearch() {
-      if((this.queryInfo.pageNum-1)*this.queryInfo.pageSize>this.total){
+      if ((this.queryInfo.pageNum - 1) * this.queryInfo.pageSize > this.total) {
         this.queryInfo.pageNum = 1;
         this.pageSize = 5;
       }
-      if(this.operationType==='任意词'){
-        const { data: res } = await this.$http.post("searchBook", this.queryInfo);
+      if (this.operationType === "任意词") {
+        const { data: res } = await this.$http.post(
+          "searchBook",
+          this.queryInfo
+        );
         this.getKeyWords();
         this.booksList = res.bookList;
-        if(res.status==422){
+        if (res.status == 422) {
           this.total = 0;
-          this.queryInfo.pageSize =  5;
+          this.queryInfo.pageSize = 5;
           this.queryInfo.pageNum = 1;
-        }
-        else{
+        } else {
           this.total = res.total;
         }
-      }
-      else if(this.operationType==='书名'){
-        const { data: res } = await this.$http.post("searchBookByName", this.queryInfo);
+      } else if (this.operationType === "书名") {
+        const { data: res } = await this.$http.post(
+          "searchBookByName",
+          this.queryInfo
+        );
         this.getKeyWords();
         this.booksList = res.bookList;
-        if(res.status==422){
+        if (res.status == 422) {
           this.total = 0;
-          this.queryInfo.pageSize =  5;
+          this.queryInfo.pageSize = 5;
           this.queryInfo.pageNum = 1;
-        }
-        else{
+        } else {
           this.total = res.total;
         }
-      }
-      else if(this.operationType==='作者'){
-        const { data: res } = await this.$http.post("searchBookByAuthor", this.queryInfo);
+      } else if (this.operationType === "作者") {
+        const { data: res } = await this.$http.post(
+          "searchBookByAuthor",
+          this.queryInfo
+        );
         this.getKeyWords();
         this.booksList = res.bookList;
-        if(res.status==422){
+        if (res.status == 422) {
           this.total = 0;
-          this.queryInfo.pageSize =  5;
+          this.queryInfo.pageSize = 5;
           this.queryInfo.pageNum = 1;
-        }
-        else{
+        } else {
           this.total = res.total;
         }
-      }
-      else if(this.operationType==='出版社'){
-        const { data: res } = await this.$http.post("searchBookByPublisher", this.queryInfo);
+      } else if (this.operationType === "出版社") {
+        const { data: res } = await this.$http.post(
+          "searchBookByPublisher",
+          this.queryInfo
+        );
         this.getKeyWords();
         this.booksList = res.bookList;
-        if(res.status==422){
+        if (res.status == 422) {
           this.total = 0;
-          this.queryInfo.pageSize =  5;
+          this.queryInfo.pageSize = 5;
           this.queryInfo.pageNum = 1;
-        }
-        else{
+        } else {
           this.total = res.total;
         }
       }
@@ -343,13 +352,14 @@ export default {
     },
     //预约图书函数
     async reserveBook(index) {
-      if(!this.$store.state.islogin){
-        return this.$message.error("请先登录!")
+      if (!this.$store.state.islogin) {
+        return this.$message.error("请先登录!");
       }
-      if(this.Role!==1){
-         return this.$message.error("工作人员不允许预约图书，请使用私人账号预约");
-      }
-      else{
+      if (this.Role !== 1) {
+        return this.$message.error(
+          "工作人员不允许预约图书，请使用私人账号预约"
+        );
+      } else {
         const year = new Date().getFullYear();
         const month =
           new Date().getMonth() + 1 < 10
@@ -378,15 +388,18 @@ export default {
           book_index: this.booksList[index].book_index,
           reserveDate: this.reserveDate,
         });
-        if(res.status==410){
-          this.$message.error("请先归还超期图书并缴纳罚款！")
-        }
-        else if(res.status==200){
-          const confirmResult = await this.$confirm("您是否确定预约本书?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).catch((err) => err);
+        if (res.status == 410) {
+          this.$message.error("请先归还超期图书并缴纳罚款！");
+        } else if (res.status == 200) {
+          const confirmResult = await this.$confirm(
+            "您是否确定预约本书?",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }
+          ).catch((err) => err);
 
           if (confirmResult !== "confirm") {
             this.viewVisible = false;
@@ -394,21 +407,21 @@ export default {
             // return this.$message.info("已经取消预约!");
           }
           this.$message.success("预约成功!");
-          this.getBooksList() ;
-        }
-        else{
-          this.$message.error("此图书数量为0，暂时无法预约！")
+          this.getBooksList();
+        } else {
+          this.$message.error("此图书数量为0，暂时无法预约！");
         }
       }
     },
     async reserveBook1() {
-      if(!this.$store.state.islogin){
-        return this.$message.error("请先登录!")
+      if (!this.$store.state.islogin) {
+        return this.$message.error("请先登录!");
       }
-      if(this.Role!==1){
-        return this.$message.error("工作人员不允许预约图书，请使用私人账号预约");
-      }
-      else{
+      if (this.Role !== 1) {
+        return this.$message.error(
+          "工作人员不允许预约图书，请使用私人账号预约"
+        );
+      } else {
         const year = new Date().getFullYear();
         const month =
           new Date().getMonth() + 1 < 10
@@ -437,25 +450,27 @@ export default {
           book_index: this.form.book_index,
           reserveDate: this.reserveDate,
         });
-        if(res.status==410){
-          this.$message.error("请先归还超期图书并缴纳罚款！")
-        }
-        else if(res.status==200){
-          const confirmResult = await this.$confirm("您是否确定预约本书?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }).catch((err) => err);
+        if (res.status == 410) {
+          this.$message.error("请先归还超期图书并缴纳罚款！");
+        } else if (res.status == 200) {
+          const confirmResult = await this.$confirm(
+            "您是否确定预约本书?",
+            "提示",
+            {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning",
+            }
+          ).catch((err) => err);
 
           if (confirmResult !== "confirm") {
             this.viewVisible = false;
             return;
             // return this.$message.info("已经取消预约!");
           }
-          this.$message.success("预约成功!")
-        }
-        else{
-          this.$message.error("此图书数量为0，暂时无法预约！")
+          this.$message.success("预约成功!");
+        } else {
+          this.$message.error("此图书数量为0，暂时无法预约！");
         }
       }
     },
@@ -478,32 +493,31 @@ export default {
 .el-form {
   margin-right: 50px;
 }
-.hot{
+.hot {
   margin-left: 10%;
   margin-top: 15px;
 }
-.h{
+.h {
   color: brown;
   list-style-type: none;
   float: flex;
 }
-.myul{
+.myul {
   margin-top: 5px;
-  width:100%;
+  width: 100%;
   list-style-type: none;
 }
-.myul li{
+.myul li {
   padding-left: 1em;
   float: left;
 }
-.li1{
-  color:brown;
+.li1 {
+  color: brown;
 }
-.li2{
-  color:rgb(79, 79, 196);
+.li2 {
+  color: rgb(79, 79, 196);
 }
-a:hover
-{
-  background-color:rgb(158, 158, 149);
+a:hover {
+  background-color: rgb(158, 158, 149);
 }
 </style>
