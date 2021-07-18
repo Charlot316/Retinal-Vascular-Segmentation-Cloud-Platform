@@ -28,10 +28,29 @@
             </template>
           </el-input>
         </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            type="password"
+            placeholder="password"
+            v-model="param.tempPassword"
+            @keyup.enter="submitForm()"
+          >
+            <template #prepend>
+              <el-button icon="el-icon-lock">确认密码</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
         <el-form-item prop="email">
           <el-input v-model="param.email" placeholder="email">
             <template #prepend>
               <el-button icon="el-icon-lock">邮箱</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phone">
+          <el-input v-model="param.phone" placeholder="phone">
+            <template #prepend>
+              <el-button icon="el-icon-lock">手机号</el-button>
             </template>
           </el-input>
         </el-form-item>
@@ -61,6 +80,13 @@ export default {
         return callback();
       }
       callback(new Error("请输入合法的邮箱"));
+    };
+    var checkPhone = (rule, value, callback) => {
+      const regPhone = /^[0-9]+$/;
+      if (regPhone.test(value)) {
+        return callback();
+      }
+      callback(new Error("请输入合法的手机号"));
     };
     return {
       param: {
@@ -95,6 +121,13 @@ export default {
             trigger: "blur",
           },
         ],
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          {
+            validator: checkPhone,
+            trigger: "blur",
+          },
+        ],
         sex: [{ requierd: true, message: "请选择性别", trigger: "blur" }],
       },
     };
@@ -107,6 +140,9 @@ export default {
       this.$refs.register.validate(async (valid) => {
         if (!valid) {
           return;
+        }
+        if (this.param.password !== this.param.tempPassword) {
+          return alert("输入的两次密码不一致");
         }
         if (this.param.sex === "") {
           alert("请选择性别");
@@ -133,7 +169,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  /* background-image: url(../assets/img/login.jpg); */
+  background-image: url(../assets/img/login.jpg);
   background-size: 100%;
 }
 .ms-title {
@@ -146,12 +182,12 @@ export default {
 }
 .ms-register {
   position: absolute;
-  left: 50%;
+  left: 45%;
   top: 50%;
-  width: 350px;
+  width: 25%;
   margin: -190px 0 0 -175px;
   border-radius: 5px;
-  background: rgba(30, 30, 32, 0.3);
+  background: rgba(255, 255, 255);
   overflow: hidden;
 }
 .ms-content {
@@ -169,7 +205,7 @@ export default {
 .register-tips {
   font-size: 12px;
   line-height: 30px;
-  color: #fff;
+  color: rgb(29, 29, 31);
 }
 .h {
   color: rgb(129, 109, 83);

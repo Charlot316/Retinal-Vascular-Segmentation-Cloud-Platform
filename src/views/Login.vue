@@ -12,7 +12,7 @@
         <el-form-item prop="username">
           <el-input v-model="param.username" placeholder="username">
             <template #prepend>
-              <el-button icon="el-icon-user"></el-button>
+              <el-button icon="el-icon-user">用户名</el-button>
             </template>
           </el-input>
         </el-form-item>
@@ -24,14 +24,14 @@
             @keyup.enter="submitForm()"
           >
             <template #prepend>
-              <el-button icon="el-icon-lock"></el-button>
+              <el-button icon="el-icon-lock">密码</el-button>
             </template>
           </el-input>
         </el-form-item>
         <div class="login-btn">
           <el-button type="primary" @click="submitForm()">登录</el-button>
         </div>
-        <h class="login-tips">当前还未注册？</h>
+        <h>当前还未注册？</h>
         <h class="login-tips"
           ><router-link to="/register">前往注册</router-link></h
         >
@@ -86,7 +86,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  /* background-image: url(../assets/img/login.jpg); */
+  background-image: url(../assets/img/login.jpg);
   background-size: 100%;
 }
 .ms-title {
@@ -99,12 +99,12 @@ export default {
 }
 .ms-login {
   position: absolute;
-  left: 50%;
+  left: 45%;
   top: 50%;
-  width: 350px;
+  width: 25%;
   margin: -190px 0 0 -175px;
   border-radius: 5px;
-  background: rgba(30, 30, 32, 0.3);
+  background: rgba(255, 255, 255);
   overflow: hidden;
 }
 .ms-content {
@@ -120,8 +120,7 @@ export default {
   margin-bottom: 10px;
 }
 .login-tips {
-  font-size: 12px;
   line-height: 30px;
-  color: #fff;
+  color: rgb(29, 29, 31);
 }
 </style>
