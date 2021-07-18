@@ -4,7 +4,6 @@
       <el-col :span="8">
         <el-card shadow="hover" class="mgb20" style="height: 252px">
           <div class="user-info">
-            <img src="../assets/img/user.jpg" class="user-avator" alt />
             <div class="user-info-cont">
               <div class="user-info-name">{{ username }}</div>
               <div class="role">{{ role }}</div>
@@ -53,9 +52,7 @@
               ></el-progress>
             </div>
             <div style="margin-top: 50px">
-              <p>
-                <img src="../assets/img/搜索.png" /><h class="h">借阅分析</h>
-              </p>
+              <p></p>
               <p class="font">在所有读者中</p>
               <p class="font1">
                 排在<h class="font2">{{ getpercent + "%" }}</h
@@ -121,7 +118,6 @@
           <el-row :gutter="20" class="mgb20">
             <el-col :span="8">
               <el-card :shadow="hover">
-                <img fit="fit" src="../assets/img/数据.png" class="image" />
                 <div style="padding: 14px">
                   <h2>图书管理</h2>
                   <div style="margin-top: 20px">
@@ -132,7 +128,6 @@
             </el-col>
             <el-col :span="8">
               <el-card :shadow="hover">
-                <img fit="fit" src="../assets/img/借书.png" class="image" />
                 <div style="padding: 14px">
                   <h2>借阅管理</h2>
                   <div style="margin-top: 20px">
@@ -143,7 +138,6 @@
             </el-col>
             <el-col :span="8">
               <el-card :shadow="hover">
-                <img fit="fit" src="../assets/img/用户管理.png" class="image" />
                 <div style="padding: 14px">
                   <h2>用户管理</h2>
                   <div style="margin-top: 20px">
@@ -238,11 +232,7 @@
                 </el-table-column>
               </el-table>
               <div style="margin-top: 50px">
-                <p>
-                  <img src="../assets/img/排行榜.png" /><h class="h"
-                    >借阅时间分布</h
-                  >
-                </p>
+                <p></p>
                 <div id="volume" class="charts"></div>
               </div>
             </el-card>
