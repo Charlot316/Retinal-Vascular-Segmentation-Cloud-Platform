@@ -62,19 +62,34 @@ export default {
   methods: {
     submitForm() {
       this.$refs.login.validate(async (valid) => {
-        if (!valid) {
+        if (valid) {
+          await new Promise((resolve) => {
+            this.$http
+                .post("/login/", JSON.stringify(this.param))
+                .then((res) => {
+                  console.log(res);
+                  if (res.data.message === "用户不存在") {
+                    alert("用户不存在");
+                    return console.log(res.data.message);
+                  }
+                  if (res.data.message === "密码错误") {
+                    alert("用户名或密码错误！");
+                    return console.log(res.data.message);
+                  }
+                  console.log("登录成功");
+                  this.$store.commit("login", this.param.username);
+                  this.$store.commit("storeId", res.user_id);
+                  this.$store.commit("setRole", res.role);
+                  console.log(res.user_id);
+                  this.$router.push({ path: "/user" });
+                });
+            resolve();
+          }).then(() => {
+            console.log("成功啦post啦");
+          });
+        } else {
           return;
         }
-        const { data: res } = await this.$http.post("login", this.param);
-        if (res.status !== 200) {
-          return this.$message.error("请输入正确的帐号名称或密码");
-        }
-        this.$message.success("登录成功");
-        this.$store.commit("login", this.param.username);
-        this.$store.commit("storeId", res.user_id);
-        this.$store.commit("setRole", res.role);
-        console.log(res.user_id);
-        this.$router.push({ path: "/user" });
       });
     },
   },
