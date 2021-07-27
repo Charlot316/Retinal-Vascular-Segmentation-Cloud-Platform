@@ -93,6 +93,7 @@ export default {
         username: "",
         password: "",
         email: "",
+        phone: "",
         sex: "",
       },
       rules: {
@@ -138,27 +139,54 @@ export default {
   methods: {
     submitForm() {
       this.$refs.register.validate(async (valid) => {
-        if (!valid) {
+        if (valid) {
+          if (this.param.password !== this.param.tempPassword) {
+            return alert("输入的两次密码不一致");
+          }
+          if (this.param.sex === "") {
+            alert("请选择性别");
+          } else {
+            await new Promise((resolve) => {
+              this.$http
+                  .post("/register/", JSON.stringify(this.param))
+                  .then((res) => {
+                    console.log(res);
+                    if (res.data.message === "用户名已存在")
+                      return this.$message.error("该用户名已被注册！");
+                    this.$message.success("注册成功");
+                    this.$router.push({ path: "/login" });
+                  });
+              resolve();
+            }).then(() => {
+              console.log("成功啦post啦");
+            });
+          }
+        } else {
           return;
         }
-        if (this.param.password !== this.param.tempPassword) {
-          return alert("输入的两次密码不一致");
-        }
-        if (this.param.sex === "") {
-          alert("请选择性别");
-        } else {
-          if (this.param.sex === "男") {
-            this.param.sex = 1;
-          } else {
-            this.param.sex = 0;
-          }
-          const { data: res } = await this.$http.post("register", this.param);
-          if (res.status !== 200)
-            return this.$message.error("该用户名已被注册！");
-          this.$message.success("注册成功");
-          this.$router.push({ path: "/login" });
-        }
       });
+      // this.$refs.register.validate(async (valid) => {
+      //   if (!valid) {
+      //     return;
+      //   }
+      //   if (this.param.password !== this.param.tempPassword) {
+      //     return alert("输入的两次密码不一致");
+      //   }
+      //   if (this.param.sex === "") {
+      //     alert("请选择性别");
+      //   } else {
+      //     if (this.param.sex === "男") {
+      //       this.param.sex = 1;
+      //     } else {
+      //       this.param.sex = 0;
+      //     }
+      //     const { data: res } = await this.$http.post("register", this.param);
+      //     if (res.status !== 200)
+      //       return this.$message.error("该用户名已被注册！");
+      //     this.$message.success("注册成功");
+      //     this.$router.push({ path: "/login" });
+      //   }
+      // });
     },
   },
 };
