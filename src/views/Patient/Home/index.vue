@@ -18,8 +18,8 @@
   </div>
 </template>
 <script>
-  import vHeader from "../../components/Patient/Header";
-  import vSidebar from "../../components/Patient/Sidebar";
+  import vHeader from "../../../components/Patient/Header";
+  import vSidebar from "../../../components/Patient/Sidebar";
   export default {
     components: {
       vHeader,
