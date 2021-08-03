@@ -18,20 +18,20 @@
   </div>
 </template>
 <script>
-import vHeader from "../components/Header";
-import vSidebar from "../components/Sidebar";
-export default {
-  components: {
-    vHeader,
-    vSidebar,
-  },
-  computed: {
-    tagsList() {
-      return this.$store.state.tagsList.map((item) => item.name);
+  import vHeader from "../../components/Patient/Header";
+  import vSidebar from "../../components/Patient/Sidebar";
+  export default {
+    components: {
+      vHeader,
+      vSidebar,
     },
-    collapse() {
-      return this.$store.state.collapse;
+    computed: {
+      tagsList() {
+        return this.$store.state.tagsList.map((item) => item.name);
+      },
+      collapse() {
+        return this.$store.state.collapse;
+      },
     },
-  },
-};
+  };
 </script>

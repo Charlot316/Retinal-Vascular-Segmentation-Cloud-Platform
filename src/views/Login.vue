@@ -41,30 +41,32 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      param: {
-        username: "",
-        password: "",
-      },
-      rules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      },
-    };
-  },
-  created() {
-    this.$store.commit("clearTags");
-  },
-  methods: {
-    submitForm() {
-      this.$refs.login.validate(async (valid) => {
-        if (valid) {
-          await new Promise((resolve) => {
-            this.$http
+  export default {
+    data() {
+      return {
+        param: {
+          username: "",
+          password: "",
+        },
+        rules: {
+          username: [
+            { required: true, message: "请输入用户名", trigger: "blur" },
+          ],
+          password: [
+            { required: true, message: "请输入密码", trigger: "blur" },
+          ],
+        },
+      };
+    },
+    created() {
+      this.$store.commit("clearTags");
+    },
+    methods: {
+      submitForm() {
+        this.$refs.login.validate(async (valid) => {
+          if (valid) {
+            await new Promise((resolve) => {
+              this.$http
                 .post("/login/", JSON.stringify(this.param))
                 .then((res) => {
                   console.log(res);
@@ -83,59 +85,59 @@ export default {
                   console.log(res.user_id);
                   this.$router.push({ path: "/user" });
                 });
-            resolve();
-          }).then(() => {
-            console.log("成功啦post啦");
-          });
-        } else {
-          return;
-        }
-      });
+              resolve();
+            }).then(() => {
+              console.log("成功啦post啦");
+            });
+          } else {
+            return;
+          }
+        });
+      },
     },
-  },
-};
+  };
 </script>
 
 <style scoped>
-.login-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background-image: url(../assets/img/login.jpg);
-  background-size: 100%;
-}
-.ms-title {
-  width: 100%;
-  line-height: 50px;
-  text-align: center;
-  font-size: 20px;
-  color: rgb(141, 139, 151);
-  border-bottom: 1px solid rgb(87, 107, 163);
-}
-.ms-login {
-  position: absolute;
-  left: 45%;
-  top: 50%;
-  width: 25%;
-  margin: -190px 0 0 -175px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255);
-  overflow: hidden;
-}
-.ms-content {
-  padding: 30px 30px;
-  color: rgb(29, 29, 31);
-}
-.login-btn {
-  text-align: center;
-}
-.login-btn button {
-  width: 100%;
-  height: 36px;
-  margin-bottom: 10px;
-}
-.login-tips {
-  line-height: 30px;
-  color: rgb(29, 29, 31);
-}
+  .login-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url(../assets/img/login.jpg);
+    background-size: 100%;
+  }
+  .ms-title {
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+    font-size: 20px;
+    color: rgb(141, 139, 151);
+    border-bottom: 1px solid rgb(87, 107, 163);
+  }
+  .ms-login {
+    position: absolute;
+    left: 45%;
+    top: 50%;
+    width: 25%;
+    margin: -190px 0 0 -175px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255);
+    overflow: hidden;
+  }
+  .ms-content {
+    padding: 30px 30px;
+    color: rgb(29, 29, 31);
+  }
+  .login-btn {
+    text-align: center;
+  }
+  .login-btn button {
+    width: 100%;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+  .login-tips {
+    line-height: 30px;
+    color: rgb(29, 29, 31);
+  }
 </style>
