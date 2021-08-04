@@ -21,13 +21,22 @@ const routes = [
         "../views/Public/Login"
       ),
   },
+  {
+    path: "/home",
+    name: "Home",
+    component: () =>
+      import(
+        /* webpackChunkName: "login" */
+        "../views/Public/Home"
+      ),
+  },
   /* 患者的页面的路由*/
   {
     path: "/patient",
     name: "Patient",
     children: [
       {
-        path: "/patient/user",
+        path: "user",
         name: "/patient/user",
         meta: {
           title: "个人中心",
@@ -43,11 +52,11 @@ const routes = [
   },
   /* 医生的页面的路由*/
   {
-    path: "/",
+    path: "/doctor",
     name: "Doctor",
     children: [
       {
-        path: "/doctor/user",
+        path: "user",
         name: "/doctor/user",
         meta: {
           title: "个人中心",
@@ -63,16 +72,48 @@ const routes = [
   },
   /* 管理员的页面的路由*/
   {
-    path: "/",
+    path: "/administrator",
     name: "Administrator",
     children: [
       {
-        path: "/administrator/user",
+        path: "user",
         name: "user",
         meta: {
           title: "个人中心",
         },
         component: () => import("../views/Administrator/User"),
+      },
+      {
+        path: "admin/patient",
+        name: "admin/patient",
+        meta: {
+          title: "患者管理",
+        },
+        component: () => import("../views/Administrator/Patient"),
+      },
+      {
+        path: "admin/doctor",
+        name: "admin/doctor",
+        meta: {
+          title: "医生管理",
+        },
+        component: () => import("../views/Administrator/Doctor"),
+      },
+      {
+        path: "admin/drug",
+        name: "admin/drug",
+        meta: {
+          title: "药品管理",
+        },
+        component: () => import("../views/Administrator/Drug"),
+      },
+      {
+        path: "admin/operation",
+        name: "admin/operation",
+        meta: {
+          title: "手术管理",
+        },
+        component: () => import("../views/Administrator/Operation"),
       },
     ],
     component: () =>

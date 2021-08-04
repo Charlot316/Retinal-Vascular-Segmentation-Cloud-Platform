@@ -38,36 +38,46 @@
         <el-card shadow="hover" style="margin-bottom: 20px">
           <template #header>
             <div class="clearfix">
-              <h1>工作人员处理模块</h1>
+              <h1>信息管理</h1>
             </div>
           </template>
           <el-row :gutter="20" class="mgb20">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-card :shadow="hover">
                 <div style="padding: 14px">
-                  <h2>图书管理</h2>
+                  <h2>患者管理</h2>
                   <div style="margin-top: 20px">
                     <el-button @click="hrefone">操作</el-button>
                   </div>
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-card :shadow="hover">
                 <div style="padding: 14px">
-                  <h2>借阅管理</h2>
+                  <h2>医生管理</h2>
                   <div style="margin-top: 20px">
                     <el-button @click="hreftwo">操作</el-button>
                   </div>
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-card :shadow="hover">
                 <div style="padding: 14px">
-                  <h2>用户管理</h2>
+                  <h2>药物管理</h2>
                   <div style="margin-top: 20px">
                     <el-button @click="hrefthree">操作</el-button>
+                  </div>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card :shadow="hover">
+                <div style="padding: 14px">
+                  <h2>手术管理</h2>
+                  <div style="margin-top: 20px">
+                    <el-button @click="hreffour">操作</el-button>
                   </div>
                 </div>
               </el-card>
@@ -359,16 +369,16 @@
         this.userName = this.$store.state.username;
       },
       hrefone() {
-        this.$router.push({ path: "/adminbook" });
+        this.$router.push({ path: "/administrator/admin/patient" });
       },
       hreftwo() {
-        this.$router.push({ path: "/adminrb" });
+        this.$router.push({ path: "/administrator/admin/patient" });
       },
       hrefthree() {
-        this.$router.push({ path: "/adminuser" });
+        this.$router.push({ path: "/administrator/admin/patient" });
       },
       hreffour() {
-        this.$router.push({ path: "/adminpunish" });
+        this.$router.push({ path: "/administrator/admin/patient" });
       },
       //展示不同种类借书排行的颜色
       customColorMethod(val) {
