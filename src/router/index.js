@@ -36,6 +36,14 @@ const routes = [
     name: "Patient",
     children: [
       {
+        path: "upload",
+        name: "/patient/upload",
+        meta: {
+          title: "上传",
+        },
+        component: () => import("../views/Patient/Upload"),
+      },
+      {
         path: "user",
         name: "/patient/user",
         meta: {
