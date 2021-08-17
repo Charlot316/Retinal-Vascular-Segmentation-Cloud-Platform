@@ -15,19 +15,19 @@ app
     .use(router)
     .mount('#app')
 
-router.beforeEach((to, from, next) => {
-    if(to.matched.some(res => res.meta.requireAuth)){
-        if(store.state.islogin){
-            next();
-        }
-        else{
-            next({path: '/login',
-            query: {redirect: to.fullPath} 
-        });
-           
-        }
-    }
-    else{
-        next();
-    }
-});
+// router.beforeEach((to, from, next) => {
+//     if(to.matched.some(res => res.meta.requireAuth)){
+//         if(store.state.islogin){
+//             next();
+//         }
+//         else{
+//             next({path: '/login',
+//             query: {redirect: to.fullPath}
+//         });
+//
+//         }
+//     }
+//     else{
+//         next();
+//     }
+// });
