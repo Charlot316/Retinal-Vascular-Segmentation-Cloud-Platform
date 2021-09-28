@@ -77,6 +77,11 @@
             index: "Notification",
             title: "最新通知",
           },
+          {
+            icon:"el-icon-document",
+            index:"/patient/upload",
+            title:"上传图片",
+          }
         ],
       };
     },

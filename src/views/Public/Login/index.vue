@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">视网膜云平台（一个可以随时替换的标题）</div>
+      <div class="ms-title">视网膜云平台</div>
       <el-form
         :model="param"
         :rules="rules"
@@ -83,7 +83,7 @@
                   this.$store.commit("storeId", res.user_id);
                   this.$store.commit("setRole", res.role);
                   console.log(res.user_id);
-                  this.$router.push({ path: "/user" });
+                  this.$router.push({ path: "/patient" });
                 });
               resolve();
             }).then(() => {
