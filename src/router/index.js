@@ -71,6 +71,14 @@ const routes = [
         },
         component: () => import("../views/Doctor/User"),
       },
+      {
+        path: "upload",
+        name: "/doctor/upload",
+        meta: {
+          title: "上传",
+        },
+        component: () => import("../views/Doctor/Upload"),
+      },
     ],
     component: () =>
       import(

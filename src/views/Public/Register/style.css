@@ -3,7 +3,6 @@
   width: 100%;
   height: 100%;
   background-image: url(../../../assets/img/login.jpg);
-  background-size: 100%;
 }
 .ms-title {
   width: 100%;
@@ -15,9 +14,9 @@
 }
 .ms-register {
   position: absolute;
-  left: 47%;
+  left: 50%;
   top: 40%;
-  width: 25%;
+  width: 350px;
   margin: -190px 0 0 -175px;
   border-radius: 5px;
   background: rgba(255, 255, 255);

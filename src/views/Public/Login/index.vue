@@ -12,7 +12,7 @@
         <el-form-item prop="username">
           <el-input v-model="param.username" placeholder="username">
             <template #prepend>
-              <el-button icon="el-icon-user">用户名</el-button>
+              <i class="el-icon-user">用户名</i>
             </template>
           </el-input>
         </el-form-item>
@@ -24,7 +24,7 @@
             @keyup.enter="submitForm()"
           >
             <template #prepend>
-              <el-button icon="el-icon-lock">密码</el-button>
+              <i class="el-icon-lock">密码</i>
             </template>
           </el-input>
         </el-form-item>
@@ -83,7 +83,7 @@
                   this.$store.commit("storeId", res.user_id);
                   this.$store.commit("setRole", res.role);
                   console.log(res.user_id);
-                  this.$router.push({ path: "/patient" });
+                  this.$router.push({ path: "/doctor/upload" });
                 });
               resolve();
             }).then(() => {

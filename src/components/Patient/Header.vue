@@ -73,7 +73,7 @@
       handleCommand(command) {
         if (command == "loginout") {
           this.$store.commit("loginout");
-          this.$router.push("/search");
+          this.$router.push("/login");
         }
       },
       // 侧边栏折叠

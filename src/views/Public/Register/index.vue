@@ -13,7 +13,7 @@
           <el-form-item prop="username">
             <el-input v-model="param.username" placeholder="username">
               <template #prepend>
-                <el-button icon="el-icon-user">用户名</el-button>
+                <i class="el-icon-user">用户名</i>
               </template>
             </el-input>
           </el-form-item>
@@ -25,7 +25,7 @@
               @keyup.enter="submitForm()"
             >
               <template #prepend>
-                <el-button icon="el-icon-lock">密码</el-button>
+                <i class="el-icon-lock">密码</i>
               </template>
             </el-input>
           </el-form-item>
@@ -37,14 +37,14 @@
               @keyup.enter="submitForm()"
             >
               <template #prepend>
-                <el-button icon="el-icon-lock">确认密码</el-button>
+                <i class="el-icon-lock">确认密码</i>
               </template>
             </el-input>
           </el-form-item>
           <el-form-item prop="email">
             <el-input v-model="param.email" placeholder="email">
               <template #prepend>
-                <el-button icon="el-icon-lock">邮箱</el-button>
+                <i class="el-icon-lock">邮箱</i>
               </template>
             </el-input>
           </el-form-item>

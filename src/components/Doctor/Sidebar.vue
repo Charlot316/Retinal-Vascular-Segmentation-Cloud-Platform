@@ -12,7 +12,10 @@
     >
       <template v-for="item in items">
         <template v-if="item.subs">
-          <el-submenu :index="item.index" :key="item.index">
+          <el-submenu
+            :index="item.index"
+            :key="item.index"
+          >
             <template #title>
               <i :class="item.icon"></i>
               <span>{{ item.title }}</span>
@@ -36,13 +39,15 @@
                 v-else
                 :index="subItem.index"
                 :key="subItem.index"
-                >{{ subItem.title }}</el-menu-item
-              >
+              >{{ subItem.title }}</el-menu-item>
             </template>
           </el-submenu>
         </template>
         <template v-else>
-          <el-menu-item :index="item.index" :key="item.index">
+          <el-menu-item
+            :index="item.index"
+            :key="item.index"
+          >
             <i :class="item.icon"></i>
             <template #title>{{ item.title }}</template>
           </el-menu-item>
@@ -53,65 +58,70 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        items: [
-          {
-            icon: "el-icon-user",
-            title: "个人中心",
-            subs: [],
-          },
-          {
-            icon: "el-icon-search",
-            index: "search",
-            title: "手术查询",
-          },
-          {
-            icon: "el-icon-view",
-            index: "popularbook",
-            title: "药品信息",
-          },
-          {
-            icon: "el-icon-bell",
-            index: "Notification",
-            title: "最新通知",
-          },
-        ],
-      };
+export default {
+  data() {
+    return {
+      items: [
+        {
+          icon: "el-icon-document",
+          index: "/doctor/upload",
+          title: "上传图片",
+        }
+        // {
+        //   icon: "el-icon-user",
+        //   title: "个人中心",
+        //   subs: [],
+        // },
+        // {
+        //   icon: "el-icon-search",
+        //   index: "search",
+        //   title: "手术查询",
+        // },
+        // {
+        //   icon: "el-icon-view",
+        //   index: "popularbook",
+        //   title: "药品信息",
+        // },
+        // {
+        //   icon: "el-icon-bell",
+        //   index: "Notification",
+        //   title: "最新通知",
+        // },
+      ],
+    };
+  },
+  methods: {},
+  computed: {
+    onRoutes() {
+      return this.$route.path.replace("/", "");
     },
-    methods: {},
-    computed: {
-      onRoutes() {
-        return this.$route.path.replace("/", "");
-      },
-      collapse() {
-        return this.$store.state.collapse;
-      },
-      Role() {
-        let role = this.$store.state.role;
-        return role;
-      },
+    collapse() {
+      return this.$store.state.collapse;
     },
-  };
+    Role() {
+      let role = this.$store.state.role;
+      return role;
+    },
+  },
+};
 </script>
 
 <style scoped>
-  .sidebar {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 70px;
-    bottom: 0;
-    overflow-y: scroll;
-  }
-  .sidebar::-webkit-scrollbar {
-    width: 0;
-  }
-  .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 250px;
-  }
-  .sidebar > ul {
-    height: 100%;
-  }
+.sidebar {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 70px;
+  bottom: 0;
+  overflow-y: scroll;
+}
+.sidebar::-webkit-scrollbar {
+  width: 0;
+}
+.sidebar-el-menu:not(.el-menu--collapse) {
+  width: 250px;
+}
+.sidebar > ul {
+  height: 100%;
+}
 </style>
