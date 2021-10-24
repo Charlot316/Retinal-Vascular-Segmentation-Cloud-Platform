@@ -1,34 +1,102 @@
 <template>
-  <div class="container">
-    <el-form
-      ref="form"
-      :model="form"
-      label-width="80px"
-    >
-      <!--      <el-form-item label="图片名称">-->
-      <!--        <el-input-->
-      <!--          v-model="form.pic_title"-->
-      <!--          placeholder="请输入图片名称"-->
-      <!--        ></el-input>-->
-      <!--      </el-form-item>-->
-      <el-form-item label="图片">
-        <input
-          type="file"
-          @change="getImageFile"
-          id="img"
-        />
-      </el-form-item>
-      <el-form-item>
+  <div>
+    <div class="container">
+      <el-upload
+        class="upload-demo inline-block"
+        action="http://10.251.0.251:8000/receive/"
+        :data="{pic_title:'test.tif'}"
+        :on-success="handleAvatarSuccess"
+        list-type=false
+        :show-file-list="false"
+        name="pic_img"
+      >
         <el-button
+          show-file-list=false
           type="primary"
-          @click="onSubmit"
-        >确认上传</el-button>
-        <el-button
-          type="success"
-          @click="download"
-        >下载结果</el-button>
-      </el-form-item>
-    </el-form>
+        >上传图片</el-button>
+      </el-upload>
+      <el-button
+        type="success"
+        @click="download"
+      >下载结果</el-button>
+      <div
+        v-for="singleImage in imageList"
+        :key="singleImage"
+        style="margin-top: 20px"
+      >
+        <el-card shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <span>{{singleImage.name}}</span>
+              <el-button @click="download">下载全部图片</el-button>
+            </div>
+          </template>
+          <el-row>
+            <el-col :span="8">
+
+              <el-card :body-style="{ padding: '0px' }">
+                <img
+                  style="width: 100%;"
+                  :src="singleImage.origin"
+                  class="image"
+                />
+                <div style="padding: 14px">
+                  <span>原始图片</span>
+                  <div class="bottom">
+                    <el-button
+                      type="text"
+                      class="button"
+                    >下载图片</el-button>
+                  </div>
+                </div>
+              </el-card>
+
+            </el-col>
+            <el-col :span="8">
+
+              <el-card :body-style="{ padding: '0px' }">
+                <img
+                  style="width: 100%;"
+                  :src="singleImage.bytemap"
+                  class="image"
+                />
+                <div style="padding: 14px">
+                  <span>bytemap</span>
+                  <div class="bottom">
+                    <el-button
+                      type="text"
+                      class="button"
+                    >下载图片</el-button>
+                  </div>
+                </div>
+              </el-card>
+
+            </el-col>
+            <el-col :span="8">
+
+              <el-card :body-style="{ padding: '0px' }">
+                <img
+                  style="width: 100%;"
+                  :src="singleImage.promap"
+                  class="image"
+                />
+                <div style="padding: 14px">
+                  <span>promap</span>
+                  <div class="bottom">
+                    <el-button
+                      type="text"
+                      class="button"
+                    >下载图片</el-button>
+                  </div>
+                </div>
+              </el-card>
+
+            </el-col>
+
+          </el-row>
+        </el-card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -41,32 +109,57 @@ export default {
         pic_title: "测试",
         pic_img: "",
       },
+      imageList: [],
     };
   },
+  created() {
+    this.getImageList();
+  },
   methods: {
-
+    getImageList() {
+      this.imageList = [
+        {
+          name: "一个图片",
+          origin: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff8107c953b8e05b262b2bab62c44acbcb238a7b79ece0-Deltbt_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=0d1d0ae8ae31dd257cfb6c985390351a",
+          bytemap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200616_HN2jR.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=bdd770537b2bff7e58737481c3bb331e",
+          promap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200604_txGEW.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=ed45db0968503fa01e0359a76e2b6970",
+        },
+        {
+          name: "一个图片",
+          origin: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff8107c953b8e05b262b2bab62c44acbcb238a7b79ece0-Deltbt_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=0d1d0ae8ae31dd257cfb6c985390351a",
+          bytemap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200616_HN2jR.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=bdd770537b2bff7e58737481c3bb331e",
+          promap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200604_txGEW.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=ed45db0968503fa01e0359a76e2b6970",
+        },
+      ]
+    },
+    handleAvatarSuccess() {
+      this.$message({
+        message: "上传成功",
+        type: "success",
+      });
+    },
     getImageFile: function (e) {
       let file = e.target.files[0];
       this.form.pic_img = file;
       this.form.pic_title = 'test.tif'
     },
-    onSubmit() {
-      let formData = new FormData();
-      formData.append("pic_title", this.form.pic_title);
-      formData.append("pic_img", this.form.pic_img, 'test.tif');
-      this.$http
-        .post("/receive/", formData)
-        .then((res) => {
-          console.log(res);
-          this.$message({
-            message: "上传成功",
-            type: "success",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // onSubmit() {
+    //   let formData = new FormData();
+    //   formData.append("pic_title", this.form.pic_title);
+    //   formData.append("pic_img", this.form.pic_img, 'test.tif');
+    //   this.$http
+    //     .post("/receive/", formData)
+    //     .then((res) => {
+    //       console.log(res);
+    //       this.$message({
+    //         message: "上传成功",
+    //         type: "success",
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     download() {
       this.$http.post("/download/", this.form.pic_title, {
         responseType: "blob",
