@@ -1,4 +1,8 @@
 from django.db import models
+import os
+from eyes.storage import ImageStorage
+
+
 class Patient(models.Model):
     pName = models.CharField(max_length=30)
     pID = models.AutoField(primary_key=True)
@@ -29,6 +33,13 @@ class Manager(models.Model):
     mName = models.CharField(max_length=20)
     mPwd = models.CharField(max_length=25)
 
+
+
+
 class Pho(models.Model):
-    pName = models.CharField(max_length=30)
-    img = models.FileField(blank=True, null=True, upload_to='test')
+    name = models.CharField(max_length=30)
+    uId=models.IntegerField(null=True)
+    origin = models.CharField(null=True,max_length=255)
+    bytemap = models.CharField(null=True,max_length=255)
+    promap = models.CharField(null=True,max_length=255)
+    img = models.FileField(blank=True, null=True, upload_to='test',storage=ImageStorage())
