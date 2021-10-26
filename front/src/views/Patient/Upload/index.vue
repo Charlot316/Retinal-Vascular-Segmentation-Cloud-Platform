@@ -4,10 +4,11 @@
       <el-upload
         class="upload-demo inline-block"
         action="http://10.251.0.251:8000/receive/"
-        :data="{pic_title:'test.tif'}"
+        :data="{pic_title:title,user_id:$store.state.user_id}"
         :on-success="handleAvatarSuccess"
         list-type=false
         :show-file-list="false"
+        :before-upload="setName"
         name="pic_img"
       >
         <el-button
@@ -19,6 +20,15 @@
         type="success"
         @click="downloadAllImage()"
       >下载所有图片</el-button>
+      <el-button
+        style="margin-left:25px"
+        @click="deleteAllImage(singleImage)"
+        type="danger"
+      >清空本页图片</el-button>
+      <!-- <el-button
+        type="success"
+        @click="download()"
+      >测试下载图片</el-button> -->
       <div
         v-for="singleImage in imageList"
         :key="singleImage"
@@ -28,7 +38,17 @@
           <template #header>
             <div class="card-header">
               <span>{{singleImage.name}}</span>
-              <el-button @click="downloadASetOfImage(singleImage)">下载全部图片</el-button>
+              <span>
+                <el-button
+                  @click="downloadASetOfImage(singleImage)"
+                  type="primary"
+                  style="margin-right:10px"
+                >下载全部图片</el-button>
+                <el-button
+                  @click="deleteAGroupOfImage(singleImage)"
+                  type="danger"
+                >删除全部图片</el-button>
+              </span>
             </div>
           </template>
           <el-row>
@@ -40,7 +60,18 @@
                   :src="singleImage.origin"
                   class="image"
                   :preview-src-list="[singleImage.origin,singleImage.bytemap,singleImage.promap]"
-                />
+                >
+                  <template #error>
+                    <div class="image-slot">
+                      <el-image
+                        style="width: 100%;"
+                        :src="require('../../../assets/img/loading.gif')"
+                        class="image"
+                      />
+                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                    </div>
+                  </template>
+                </el-image>
                 <div style="padding: 14px">
                   <span>原始图片</span>
                   <div class="bottom">
@@ -62,7 +93,18 @@
                   :src="singleImage.bytemap"
                   class="image"
                   :preview-src-list="[singleImage.bytemap,singleImage.promap,singleImage.origin]"
-                />
+                >
+                  <template #error>
+                    <div class="image-slot">
+                      <el-image
+                        style="width: 100%;"
+                        :src="require('../../../assets/img/loading.gif')"
+                        class="image"
+                      />
+                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                    </div>
+                  </template>
+                </el-image>
                 <div style="padding: 14px">
                   <span>bytemap</span>
                   <div class="bottom">
@@ -84,7 +126,18 @@
                   :src="singleImage.promap"
                   class="image"
                   :preview-src-list="[singleImage.promap,singleImage.origin,singleImage.bytemap]"
-                />
+                >
+                  <template #error>
+                    <div class="image-slot">
+                      <el-image
+                        style="width: 100%;"
+                        :src="require('../../../assets/img/loading.gif')"
+                        class="image"
+                      />
+                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                    </div>
+                  </template>
+                </el-image>
                 <div style="padding: 14px">
                   <span>promap</span>
                   <div class="bottom">
@@ -107,7 +160,7 @@
 </template>
 
 <script>
-
+import { ElMessageBox, ElMessage } from 'element-plus'
 export default {
   name: "Upload",
   data() {
@@ -116,6 +169,7 @@ export default {
         pic_title: "测试",
         pic_img: "",
       },
+      title: "",
       imageList: [],
     };
   },
@@ -123,6 +177,15 @@ export default {
     this.getImageList();
   },
   methods: {
+
+    setName(file) {
+      var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+      if (fileExtension === "gif") {
+        alert("不支持上传gif图片")
+        return false
+      }
+      this.title = file.name;
+    },
     downloadAllImage() {
       var i, len;
       for (i = 0, len = this.imageList.length; i < len; i++) {
@@ -134,46 +197,107 @@ export default {
       this.downloadIamge(singleImage.bytemap, singleImage.name + "_bytemap")
       this.downloadIamge(singleImage.promap, singleImage.name + "_promap")
     },
-    downloadIamge(imgsrc, name) {//下载图片地址和图片名
-      let image = new Image();
-      // 解决跨域 Canvas 污染问题
-      image.setAttribute("crossOrigin", "anonymous");
-      image.onload = function () {
-        let canvas = document.createElement("canvas");
-        canvas.width = image.width;
-        canvas.height = image.height;
-        let context = canvas.getContext("2d");
-        context.drawImage(image, 0, 0, image.width, image.height);
-        let url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
-        let a = document.createElement("a"); // 生成一个a元素
-        let event = new MouseEvent("click"); // 创建一个单击事件
-        a.download = name || "photo"; // 设置图片名称
-        a.href = url; // 将生成的URL设置为a.href属性
-        a.dispatchEvent(event); // 触发a的单击事件
-      };
-      image.src = imgsrc;
+    deleteAllImage() {
+      ElMessageBox.confirm(
+        '本操作无法撤回，您确认要清空本页图片吗？',
+        'Warning',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          var i, len;
+          for (i = 0, len = this.imageList.length; i < len; i++) {
+            this.deleteASetOfImage(this.imageList[i])
+          }
+          ElMessage({
+            type: 'success',
+            message: '删除成功',
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除被取消',
+          })
+        })
     },
-    getImageList() {
-      this.imageList = [
+    deleteAGroupOfImage(singleImage) {
+      ElMessageBox.confirm(
+        '本操作无法撤回，您确认要清空这三张图片吗？',
+        'Warning',
         {
-          name: "一个图片",
-          origin: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff8107c953b8e05b262b2bab62c44acbcb238a7b79ece0-Deltbt_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=0d1d0ae8ae31dd257cfb6c985390351a",
-          bytemap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200616_HN2jR.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=bdd770537b2bff7e58737481c3bb331e",
-          promap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200604_txGEW.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=ed45db0968503fa01e0359a76e2b6970",
-        },
-        {
-          name: "又一个图片",
-          origin: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff8107c953b8e05b262b2bab62c44acbcb238a7b79ece0-Deltbt_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=0d1d0ae8ae31dd257cfb6c985390351a",
-          bytemap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200616_HN2jR.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=bdd770537b2bff7e58737481c3bb331e",
-          promap: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201705%2F20%2F20170520200604_txGEW.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1637657441&t=ed45db0968503fa01e0359a76e2b6970",
-        },
-      ]
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          this.deleteASetOfImage(singleImage)
+          ElMessage({
+            type: 'success',
+            message: '删除成功',
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除被取消',
+          })
+        })
+    },
+    async deleteASetOfImage(singleImage) {
+       await new Promise((resolve) => {
+        this.$http
+          .post("/deletePicture/", JSON.stringify({ name:singleImage.name }))
+          .then((res) => {
+            {
+              if (res.data.message === "删除成功") {
+                this.getImageList()
+              }
+              else {
+                alert("删除失败")
+              }
+            }
+          });
+        resolve();
+      }).then(() => {
+      });
+      
+    },
+    async getImageList() {
+      await new Promise((resolve) => {
+        this.$http
+          .post("/getList/", JSON.stringify({ user_id: this.$store.state.user_id }))
+          .then((res) => {
+            console.log(res);
+            {
+              console.log(res);
+              if (res.data.message === "返回list成功") {
+                this.imageList = res.data.imageList
+              }
+              else {
+                alert("获取列表失败")
+              }
+            }
+          });
+        resolve();
+      }).then(() => {
+        console.log("成功啦post啦");
+      });
     },
     handleAvatarSuccess() {
       this.$message({
         message: "上传成功",
         type: "success",
       });
+      this.getImageList();
+      // setTimeout(() => {
+      //   this.imageList[this.imageList.length - 1] = {}
+      //   this.getImageList();
+      // }, 15000)
     },
     getImageFile: function (e) {
       let file = e.target.files[0];
@@ -197,39 +321,39 @@ export default {
     //       console.log(err);
     //     });
     // },
-    // download() {
-    //   this.$http.post("/download/", this.form.pic_title, {
-    //     responseType: "blob",
-    //   })
-    //     .then((res) => {
-    //       // console.log(res);
-    //       if (res.data.success === false) {
-    //         this.$message.error("出现错误");
-    //         return;
-    //       }
-    //       console.log(res, '看一下res是啥');
-    //       const data = res.data;
-    //       const url = window.URL.createObjectURL(
-    //         new Blob([data], {
-    //           type: "application/octet-stream",
-    //         })
-    //       );
-    //       console.log(url, '看一下url是啥')
-    //       console.log("**********");
-    //       console.log(res.headers['content-disposition']);
-    //       let fileName = 'test.png'
-    //       const a = document.createElement("a");
-    //       document.body.appendChild(a);
-    //       a.style.display = "none";
-    //       a.href = url;
-    //       let filename = fileName;
-    //       a.download = filename;
-    //       console.log(filename)
-    //       a.click();
-    //       document.body.removeChild(a);
-    //       window.URL.revokeObjectURL(url);
-    //     })
-    // },
+    download() {
+      this.$http.post("/download/", this.form.pic_title, {
+        responseType: "blob",
+      })
+        .then((res) => {
+          // console.log(res);
+          if (res.data.success === false) {
+            this.$message.error("出现错误");
+            return;
+          }
+          console.log(res, '看一下res是啥');
+          const data = res.data;
+          const url = window.URL.createObjectURL(
+            new Blob([data], {
+              type: "application/octet-stream",
+            })
+          );
+          console.log(url, '看一下url是啥')
+          console.log("**********");
+          console.log(res.headers['content-disposition']);
+          let fileName = 'test.png'
+          const a = document.createElement("a");
+          document.body.appendChild(a);
+          a.style.display = "none";
+          a.href = url;
+          let filename = fileName;
+          a.download = filename;
+          console.log(filename)
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        })
+    },
   },
 };
 </script>
