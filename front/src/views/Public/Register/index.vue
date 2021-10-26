@@ -2,7 +2,7 @@
   <div class="register-wrap">
     <el-scrollbar style="height:100%">
       <div class="ms-register">
-        <div class="ms-title">视网膜云平台（一个可以随时替换的标题）</div>
+        <div class="ms-title">眼底血管分割云平台</div>
         <el-form
           :model="param"
           :rules="rules"

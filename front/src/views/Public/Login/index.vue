@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">视网膜云平台</div>
+      <div class="ms-title">眼底血管分割云平台</div>
       <el-form
         :model="param"
         :rules="rules"
