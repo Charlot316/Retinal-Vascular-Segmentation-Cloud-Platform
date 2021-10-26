@@ -5,7 +5,7 @@
       <i v-if="!collapse" class="el-icon-s-fold"></i>
       <i v-else class="el-icon-s-unfold"></i>
     </div>
-    <div class="logo">一个随时可以更换的标题</div>
+    <div class="logo">眼底血管分割云平台</div>
     <div class="header-right">
       <div class="header-user-con">
         <!-- 消息中心 -->
