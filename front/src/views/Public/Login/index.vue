@@ -80,9 +80,8 @@
                   }
                   console.log("登录成功");
                   this.$store.commit("login", this.param.username);
-                  this.$store.commit("storeId", res.user_id);
-                  this.$store.commit("setRole", res.role);
-                  console.log(res.user_id);
+                  this.$store.commit("storeId", res.data.user_id);
+                  console.log(res.data.user_id);
                   this.$router.push({ path: "/doctor/upload" });
                 });
               resolve();
