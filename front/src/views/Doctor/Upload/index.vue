@@ -71,37 +71,40 @@
                   content="搜索图片"
                   placement="right"
                 >
-                  <el-popover
-                    placement="right"
-                    :width="400"
-                    trigger="click"
-                  >
+                  <div>
+                    <el-popover
+                      placement="right"
+                      :width="400"
+                      trigger="click"
+                    >
 
-                    <template #reference>
-                      <el-button
-                        style="margin-top:25px"
-                        type="info"
-                        icon="el-icon-search"
-                        circle
-                      ></el-button>
-                    </template>
-                    <div>
-                      <el-input
-                        v-model="searchTitle"
-                        @keyup.enter="getImageList"
-                        placeholder="请输入图片名"
-                        clearable
-                      >
-                        <template #append>
-                          <el-button
-                            @click="getImageList"
-                            icon="el-icon-search"
-                          ></el-button>
-                        </template>
-                      </el-input>
-                    </div>
-                  </el-popover>
+                      <template #reference>
 
+                        <el-button
+                          style="margin-top:25px"
+                          type="info"
+                          icon="el-icon-search"
+                          circle
+                        ></el-button>
+
+                      </template>
+                      <div>
+                        <el-input
+                          v-model="searchTitle"
+                          @keyup.enter="getImageList"
+                          placeholder="请输入图片名"
+                          clearable
+                        >
+                          <template #append>
+                            <el-button
+                              @click="getImageList"
+                              icon="el-icon-search"
+                            ></el-button>
+                          </template>
+                        </el-input>
+                      </div>
+                    </el-popover>
+                  </div>
                 </el-tooltip>
               </el-row>
             </div>
@@ -110,35 +113,55 @@
         <el-col :span="16">
           <div class="container">
             <div>
-              <el-upload
-                class="upload-demo inline-block"
-                action="http://10.251.0.251:8000/receive/"
-                :data="{pic_title:title,user_id:$store.state.user_id}"
-                :on-success="handleAvatarSuccess"
-                list-type=false
-                :show-file-list="false"
-                :before-upload="setName"
-                name="pic_img"
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="上传新的眼底血管图片"
+                placement="top"
+              >
+                <el-upload
+                  class="upload-demo inline-block"
+                  action="http://10.251.0.251:8000/receive/"
+                  :data="{pic_title:title,user_id:$store.state.user_id}"
+                  :on-success="handleAvatarSuccess"
+                  list-type=false
+                  :show-file-list="false"
+                  :before-upload="setName"
+                  name="pic_img"
+                >
+                  <el-button
+                    show-file-list=false
+                    type="primary"
+                    icon="el-icon-upload"
+                  >上传</el-button>
+                </el-upload>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="下载本页所有图片"
+                placement="top"
               >
                 <el-button
-                  show-file-list=false
-                  type="primary"
-                  icon="el-icon-upload"
-                >上传</el-button>
-              </el-upload>
-              <el-button
-                type="success"
-                @click="downloadAllImage()"
-                icon="el-icon-download"
-              >下载</el-button>
-              <el-button
-                style="margin-left:30px"
-                @click="deleteAllImage(singleImage)"
-                type="danger"
-                icon="el-icon-delete"
-              >清空</el-button>
+                  type="success"
+                  @click="downloadAllImage()"
+                  icon="el-icon-download"
+                >下载</el-button>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="dark"
+                content="清空本页所有图片"
+                placement="top"
+              >
+                <el-button
+                  style="margin-left:30px"
+                  @click="deleteAllImage(singleImage)"
+                  type="danger"
+                  icon="el-icon-delete"
+                >清空</el-button>
+              </el-tooltip>
               <el-input
-               
                 v-model="searchTitle"
                 @keyup.enter="getImageList"
                 placeholder="请输入图片名"
@@ -205,7 +228,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.promap, singleImage.name+'_origin')"
+                            @click="downloadIamge(singleImage.origin, singleImage.name+'_origin')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -239,7 +262,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.promap, singleImage.name+'_bytemap')"
+                            @click="downloadIamge(singleImage.bytemap, singleImage.name+'_bytemap')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -377,7 +400,7 @@ export default {
   methods: {
 
     handleSizeChange(size) {
-console.log("被调用了")
+      console.log("被调用了")
       this.pagesize = size;
       this.getImageList();
     },
