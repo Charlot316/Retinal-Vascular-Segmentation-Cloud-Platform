@@ -1,160 +1,354 @@
 <template>
   <div>
-    <div class="container">
-      <el-upload
-        class="upload-demo inline-block"
-        action="http://10.251.0.251:8000/receive/"
-        :data="{pic_title:title,user_id:$store.state.user_id}"
-        :on-success="handleAvatarSuccess"
-        list-type=false
-        :show-file-list="false"
-        :before-upload="setName"
-        name="pic_img"
-      >
-        <el-button
-          show-file-list=false
-          type="primary"
-        >上传图片</el-button>
-      </el-upload>
-      <el-button
-        type="success"
-        @click="downloadAllImage()"
-      >下载所有图片</el-button>
-      <el-button
-        style="margin-left:25px"
-        @click="deleteAllImage(singleImage)"
-        type="danger"
-      >清空本页图片</el-button>
-      <!-- <el-button
-        type="success"
-        @click="download()"
-      >测试下载图片</el-button> -->
-      <div
-        v-for="singleImage in imageList"
-        :key="singleImage"
-        style="margin-top: 20px"
-      >
-        <el-card shadow="hover">
-          <template #header>
-            <div class="card-header">
-              <span>{{singleImage.name}}</span>
-              <span>
-                <el-button
-                  @click="downloadASetOfImage(singleImage)"
-                  type="primary"
-                  style="margin-right:10px"
-                >下载全部图片</el-button>
-                <el-button
-                  @click="deleteAGroupOfImage(singleImage)"
-                  type="danger"
-                >删除全部图片</el-button>
-              </span>
+    <div class="body">
+      <el-row>
+        <el-col :span="4">
+          <el-affix :offset="120">
+            <div style="margin-left:5vw;">
+              <el-row>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="上传新的眼底血管图片"
+                  placement="right"
+                >
+                  <el-upload
+                    class="upload-demo"
+                    action="http://10.251.0.251:8000/receive/"
+                    :data="{pic_title:title,user_id:$store.state.user_id}"
+                    :on-success="handleAvatarSuccess"
+                    list-type=false
+                    :show-file-list="false"
+                    :before-upload="setName"
+                    name="pic_img"
+                  >
+                    <el-button
+                      show-file-list=false
+                      type="primary"
+                      icon="el-icon-upload"
+                      circle
+                    ></el-button>
+                  </el-upload>
+                </el-tooltip>
+
+              </el-row>
+              <el-row>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="下载本页所有图片"
+                  placement="right"
+                >
+                  <el-button
+                    style="margin-top:25px"
+                    type="success"
+                    icon="el-icon-download"
+                    @click="downloadAllImage()"
+                    circle
+                  ></el-button>
+                </el-tooltip>
+              </el-row>
+              <el-row>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="清空本页所有图片"
+                  placement="right"
+                >
+                  <el-button
+                    style="margin-top:25px"
+                    @click="deleteAllImage(singleImage)"
+                    type="danger"
+                    icon="el-icon-delete"
+                    circle
+                  ></el-button>
+                </el-tooltip>
+              </el-row>
+              <el-row>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="搜索图片"
+                  placement="right"
+                >
+                  <el-popover
+                    placement="right"
+                    :width="400"
+                    trigger="click"
+                  >
+
+                    <template #reference>
+                      <el-button
+                        style="margin-top:25px"
+                        type="info"
+                        icon="el-icon-search"
+                        circle
+                      ></el-button>
+                    </template>
+                    <div>
+                      <el-input
+                        v-model="searchTitle"
+                        @keyup.enter="getImageList"
+                        placeholder="请输入图片名"
+                        clearable
+                      >
+                        <template #append>
+                          <el-button
+                            @click="getImageList"
+                            icon="el-icon-search"
+                          ></el-button>
+                        </template>
+                      </el-input>
+                    </div>
+                  </el-popover>
+
+                </el-tooltip>
+              </el-row>
             </div>
-          </template>
-          <el-row>
-            <el-col :span="8">
+          </el-affix>
+        </el-col>
+        <el-col :span="16">
+          <div class="container">
+            <div>
+              <el-upload
+                class="upload-demo inline-block"
+                action="http://10.251.0.251:8000/receive/"
+                :data="{pic_title:title,user_id:$store.state.user_id}"
+                :on-success="handleAvatarSuccess"
+                list-type=false
+                :show-file-list="false"
+                :before-upload="setName"
+                name="pic_img"
+              >
+                <el-button
+                  show-file-list=false
+                  type="primary"
+                  icon="el-icon-upload"
+                >上传</el-button>
+              </el-upload>
+              <el-button
+                type="success"
+                @click="downloadAllImage()"
+                icon="el-icon-download"
+              >下载</el-button>
+              <el-button
+                style="margin-left:30px"
+                @click="deleteAllImage(singleImage)"
+                type="danger"
+                icon="el-icon-delete"
+              >清空</el-button>
+              <el-input
+               
+                v-model="searchTitle"
+                @keyup.enter="getImageList"
+                placeholder="请输入图片名"
+                clearable
+                style=" margin-left:50px;width:300px"
+              >
+                <template #append>
+                  <el-button
+                    @click="getImageList"
+                    icon="el-icon-search"
+                  ></el-button>
+                </template>
+              </el-input>
+            </div>
+            <div
+              v-for="singleImage in imageList"
+              :key="singleImage"
+              style="margin-top: 20px"
+            >
+              <el-card shadow="hover">
+                <template #header>
+                  <div class="card-header">
+                    <span>{{singleImage.name}}</span>
+                    <span>
+                      <el-button
+                        @click="downloadASetOfImage(singleImage)"
+                        style="margin-right:10px"
+                        icon="el-icon-download"
+                      >下载全部</el-button>
+                      <el-button
+                        @click="deleteAGroupOfImage(singleImage)"
+                        type="danger"
+                        icon="el-icon-delete"
+                      >删除全部</el-button>
+                    </span>
+                  </div>
+                </template>
+                <el-row>
+                  <el-col :span="8">
 
-              <el-card :body-style="{ padding: '0px' }">
-                <el-image
-                  style="width: 100%;"
-                  :src="singleImage.origin"
-                  class="image"
-                  :preview-src-list="[singleImage.origin,singleImage.bytemap,singleImage.promap]"
-                >
-                  <template #error>
-                    <div class="image-slot">
+                    <el-card :body-style="{ padding: '0px' }">
+                      <el-image
+                        lazy
+                        style="width: 100%;"
+                        :src="singleImage.origin"
+                        class="image"
+                        :preview-src-list="[singleImage.origin,singleImage.bytemap,singleImage.promap]"
+                      >
+                        <template #error>
+                          <div class="image-slot">
+                            <el-image
+                              lazy
+                              style="width: 100%;"
+                              :src="require('../../../assets/img/loading.gif')"
+                              class="image"
+                            />
+                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                          </div>
+                        </template>
+                      </el-image>
+                      <div style="padding: 14px">
+                        <span>原始图片</span>
+                        <div class="bottom">
+                          <el-button
+                            type="text"
+                            class="button"
+                            @click="downloadIamge(singleImage.promap, singleImage.name+'_origin')"
+                          >下载图片</el-button>
+                        </div>
+                      </div>
+                    </el-card>
+
+                  </el-col>
+                  <el-col :span="8">
+
+                    <el-card :body-style="{ padding: '0px' }">
+                      <el-image
+                        lazy
+                        style="width: 100%;"
+                        :src="singleImage.bytemap"
+                        class="image"
+                        :preview-src-list="[singleImage.bytemap,singleImage.promap,singleImage.origin]"
+                      >
+                        <template #error>
+                          <div class="image-slot">
+                            <el-image
+                              style="width: 100%;"
+                              :src="require('../../../assets/img/loading.gif')"
+                              class="image"
+                            />
+                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                          </div>
+                        </template>
+                      </el-image>
+                      <div style="padding: 14px">
+                        <span>bytemap</span>
+                        <div class="bottom">
+                          <el-button
+                            type="text"
+                            class="button"
+                            @click="downloadIamge(singleImage.promap, singleImage.name+'_bytemap')"
+                          >下载图片</el-button>
+                        </div>
+                      </div>
+                    </el-card>
+
+                  </el-col>
+                  <el-col :span="8">
+
+                    <el-card :body-style="{ padding: '0px' }">
                       <el-image
                         style="width: 100%;"
-                        :src="require('../../../assets/img/loading.gif')"
+                        :src="singleImage.promap"
                         class="image"
-                      />
-                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
-                    </div>
-                  </template>
-                </el-image>
-                <div style="padding: 14px">
-                  <span>原始图片</span>
-                  <div class="bottom">
-                    <el-button
-                      type="text"
-                      class="button"
-                      @click="downloadIamge(singleImage.promap, singleImage.name+'_origin')"
-                    >下载图片</el-button>
-                  </div>
-                </div>
+                        :preview-src-list="[singleImage.promap,singleImage.origin,singleImage.bytemap]"
+                      >
+                        <template #error>
+                          <div class="image-slot">
+                            <el-image
+                              style="width: 100%;"
+                              :src="require('../../../assets/img/loading.gif')"
+                              class="image"
+                            />
+                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                          </div>
+                        </template>
+                      </el-image>
+                      <div style="padding: 14px">
+                        <span>promap</span>
+                        <div class="bottom">
+                          <el-button
+                            type="text"
+                            class="button"
+                            @click="downloadIamge(singleImage.promap, singleImage.name+'_promap')"
+                          >下载图片</el-button>
+                        </div>
+                      </div>
+                    </el-card>
+
+                  </el-col>
+
+                </el-row>
               </el-card>
-
-            </el-col>
-            <el-col :span="8">
-
-              <el-card :body-style="{ padding: '0px' }">
-                <el-image
-                  style="width: 100%;"
-                  :src="singleImage.bytemap"
-                  class="image"
-                  :preview-src-list="[singleImage.bytemap,singleImage.promap,singleImage.origin]"
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="4">
+          <el-affix :offset="120">
+            <div style="margin-left:2vw;">
+              <el-row>
+                <el-select
+                  v-model="pagesize"
+                  placeholder="Select"
+                  style="width:100px;margin-left:5px"
+                  :change="()=>handleSizeChange(pagesize)"
                 >
-                  <template #error>
-                    <div class="image-slot">
-                      <el-image
-                        style="width: 100%;"
-                        :src="require('../../../assets/img/loading.gif')"
-                        class="image"
-                      />
-                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
-                    </div>
-                  </template>
-                </el-image>
-                <div style="padding: 14px">
-                  <span>bytemap</span>
-                  <div class="bottom">
-                    <el-button
-                      type="text"
-                      class="button"
-                      @click="downloadIamge(singleImage.promap, singleImage.name+'_bytemap')"
-                    >下载图片</el-button>
-                  </div>
-                </div>
-              </el-card>
-
-            </el-col>
-            <el-col :span="8">
-
-              <el-card :body-style="{ padding: '0px' }">
-                <el-image
-                  style="width: 100%;"
-                  :src="singleImage.promap"
-                  class="image"
-                  :preview-src-list="[singleImage.promap,singleImage.origin,singleImage.bytemap]"
+                  <el-option
+                    label="1条/页"
+                    :value="1"
+                  >
+                  </el-option>
+                  <el-option
+                    label="3条/页"
+                    :value="3"
+                  >
+                  </el-option>
+                  <el-option
+                    label="5条/页"
+                    :value="5"
+                  >
+                  </el-option>
+                  <el-option
+                    label="10条/页"
+                    :value="10"
+                  >
+                  </el-option>
+                </el-select>
+              </el-row>
+              <el-row style="margin-left:5px;">
+                <el-button-group>
+                  <el-button
+                    style="width:50px;"
+                    icon="el-icon-arrow-left"
+                    :disabled="pagenum<=1"
+                    @click="handleCurrentChange(pagenum-1)"
+                  ></el-button>
+                  <el-button
+                    style="width:50px;"
+                    icon="el-icon-arrow-right"
+                    :disabled="pagenum>=(total/pagesize)"
+                    @click="handleCurrentChange(pagenum+1)"
+                  >
+                  </el-button>
+                </el-button-group>
+              </el-row>
+              <el-row>
+                <el-pagination
+                  :currentPage="pagenum"
+                  :page-size="pagesize"
+                  layout="pager"
+                  :total="total"
+                  :pager-count="10"
+                  @current-change="handleCurrentChange"
                 >
-                  <template #error>
-                    <div class="image-slot">
-                      <el-image
-                        style="width: 100%;"
-                        :src="require('../../../assets/img/loading.gif')"
-                        class="image"
-                      />
-                      <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
-                    </div>
-                  </template>
-                </el-image>
-                <div style="padding: 14px">
-                  <span>promap</span>
-                  <div class="bottom">
-                    <el-button
-                      type="text"
-                      class="button"
-                      @click="downloadIamge(singleImage.promap, singleImage.name+'_promap')"
-                    >下载图片</el-button>
-                  </div>
-                </div>
-              </el-card>
-
-            </el-col>
-
-          </el-row>
-        </el-card>
-      </div>
+                </el-pagination>
+              </el-row>
+            </div>
+          </el-affix>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -169,6 +363,10 @@ export default {
         pic_title: "测试",
         pic_img: "",
       },
+      pagenum: 1,
+      pagesize: 5,
+      searchTitle: "",
+      total: 0,
       title: "",
       imageList: [],
     };
@@ -178,6 +376,15 @@ export default {
   },
   methods: {
 
+    handleSizeChange(size) {
+console.log("被调用了")
+      this.pagesize = size;
+      this.getImageList();
+    },
+    handleCurrentChange(current) {
+      this.pagenum = current;
+      this.getImageList();
+    },
     setName(file) {
       var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
       if (fileExtension === "gif") {
@@ -249,9 +456,9 @@ export default {
         })
     },
     async deleteASetOfImage(singleImage) {
-       await new Promise((resolve) => {
+      await new Promise((resolve) => {
         this.$http
-          .post("/deletePicture/", JSON.stringify({ name:singleImage.name }))
+          .post("/deletePicture/", JSON.stringify({ name: singleImage.name }))
           .then((res) => {
             {
               if (res.data.message === "删除成功") {
@@ -265,18 +472,17 @@ export default {
         resolve();
       }).then(() => {
       });
-      
+
     },
     async getImageList() {
       await new Promise((resolve) => {
         this.$http
-          .post("/getList/", JSON.stringify({ user_id: this.$store.state.user_id }))
+          .post("/getList/", JSON.stringify({ title: this.searchTitle, user_id: this.$store.state.user_id, pagenum: this.pagenum, pagesize: this.pagesize }))
           .then((res) => {
-            console.log(res);
             {
-              console.log(res);
               if (res.data.message === "返回list成功") {
                 this.imageList = res.data.imageList
+                this.total = res.data.total
               }
               else {
                 alert("获取列表失败")
@@ -285,7 +491,6 @@ export default {
           });
         resolve();
       }).then(() => {
-        console.log("成功啦post啦");
       });
     },
     handleAvatarSuccess() {
@@ -299,60 +504,24 @@ export default {
       //   this.getImageList();
       // }, 15000)
     },
-    getImageFile: function (e) {
-      let file = e.target.files[0];
-      this.form.pic_img = file;
-      this.form.pic_title = 'test.tif'
-    },
-    // onSubmit() {
-    //   let formData = new FormData();
-    //   formData.append("pic_title", this.form.pic_title);
-    //   formData.append("pic_img", this.form.pic_img, 'test.tif');
-    //   this.$http
-    //     .post("/receive/", formData)
-    //     .then((res) => {
-    //       console.log(res);
-    //       this.$message({
-    //         message: "上传成功",
-    //         type: "success",
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
-    download() {
-      this.$http.post("/download/", this.form.pic_title, {
-        responseType: "blob",
-      })
-        .then((res) => {
-          // console.log(res);
-          if (res.data.success === false) {
-            this.$message.error("出现错误");
-            return;
-          }
-          console.log(res, '看一下res是啥');
-          const data = res.data;
-          const url = window.URL.createObjectURL(
-            new Blob([data], {
-              type: "application/octet-stream",
-            })
-          );
-          console.log(url, '看一下url是啥')
-          console.log("**********");
-          console.log(res.headers['content-disposition']);
-          let fileName = 'test.png'
-          const a = document.createElement("a");
-          document.body.appendChild(a);
-          a.style.display = "none";
-          a.href = url;
-          let filename = fileName;
-          a.download = filename;
-          console.log(filename)
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-        })
+    downloadIamge(imgsrc, name) {//下载图片地址和图片名
+      let image = new Image();
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute("crossOrigin", "anonymous");
+      image.onload = function () {
+        let canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        let context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, image.width, image.height);
+        let url = canvas.toDataURL("image/png"); //得到图片的base64编码数据
+        let a = document.createElement("a"); // 生成一个a元素
+        let event = new MouseEvent("click"); // 创建一个单击事件
+        a.download = name || "photo"; // 设置图片名称
+        a.href = url; // 将生成的URL设置为a.href属性
+        a.dispatchEvent(event); // 触发a的单击事件
+      };
+      image.src = imgsrc;
     },
   },
 };
