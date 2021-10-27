@@ -316,7 +316,7 @@
                   v-model="pagesize"
                   placeholder="Select"
                   style="width:100px;margin-left:5px"
-                  :change="()=>handleSizeChange(pagesize)"
+                  @change="handleSizeChange(pagesize)"
                 >
                   <el-option
                     label="1条/页"
@@ -400,7 +400,6 @@ export default {
   methods: {
 
     handleSizeChange(size) {
-      console.log("被调用了")
       this.pagesize = size;
       this.getImageList();
     },
