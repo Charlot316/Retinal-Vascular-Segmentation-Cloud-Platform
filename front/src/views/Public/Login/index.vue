@@ -71,11 +71,11 @@
                 .then((res) => {
                   console.log(res);
                   if (res.data.message === "用户不存在") {
-                    alert("用户不存在");
+                    this.$message.error("用户不存在");
                     return console.log(res.data.message);
                   }
                   if (res.data.message === "密码错误") {
-                    alert("用户名或密码错误！");
+                    this.$message.error("用户名或密码错误！");
                     return console.log(res.data.message);
                   }
                   console.log("登录成功");

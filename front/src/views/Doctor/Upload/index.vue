@@ -2,9 +2,10 @@
   <div>
     <div class="body">
       <el-row>
+        <!-- 左侧的固定快捷按钮 -->
         <el-col :span="4">
           <el-affix :offset="120">
-            <div style="margin-left:5vw;">
+            <div style="margin-left:6vw;">
               <el-row>
                 <el-tooltip
                   class="item"
@@ -15,11 +16,11 @@
                   <el-upload
                     class="upload-demo"
                     action="http://10.251.0.251:8000/receive/"
-                    :data="{pic_title:title,user_id:$store.state.user_id}"
+                    :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
                     :show-file-list="false"
-                    :before-upload="setName"
+                    :before-upload="checkFile"
                     name="pic_img"
                   >
                     <el-button
@@ -57,7 +58,7 @@
                 >
                   <el-button
                     style="margin-top:25px"
-                    @click="deleteAllImage(singleImage)"
+                    @click="deleteAllImage()"
                     type="danger"
                     icon="el-icon-delete"
                     circle
@@ -77,16 +78,13 @@
                       :width="400"
                       trigger="click"
                     >
-
                       <template #reference>
-
                         <el-button
                           style="margin-top:25px"
                           type="info"
                           icon="el-icon-search"
                           circle
                         ></el-button>
-
                       </template>
                       <div>
                         <el-input
@@ -110,87 +108,132 @@
             </div>
           </el-affix>
         </el-col>
+        <!-- 中间主体部分 -->
         <el-col :span="16">
           <div class="container">
-            <div>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="上传新的眼底血管图片"
-                placement="top"
-              >
-                <el-upload
-                  class="upload-demo inline-block"
-                  action="http://10.251.0.251:8000/receive/"
-                  :data="{pic_title:title,user_id:$store.state.user_id}"
-                  :on-success="handleAvatarSuccess"
-                  list-type=false
-                  :show-file-list="false"
-                  :before-upload="setName"
-                  name="pic_img"
+            <!-- 顶部操作模块 -->
+            <div class="card-header">
+              <div>
+                <!-- 上传新图片的按钮 -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="上传新的眼底血管图片"
+                  placement="top"
+                >
+                  <el-upload
+                    class="upload-demo inline-block"
+                    action="http://10.251.0.251:8000/receive/"
+                    :data="{user_id:$store.state.user_id}"
+                    :on-success="handleAvatarSuccess"
+                    list-type=false
+                    :show-file-list="false"
+                    :before-upload="checkFile"
+                    name="pic_img"
+                  >
+                    <el-button
+                      show-file-list=false
+                      type="primary"
+                      icon="el-icon-upload"
+                    >上传</el-button>
+                  </el-upload>
+                </el-tooltip>
+                <!-- 下载全部图片的按钮 -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="下载本页所有图片"
+                  placement="top"
                 >
                   <el-button
-                    show-file-list=false
-                    type="primary"
-                    icon="el-icon-upload"
-                  >上传</el-button>
-                </el-upload>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="下载本页所有图片"
-                placement="top"
-              >
-                <el-button
-                  type="success"
-                  @click="downloadAllImage()"
-                  icon="el-icon-download"
-                >下载</el-button>
-              </el-tooltip>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="清空本页所有图片"
-                placement="top"
-              >
-                <el-button
-                  style="margin-left:30px"
-                  @click="deleteAllImage(singleImage)"
-                  type="danger"
-                  icon="el-icon-delete"
-                >清空</el-button>
-              </el-tooltip>
-              <el-input
-                v-model="searchTitle"
-                @keyup.enter="getImageList"
-                placeholder="请输入图片名"
-                clearable
-                style=" margin-left:50px;width:300px"
-              >
-                <template #append>
+                    type="success"
+                    @click="downloadAllImage()"
+                    icon="el-icon-download"
+                  >下载</el-button>
+                </el-tooltip>
+                <!-- 清空全部图片的按钮 -->
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="清空本页所有图片"
+                  placement="top"
+                >
                   <el-button
-                    @click="getImageList"
-                    icon="el-icon-search"
-                  ></el-button>
-                </template>
-              </el-input>
+                    style="margin-left:30px"
+                    @click="deleteAllImage()"
+                    type="danger"
+                    icon="el-icon-delete"
+                  >清空</el-button>
+                </el-tooltip>
+              </div>
+              <div>
+                <!-- 搜索框 -->
+                <el-input
+                  v-model="searchTitle"
+                  @keyup.enter="getImageList"
+                  placeholder="请输入图片名"
+                  clearable
+                  style="width:20vw"
+                >
+                  <template #append>
+                    <el-button
+                      @click="getImageList"
+                      icon="el-icon-search"
+                    ></el-button>
+                  </template>
+                </el-input>
+              </div>
             </div>
+            <!-- 显示图片卡片 -->
             <div
               v-for="singleImage in imageList"
               :key="singleImage"
               style="margin-top: 20px"
             >
               <el-card shadow="hover">
+                <!-- 卡片头栏 -->
                 <template #header>
                   <div class="card-header">
-                    <span>{{singleImage.name}}</span>
                     <span>
+                      <span>{{singleImage.name}}</span>
+                      <!-- 修改名字 -->
+                      <el-popover
+                        placement="right"
+                        width="400"
+                        trigger="click"
+                      >
+                        <template #reference>
+                          <el-button
+                            style="margin-right:10px"
+                            icon="el-icon-edit"
+                            type="text"
+                            circle
+                            @click="newName=''"
+                          ></el-button>
+                        </template>
+                        <el-input
+                          v-model="newName"
+                          @keyup.enter="revisePictureName(singleImage)"
+                          placeholder="请输入修改后的图片名称"
+                          clearable
+                        >
+                          <template #append>
+                            <el-button
+                              @click="revisePictureName(singleImage)"
+                              icon="el-icon-check"
+                            ></el-button>
+                          </template>
+                        </el-input>
+                      </el-popover>
+                    </span>
+                    <span>
+                      <!-- 下载图片 -->
                       <el-button
                         @click="downloadASetOfImage(singleImage)"
                         style="margin-right:10px"
                         icon="el-icon-download"
                       >下载全部</el-button>
+                      <!-- 删除图片 -->
                       <el-button
                         @click="deleteAGroupOfImage(singleImage)"
                         type="danger"
@@ -199,9 +242,9 @@
                     </span>
                   </div>
                 </template>
+                <!-- 三张图片 -->
                 <el-row>
                   <el-col :span="8">
-
                     <el-card :body-style="{ padding: '0px' }">
                       <el-image
                         lazy
@@ -210,6 +253,7 @@
                         class="image"
                         :preview-src-list="[singleImage.origin,singleImage.bytemap,singleImage.promap]"
                       >
+                        <!-- 图片加载出错的情况 -->
                         <template #error>
                           <div class="image-slot">
                             <el-image
@@ -218,7 +262,10 @@
                               :src="require('../../../assets/img/loading.gif')"
                               class="image"
                             />
-                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                            <div style="text-align:center;">
+                              <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                              <el-button @click="getImageList">强制刷新</el-button>
+                            </div>
                           </div>
                         </template>
                       </el-image>
@@ -233,10 +280,8 @@
                         </div>
                       </div>
                     </el-card>
-
                   </el-col>
                   <el-col :span="8">
-
                     <el-card :body-style="{ padding: '0px' }">
                       <el-image
                         lazy
@@ -252,7 +297,10 @@
                               :src="require('../../../assets/img/loading.gif')"
                               class="image"
                             />
-                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                            <div style="text-align:center;">
+                              <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                              <el-button @click="getImageList">强制刷新</el-button>
+                            </div>
                           </div>
                         </template>
                       </el-image>
@@ -267,10 +315,8 @@
                         </div>
                       </div>
                     </el-card>
-
                   </el-col>
                   <el-col :span="8">
-
                     <el-card :body-style="{ padding: '0px' }">
                       <el-image
                         style="width: 100%;"
@@ -285,7 +331,10 @@
                               :src="require('../../../assets/img/loading.gif')"
                               class="image"
                             />
-                            <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                            <div style="text-align:center;">
+                              <h3 style="text-align:center">图片加载中，请稍后刷新</h3>
+                              <el-button @click="getImageList">强制刷新</el-button>
+                            </div>
                           </div>
                         </template>
                       </el-image>
@@ -300,17 +349,16 @@
                         </div>
                       </div>
                     </el-card>
-
                   </el-col>
-
                 </el-row>
               </el-card>
             </div>
           </div>
         </el-col>
+        <!-- 右边的分页 -->
         <el-col :span="4">
           <el-affix :offset="120">
-            <div style="margin-left:2vw;">
+            <div style="margin-left:4vw;">
               <el-row>
                 <el-select
                   v-model="pagesize"
@@ -340,16 +388,16 @@
                   </el-option>
                 </el-select>
               </el-row>
-              <el-row style="margin-left:5px;">
+              <el-row style="margin-left:5px; inline-block;">
                 <el-button-group>
                   <el-button
-                    style="width:50px;"
+                    style="width:50px; inline-block;"
                     icon="el-icon-arrow-left"
                     :disabled="pagenum<=1"
                     @click="handleCurrentChange(pagenum-1)"
                   ></el-button>
                   <el-button
-                    style="width:50px;"
+                    style="width:50px; inline-block;"
                     icon="el-icon-arrow-right"
                     :disabled="pagenum>=(total/pagesize)"
                     @click="handleCurrentChange(pagenum+1)"
@@ -382,23 +430,39 @@ export default {
   name: "Upload",
   data() {
     return {
-      form: {
-        pic_title: "测试",
-        pic_img: "",
-      },
       pagenum: 1,
       pagesize: 5,
       searchTitle: "",
       total: 0,
-      title: "",
       imageList: [],
+      newName: "",
+      stateHasChanged: false,
     };
   },
   created() {
     this.getImageList();
   },
   methods: {
-
+    async revisePictureName(singleImage) {
+      if (this.newName.trim().length == 0) return this.$message.error("图片命名不能为空")
+      await new Promise((resolve) => {
+        this.$http
+          .post("/revisePictureName/", JSON.stringify({ saveName: singleImage.saveName, newName: this.newName }))
+          .then((res) => {
+            {
+              if (res.data.message === "修改成功") {
+                singleImage.name = this.newName
+                this.$message.success("图片名修改成功")
+              }
+              else {
+                this.$message.error("修改失败")
+              }
+            }
+          });
+        resolve();
+      }).then(() => {
+      });
+    },
     handleSizeChange(size) {
       this.pagesize = size;
       this.getImageList();
@@ -407,13 +471,18 @@ export default {
       this.pagenum = current;
       this.getImageList();
     },
-    setName(file) {
+    checkFile(file) {
       var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
-      if (fileExtension === "gif") {
-        alert("不支持上传gif图片")
+      if (file.type.startsWith("image")) {
+        if (fileExtension === "gif") {
+          this.$message.error("不支持上传gif图片")
+          return false
+        }
+      }
+      else {
+        this.$message.error("请上传图片");
         return false
       }
-      this.title = file.name;
     },
     downloadAllImage() {
       var i, len;
@@ -480,14 +549,14 @@ export default {
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
         this.$http
-          .post("/deletePicture/", JSON.stringify({ name: singleImage.name }))
+          .post("/deletePicture/", JSON.stringify({ saveName: singleImage.saveName }))
           .then((res) => {
             {
               if (res.data.message === "删除成功") {
                 this.getImageList()
               }
               else {
-                alert("删除失败")
+                this.$message.error("删除失败")
               }
             }
           });
@@ -507,7 +576,7 @@ export default {
                 this.total = res.data.total
               }
               else {
-                alert("获取列表失败")
+                this.$message.error("获取列表失败")
               }
             }
           });
@@ -522,7 +591,7 @@ export default {
       });
       this.getImageList();
       // setTimeout(() => {
-      //   this.imageList[this.imageList.length - 1] = {}
+      //     this.imageList = [];
       //   this.getImageList();
       // }, 15000)
     },

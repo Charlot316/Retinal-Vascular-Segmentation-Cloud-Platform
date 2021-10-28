@@ -176,10 +176,10 @@ export default {
       this.$refs.register.validate(async (valid) => {
         if (valid) {
           if (this.param.password !== this.param.tempPassword) {
-            return alert("输入的两次密码不一致");
+            return this.$message.error("输入的两次密码不一致");
           }
           if (this.param.sex === "") {
-            alert("请选择性别");
+            this.$message.error("请选择性别");
           } else {
             await new Promise((resolve) => {
               this.$http

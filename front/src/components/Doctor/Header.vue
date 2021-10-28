@@ -28,9 +28,6 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu v-if="islogin">
-              <router-link to="/user">
-                <el-dropdown-item>个人中心</el-dropdown-item>
-              </router-link>
               <el-dropdown-item divided command="loginout"
                 >退出登录</el-dropdown-item
               >
