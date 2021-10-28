@@ -37,6 +37,7 @@ urlpatterns = [
     path('receive/', user.views.receive),
     path('getList/', user.views.getList),
     path('deletePicture/', user.views.deletePicture),
+    path('revisePictureName/', user.views.revisePictureName),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     url(r'^', TemplateView.as_view(template_name="index.html")),
 ]

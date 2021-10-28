@@ -37,7 +37,8 @@ class Manager(models.Model):
 
 
 class Pho(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=255)
+    saveName = models.CharField(max_length=255)
     uId=models.IntegerField(null=True)
     origin = models.CharField(null=True,max_length=255)
     bytemap = models.CharField(null=True,max_length=255)
