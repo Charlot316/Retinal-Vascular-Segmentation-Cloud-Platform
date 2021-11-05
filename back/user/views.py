@@ -14,7 +14,7 @@ from django.views import View
 from eyes.settings import MEDIA_ROOT
 import random
 import string
-
+import urllib
 
 def login(request):
     if request.method == 'POST':
@@ -159,7 +159,9 @@ def deleDoctor(request):
         if len(p) == 0:
             return JsonResponse({'success': False, 'message': '用户名不存在'}, status=404)
         else:
+
             (Doctor.objects.get(dName=name)).delete()
+
             return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
     else:
         return JsonResponse({})
@@ -272,20 +274,83 @@ def changeDoctor(request):
     else:
         return JsonResponse({})
 
+def getList(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        uId = data_json.get('user_id')
+        pagenum = data_json.get('pagenum')  # 当前页码数
+        pagesize = data_json.get('pagesize')  # 每页显示条目数
+        title= data_json.get('title')  # 每页显示条目数
+        result = Pho.objects.filter(uId=uId,name__contains=title)
+        apply_list = list(result.values('name','saveName','origin','bytemap','promap' ))
+        total = len(apply_list)
+        paginator = Paginator(apply_list, pagesize)
+        try:
+            p_list = paginator.page(pagenum)
+        except PageNotAnInteger as e:
+            p_list = paginator.page(1)  # pagenum不是整数->返回第一页数据
+        except EmptyPage as e:
+            if int(pagenum) > paginator.num_pages:
+                p_list = paginator.page(paginator.num_pages)  # pagenum大于页码范围->获取最后一页数据
+            else:
+                p_list = paginator.page(1)  # pagenum小于页码范围->获取第一页数据
+
+        return JsonResponse({'success': True, 'message': '返回list成功','imageList': list(p_list),'total': total}, safe=False, status=200,
+                            json_dumps_params={'ensure_ascii': False})
+    else:
+        return JsonResponse({})
 
 def receive(request):
-    print(request.FILES)
     image = request.FILES.get('pic_img')
     title = request.POST.get('pic_title')
+    uId=request.POST.get('user_id')
+    obj = Pho.objects.create(img=image)
+    obj.uId=uId
 
-    obj = Pho.objects.create(pName=title, img=image)
+    obj.name=os.path.basename(os.path.splitext(image.name)[0])
+    obj.saveName=os.path.basename(os.path.splitext(obj.img.path)[0])
+    obj.origin="http://10.251.0.251:8000/media/test/"+os.path.basename(os.path.splitext(obj.img.path)[0])+"_origin.png"
+    obj.bytemap="http://10.251.0.251:8000/media/test/"+os.path.basename(os.path.splitext(obj.img.path)[0])+"_bytemap.png"
+    obj.promap="http://10.251.0.251:8000/media/test/"+os.path.basename(os.path.splitext(obj.img.path)[0])+"_promap.png"
     obj.save()
-    subprocess.Popen("python ./test/test.py", shell=True)
-    os.remove('./media/test/test.tif')
+    subprocess.Popen("python ./test/test.py"+" "+os.path.basename(obj.img.path), shell=True)
+    # os.remove('./media/test/test.tif')
     # data = jsonResult.json_managresult(message="添加成功", result="success", data=[], form_data={})
 
     return JsonResponse('message="上传成功', safe=False)
 
+def deletePicture(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        saveName = data_json.get('saveName')
+        p = Pho.objects.filter(saveName=saveName)
+        if len(p) == 0:
+            return JsonResponse({'success': False, 'message': '图片'}, status=404)
+        else:
+            (Pho.objects.get(saveName=saveName)).delete()
+            os.remove('./media/test/'+saveName+'_promap.png')
+            os.remove('./media/test/' + saveName + '_origin.png')
+            os.remove('./media/test/' + saveName + '_bytemap.png')
+            return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
+    else:
+        return JsonResponse({})
+
+def revisePictureName(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        newName = data_json.get('newName')
+        saveName = data_json.get('saveName')
+
+        picture = Pho.objects.filter(saveName=saveName)
+        if len(picture) == 0:
+            return JsonResponse({'success': False, 'message': '不存在该图片'}, status=404)
+        else:
+            obj = Pho.objects.get(saveName=saveName)
+            obj.name=newName
+            obj.save()
+            return JsonResponse({'success': True, 'message': '修改成功'}, status=200)
+    else:
+        return JsonResponse({})
 
 class DownloadQnaireToWord(View):
     def read_file(self, file_name, size):
@@ -306,7 +371,7 @@ class DownloadQnaireToWord(View):
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = "attachment; filename*=utf-8''{}".format(escape_uri_path(filename))
         print(response['Content-Disposition'])
-        os.remove('./media/test/test.tif')
+        print(response)
         if response:
             return response
         else:
