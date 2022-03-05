@@ -15,7 +15,7 @@
                 >
                   <el-upload
                     class="upload-demo"
-                    action="http://10.251.0.251:8000/receive/"
+                    action="http://localhost:8000/receive/"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
@@ -123,7 +123,7 @@
                 >
                   <el-upload
                     class="upload-demo inline-block"
-                    action="http://10.251.0.251:8000/receive/"
+                    action="http://localhost:8000/receive/"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
