@@ -35,7 +35,9 @@ urlpatterns = [
     path('chanePatient/',user.views.changePatient),
     path('changeDoctor/', user.views.changeDoctor),
     path('receive/', user.views.receive),
-    path('download/', user.views.DownloadQnaireToWord.as_view()),
+    path('getList/', user.views.getList),
+    path('deletePicture/', user.views.deletePicture),
+    path('revisePictureName/', user.views.revisePictureName),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^', TemplateView.as_view(template_name="index.html")),
 ]

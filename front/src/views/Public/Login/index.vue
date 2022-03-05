@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">视网膜云平台</div>
+      <div class="ms-title">眼底血管分割云平台</div>
       <el-form
         :model="param"
         :rules="rules"
@@ -71,18 +71,17 @@
                 .then((res) => {
                   console.log(res);
                   if (res.data.message === "用户不存在") {
-                    alert("用户不存在");
+                    this.$message.error("用户不存在");
                     return console.log(res.data.message);
                   }
                   if (res.data.message === "密码错误") {
-                    alert("用户名或密码错误！");
+                    this.$message.error("用户名或密码错误！");
                     return console.log(res.data.message);
                   }
                   console.log("登录成功");
                   this.$store.commit("login", this.param.username);
-                  this.$store.commit("storeId", res.user_id);
-                  this.$store.commit("setRole", res.role);
-                  console.log(res.user_id);
+                  this.$store.commit("storeId", res.data.user_id);
+                  console.log(res.data.user_id);
                   this.$router.push({ path: "/doctor/upload" });
                 });
               resolve();
