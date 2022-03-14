@@ -10,6 +10,7 @@ class Doctor(models.Model):
     doctor_email = models.CharField(max_length=255, blank=True, null=True)
     doctor_icon = models.CharField(max_length=255, blank=True, null=True)
     doctor_phone = models.CharField(max_length=255, blank=True, null=True)
+    doctor_sex = models.SmallIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

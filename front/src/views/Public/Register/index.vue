@@ -7,65 +7,49 @@
           :model="param"
           :rules="rules"
           ref="register"
-          label-width="0px"
-          class="ms-content"
+          class="demo-form-inline"
         >
-          <el-form-item prop="username">
+          <el-form-item prop="username" label="用户名">
             <el-input
               v-model="param.username"
-              placeholder="username"
+              placeholder="请输入用户名"
             >
-              <template #prepend>
-                <i class="el-icon-user">用户名</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" label="密码">
             <el-input
               type="password"
-              placeholder="password"
+              placeholder="请输入密码"
               v-model="param.password"
               @keyup.enter="submitForm()"
             >
-              <template #prepend>
-                <i class="el-icon-lock">密码</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" label="确认密码">
             <el-input
               type="password"
-              placeholder="password"
+              placeholder="请确认密码"
               v-model="param.tempPassword"
               @keyup.enter="submitForm()"
             >
-              <template #prepend>
-                <i class="el-icon-lock">确认密码</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="email">
+          <el-form-item prop="email" label="邮箱">
             <el-input
               v-model="param.email"
-              placeholder="email"
+              placeholder="请输入邮箱（选填）"
             >
-              <template #prepend>
-                <i class="el-icon-lock">邮箱</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="phone">
+          <el-form-item prop="phone" label="手机号">
             <el-input
               v-model="param.phone"
-              placeholder="phone"
+              placeholder="请输入手机号（选填）"
             >
-              <template #prepend>
-                <el-button icon="el-icon-lock">手机号</el-button>
-              </template>
             </el-input>
           </el-form-item>
           <el-form-item
-            label=""
+            label="性别"
             prop="sex"
           >
             <el-radio-group
@@ -102,21 +86,21 @@
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+      const regEmail = /(^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})+$)?/;
       if (regEmail.test(value)) {
         return callback();
       }
       callback(new Error("请输入合法的邮箱"));
     };
     var checkUsername = (rule, value, callback) => {
-      const regUsername = /^[0-9]+$/;
+      const regUsername = /(^[0-9]{11}$)*/;
       if (regUsername.test(value)) {
         return callback();
       }
       callback(new Error("请输入合法的用户名"));
     };
     var checkPhone = (rule, value, callback) => {
-      const regPhone = /^[0-9]+$/;
+      const regPhone = /(^[0-9]+$)*/;
       if (regPhone.test(value)) {
         return callback();
       }
@@ -137,7 +121,7 @@ export default {
             min: 1,
             max: 20,
             validator: checkUsername,
-            message: "用户名只能是数字，长度在1-20之间",
+            message: "用户名长度在1-20之间",
             trigger: "blur",
           },
         ],
@@ -151,20 +135,20 @@ export default {
           },
         ],
         email: [
-          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { required: false, message: "请输入邮箱", trigger: "blur" },
           {
             validator: checkEmail,
             trigger: "blur",
           },
         ],
         phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: false, message: "请输入手机号", trigger: "blur" },
           {
             validator: checkPhone,
             trigger: "blur",
           },
         ],
-        sex: [{ requierd: true, message: "请选择性别", trigger: "blur" }],
+        sex: [{ requierd: false, message: "请选择性别", trigger: "blur" }],
       },
     };
   },

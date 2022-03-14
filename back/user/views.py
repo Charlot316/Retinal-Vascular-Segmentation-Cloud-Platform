@@ -40,12 +40,14 @@ def register(request):
         new_email = data_json.get('email')
         new_ph = data_json.get('phone')
         new_realname = data_json.get('realname')
+        new_sex = data_json.get('sex')
         print(new_name)
         new_pwd = make_password(temp_pwd, None, 'pbkdf2_sha1')
         print(new_pwd)
         print(new_email)
         print(new_ph)
         print(new_realname)
+        print(new_sex)
         if new_name is None:
             return JsonResponse({'success': False, 'message': '未输入'})
         else:
@@ -59,6 +61,7 @@ def register(request):
                 new_d.doctor_email = new_email
                 new_d.doctor_phone = new_ph
                 new_d.doctor_realname = new_realname
+                new_d.doctor_sex = new_sex
                 new_d.save()
                 return JsonResponse({'success': True, 'message': '注册成功'})
     else:
