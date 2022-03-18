@@ -275,7 +275,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.photo_origin, singleImage.name+'_origin')"
+                            @click="downloadIamge(singleImage.photo_origin, singleImage.photo_savename+'_origin')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -305,12 +305,12 @@
                         </template>
                       </el-image>
                       <div style="padding: 14px">
-                        <span>bytemap</span>
+                        <span>黄金指标</span>
                         <div class="bottom">
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.photo_upload, singleImage.name+'_bytemap')"
+                            @click="downloadIamge(singleImage.photo_upload, singleImage.photo+'_upload')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -339,12 +339,12 @@
                         </template>
                       </el-image>
                       <div style="padding: 14px">
-                        <span>promap</span>
+                        <span>生成图片</span>
                         <div class="bottom">
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.photo_promap, singleImage.name+'_promap')"
+                            @click="downloadIamge(singleImage.photo_promap, singleImage.photo_savename+'_promap')"
                           >下载图片</el-button>
                         </div>
                       </div>
