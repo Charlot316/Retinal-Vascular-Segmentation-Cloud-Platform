@@ -77,7 +77,8 @@ def get_photo_list_for_doctor(request):
         title = data_json.get('title')  # 每页显示条目数
         result = Photo.objects.filter(uId=u_id, name__contains=title)
         apply_list = list(
-            result.values('photo_realname', 'photo_savename', 'photo_origin', 'photo_upload', 'photo_promap'))
+            result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
+                          'photo_promap', 'photo_patient__patient_id'))
         total = len(apply_list)
         paginator = Paginator(apply_list, pagesize)
         try:
@@ -97,7 +98,8 @@ def get_photo_list_for_doctor(request):
         return JsonResponse({})
 
 
-def receive(request):
+def receive_origin(request):
+    BASEURL = "http://10.251.0.251:8000/media/test/"
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
@@ -105,9 +107,9 @@ def receive(request):
 
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
     obj.photo_savename = os.path.basename(os.path.splitext(obj.img.path)[0])
-    obj.photo_origin = "http://10.251.0.251:8000/media/test/" + os.path.basename(
+    obj.photo_origin = BASEURL + os.path.basename(
         os.path.splitext(obj.img.path)[0]) + "_origin.png"
-    obj.photo_promap = "http://10.251.0.251:8000/media/test/" + os.path.basename(
+    obj.photo_promap = BASEURL + os.path.basename(
         os.path.splitext(obj.img.path)[0]) + "_promap.png"
     obj.save()
     subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.img.path), shell=True)
@@ -120,15 +122,21 @@ def receive(request):
 def delete_picture(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
-        save_name = data_json.get('saveName')
-        p = Photo.objects.filter(saveName=save_name)
+        photo_id = data_json.get('photoID')
+        p = Photo.objects.filter(photoID=photo_id)
         if len(p) == 0:
             return JsonResponse({'success': False, 'message': '图片'}, status=404)
         else:
-            (Photo.objects.get(photo_savename=save_name)).delete()
-            os.remove('./media/test/' + save_name + '_promap.png')
-            os.remove('./media/test/' + save_name + '_origin.png')
-            os.remove('./media/test/' + save_name + '_bytemap.png')
+            photo = Photo.objects.get(photoID=photo_id)
+            save_name = photo.photo_savename
+            try:
+                if photo.photo_upload is not None:
+                    os.remove('./media/test/' + save_name + '_upload.png')
+                os.remove('./media/test/' + save_name + '_promap.png')
+                os.remove('./media/test/' + save_name + '_origin.png')
+            except FileNotFoundError as e:
+                print("exception:" + e)
+            photo.delete()
             return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
     else:
         return JsonResponse({})
@@ -137,15 +145,15 @@ def delete_picture(request):
 def revise_picture_name(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
-        newName = data_json.get('newName')
-        saveName = data_json.get('saveName')
+        new_name = data_json.get('newName')
+        photo_id = data_json.get('photoID')
 
-        picture = Photo.objects.filter(saveName=saveName)
+        picture = Photo.objects.filter(photo_id=photo_id)
         if len(picture) == 0:
             return JsonResponse({'success': False, 'message': '不存在该图片'}, status=404)
         else:
-            obj = Photo.objects.get(saveName=saveName)
-            obj.name = newName
+            obj = Photo.objects.get(photo_id=photo_id)
+            obj.photo_realname = new_name
             obj.save()
             return JsonResponse({'success': True, 'message': '修改成功'}, status=200)
     else:

@@ -34,7 +34,7 @@ urlpatterns = [
     # path('findDoctor/', user.views.findDoctor),
     # path('chanePatient/',user.views.changePatient),
     # path('changeDoctor/', user.views.changeDoctor),
-    path('receive/', user.views.receive),
+    path('receive/', user.views.receive_origin),
     path('getList/', user.views.get_photo_list_for_doctor),
     path('deletePicture/', user.views.delete_picture),
     path('revisePictureName/', user.views.revise_picture_name),
