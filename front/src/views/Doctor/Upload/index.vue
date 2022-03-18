@@ -589,9 +589,9 @@ export default {
         message: "上传成功",
         type: "success",
       });
-      this.getImageList();
+      //this.getImageList();
       setTimeout(() => {
-          this.imageList = [];
+        this.imageList = [];
         this.getImageList();
       }, 15000)
     },
