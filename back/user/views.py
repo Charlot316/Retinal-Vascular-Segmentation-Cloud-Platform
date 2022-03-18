@@ -112,7 +112,7 @@ def receive_origin(request):
 
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
     obj.photo_savename = os.path.basename(os.path.splitext(obj.photo_img.path)[0])
-    obj.photo_origin = BASEURL + obj.photo_savename+".png"
+    obj.photo_origin = BASEURL + obj.photo_savename+"_origin.png"
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
     subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
