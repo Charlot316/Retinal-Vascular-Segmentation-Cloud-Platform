@@ -104,7 +104,7 @@ def get_photo_list_for_doctor(request):
 
 def receive_origin(request):
     #BASEURL ="http://localhost:8000/media/test/"
-    #BASEURL ="http://10.251.0.251:8000/media/test/"
+    BASEURL ="http://10.251.0.251:8000/media/test/"
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
