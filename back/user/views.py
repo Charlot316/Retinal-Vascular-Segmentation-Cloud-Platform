@@ -21,13 +21,15 @@ def login(request):
         print(uname)
         print(pwd)
         user = Doctor.objects.filter(doctor_username=uname)
-        print(user)
+        # print(user[0].doctor_password)
         if len(user) == 0:
             return JsonResponse({'success': False, 'message': '用户不存在'})
         if len(user) > 0:
-            if check_password((user[0]).doctor_password, pwd):
+            if check_password(pwd, (user[0]).doctor_password):
                 return JsonResponse({'success': True, 'message': '登录成功', 'userID': user[0].doctor_id,
                                      'role': 'Doctor'})
+            else:
+                return JsonResponse({'success': False, 'message': '密码错误'})
     else:
         return JsonResponse({})
 
@@ -61,7 +63,8 @@ def register(request):
                 new_d.doctor_email = new_email
                 new_d.doctor_phone = new_ph
                 new_d.doctor_realname = new_realname
-                new_d.doctor_sex = new_sex
+                if new_sex == 0 or new_sex == 1:
+                    new_d.doctor_sex = new_sex
                 new_d.save()
                 return JsonResponse({'success': True, 'message': '注册成功'})
     else:
@@ -72,10 +75,11 @@ def get_photo_list_for_doctor(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         u_id = data_json.get('user_id')
+        print(u_id)
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         title = data_json.get('title')  # 每页显示条目数
-        result = Photo.objects.filter(uId=u_id, name__contains=title)
+        result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
             result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
                           'photo_promap', 'photo_patient__patient_id'))

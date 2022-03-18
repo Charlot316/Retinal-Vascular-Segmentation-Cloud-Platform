@@ -69,19 +69,12 @@
               this.$http
                 .post("/login/", JSON.stringify(this.param))
                 .then((res) => {
-                  console.log(res);
-                  if (res.data.message === "用户不存在") {
-                    this.$message.error("用户不存在");
-                    return console.log(res.data.message);
-                  }
-                  if (res.data.message === "密码错误") {
-                    this.$message.error("用户名或密码错误！");
-                    return console.log(res.data.message);
-                  }
-                  console.log("登录成功");
+                  if (res.data.success === false)
+                    return this.$message.error(res.data.message);
+                  this.$message.success("登录成功");
                   this.$store.commit("login", this.param.username);
-                  this.$store.commit("storeId", res.data.user_id);
-                  console.log(res.data.user_id);
+                  this.$store.commit("storeId", res.data.userID);
+                  console.log(res.data.userID);
                   this.$router.push({ path: "/doctor/upload" });
                 });
               resolve();

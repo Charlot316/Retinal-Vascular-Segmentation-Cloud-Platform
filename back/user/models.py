@@ -4,9 +4,9 @@ from eyes.storage import ImageStorage
 
 class Doctor(models.Model):
     doctor_id = models.AutoField(db_column='doctor_ID', primary_key=True)  # Field name made lowercase.
-    doctor_username = models.CharField(max_length=20)
-    doctor_password = models.CharField(max_length=25)
-    doctor_realname = models.CharField(max_length=255)
+    doctor_username = models.CharField(max_length=255)
+    doctor_password = models.CharField(max_length=255)
+    doctor_realname = models.CharField(max_length=255, null=True)
     doctor_email = models.CharField(max_length=255, blank=True, null=True)
     doctor_icon = models.CharField(max_length=255, blank=True, null=True)
     doctor_phone = models.CharField(max_length=255, blank=True, null=True)
