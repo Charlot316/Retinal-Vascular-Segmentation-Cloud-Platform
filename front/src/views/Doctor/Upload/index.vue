@@ -195,7 +195,7 @@
                 <template #header>
                   <div class="card-header">
                     <span>
-                      <span>{{singleImage.name}}</span>
+                      <span>{{singleImage.photo_realname}}</span>
                       <!-- 修改名字 -->
                       <el-popover
                         placement="right"
@@ -208,7 +208,7 @@
                             icon="el-icon-edit"
                             type="text"
                             circle
-                            @click="newName=''"
+                            @click="newName=singleImage.photo_realname"
                           ></el-button>
                         </template>
                         <el-input
@@ -249,9 +249,9 @@
                       <el-image
                         lazy
                         style="width: 100%;"
-                        :src="singleImage.origin"
+                        :src="singleImage.photo_origin"
                         class="image"
-                        :preview-src-list="[singleImage.origin,singleImage.bytemap,singleImage.promap]"
+                        :preview-src-list="[singleImage.photo_origin,singleImage.photo_upload,singleImage.photo_promap]"
                       >
                         <!-- 图片加载出错的情况 -->
                         <template #error>
@@ -275,7 +275,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.origin, singleImage.name+'_origin')"
+                            @click="downloadIamge(singleImage.photo_origin, singleImage.name+'_origin')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -286,9 +286,9 @@
                       <el-image
                         lazy
                         style="width: 100%;"
-                        :src="singleImage.bytemap"
+                        :src="singleImage.photo_upload"
                         class="image"
-                        :preview-src-list="[singleImage.bytemap,singleImage.promap,singleImage.origin]"
+                        :preview-src-list="[singleImage.photo_upload,singleImage.photo_promap,singleImage.photo_origin]"
                       >
                         <template #error>
                           <div class="image-slot">
@@ -310,7 +310,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.bytemap, singleImage.name+'_bytemap')"
+                            @click="downloadIamge(singleImage.photo_upload, singleImage.name+'_bytemap')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -320,9 +320,9 @@
                     <el-card :body-style="{ padding: '0px' }">
                       <el-image
                         style="width: 100%;"
-                        :src="singleImage.promap"
+                        :src="singleImage.photo_promap"
                         class="image"
-                        :preview-src-list="[singleImage.promap,singleImage.origin,singleImage.bytemap]"
+                        :preview-src-list="[singleImage.photo_promap,singleImage.photo_origin,singleImage.photo_upload]"
                       >
                         <template #error>
                           <div class="image-slot">
@@ -344,7 +344,7 @@
                           <el-button
                             type="text"
                             class="button"
-                            @click="downloadIamge(singleImage.promap, singleImage.name+'_promap')"
+                            @click="downloadIamge(singleImage.photo_promap, singleImage.name+'_promap')"
                           >下载图片</el-button>
                         </div>
                       </div>
@@ -447,7 +447,7 @@ export default {
       if (this.newName.trim().length == 0) return this.$message.error("图片命名不能为空")
       await new Promise((resolve) => {
         this.$http
-          .post("/revisePictureName/", JSON.stringify({ saveName: singleImage.photo_savename, newName: this.newName }))
+          .post("/revisePictureName/", JSON.stringify({ photoID: singleImage.photo_id, newName: this.newName }))
           .then((res) => {
             {
               if (res.data.message === "修改成功") {
@@ -491,9 +491,9 @@ export default {
       }
     },
     downloadASetOfImage(singleImage) {
-      this.downloadIamge(singleImage.origin, singleImage.photo_realname + "_origin")
-      this.downloadIamge(singleImage.bytemap, singleImage.photo_realname + "_bytemap")
-      this.downloadIamge(singleImage.promap, singleImage.photo_realname + "_promap")
+      this.downloadIamge(singleImage.photo_origin, singleImage.photo_realname + "_origin")
+      this.downloadIamge(singleImage.photo_upload, singleImage.photo_realname + "_bytemap")
+      this.downloadIamge(singleImage.photo_promap, singleImage.photo_realname + "_promap")
     },
     deleteAllImage() {
       ElMessageBox.confirm(
@@ -549,7 +549,7 @@ export default {
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
         this.$http
-          .post("/deletePicture/", JSON.stringify({ saveName: singleImage.photoID }))
+          .post("/deletePicture/", JSON.stringify({ photoID: singleImage.photo_id }))
           .then((res) => {
             {
               if (res.data.message === "删除成功") {

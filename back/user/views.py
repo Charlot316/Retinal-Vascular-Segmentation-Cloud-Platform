@@ -112,12 +112,10 @@ def receive_origin(request):
 
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
     obj.photo_savename = os.path.basename(os.path.splitext(obj.photo_img.path)[0])
-    obj.photo_origin = BASEURL + os.path.basename(
-        os.path.splitext(obj.photo_img.path)[0]) + "_origin.png"
-    obj.photo_promap = BASEURL + os.path.basename(
-        os.path.splitext(obj.photo_img.path)[0]) + "_promap.png"
+    obj.photo_origin = BASEURL + obj.photo_savename+".png"
+    obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
-    # subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.img.path), shell=True)
+    subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
     # os.remove('./media/test/test.tif')
     # data = jsonResult.json_managresult(message="添加成功", result="success", data=[], form_data={})
 
@@ -127,20 +125,22 @@ def receive_origin(request):
 def delete_picture(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
+
         photo_id = data_json.get('photoID')
-        p = Photo.objects.filter(photoID=photo_id)
+        print(photo_id)
+        p = Photo.objects.filter(photo_id=photo_id)
         if len(p) == 0:
             return JsonResponse({'success': False, 'message': '图片'}, status=404)
         else:
-            photo = Photo.objects.get(photoID=photo_id)
+            photo = Photo.objects.get(photo_id=photo_id)
             save_name = photo.photo_savename
             try:
                 if photo.photo_upload is not None:
                     os.remove('./media/test/' + save_name + '_upload.png')
                 os.remove('./media/test/' + save_name + '_promap.png')
-                os.remove('./media/test/' + save_name + '_origin.png')
+                os.remove('./media/test/' + save_name + '.png')
             except FileNotFoundError as e:
-                print("exception:" + e)
+                print(e)
             photo.delete()
             return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
     else:
