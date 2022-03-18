@@ -447,11 +447,11 @@ export default {
       if (this.newName.trim().length == 0) return this.$message.error("图片命名不能为空")
       await new Promise((resolve) => {
         this.$http
-          .post("/revisePictureName/", JSON.stringify({ saveName: singleImage.saveName, newName: this.newName }))
+          .post("/revisePictureName/", JSON.stringify({ saveName: singleImage.photo_savename, newName: this.newName }))
           .then((res) => {
             {
               if (res.data.message === "修改成功") {
-                singleImage.name = this.newName
+                singleImage.photo_realname = this.newName
                 this.$message.success("图片名修改成功")
               }
               else {
@@ -491,9 +491,9 @@ export default {
       }
     },
     downloadASetOfImage(singleImage) {
-      this.downloadIamge(singleImage.origin, singleImage.name + "_origin")
-      this.downloadIamge(singleImage.bytemap, singleImage.name + "_bytemap")
-      this.downloadIamge(singleImage.promap, singleImage.name + "_promap")
+      this.downloadIamge(singleImage.origin, singleImage.photo_realname + "_origin")
+      this.downloadIamge(singleImage.bytemap, singleImage.photo_realname + "_bytemap")
+      this.downloadIamge(singleImage.promap, singleImage.photo_realname + "_promap")
     },
     deleteAllImage() {
       ElMessageBox.confirm(
@@ -549,7 +549,7 @@ export default {
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
         this.$http
-          .post("/deletePicture/", JSON.stringify({ saveName: singleImage.saveName }))
+          .post("/deletePicture/", JSON.stringify({ saveName: singleImage.photoID }))
           .then((res) => {
             {
               if (res.data.message === "删除成功") {
@@ -590,10 +590,10 @@ export default {
         type: "success",
       });
       this.getImageList();
-      // setTimeout(() => {
-      //     this.imageList = [];
-      //   this.getImageList();
-      // }, 15000)
+      setTimeout(() => {
+          this.imageList = [];
+        this.getImageList();
+      }, 15000)
     },
     downloadIamge(imgsrc, name) {//下载图片地址和图片名
       let image = new Image();
