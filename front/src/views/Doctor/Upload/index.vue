@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="body">
+      <my-editer/>
       <el-row>
         <!-- 左侧的固定快捷按钮 -->
         <el-col :span="4">
@@ -15,7 +16,7 @@
                 >
                   <el-upload
                     class="upload-demo"
-                    :action="baseURL+'/receive/'"
+                    :action="baseURL+'receive/'"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
@@ -123,7 +124,7 @@
                 >
                   <el-upload
                     class="upload-demo inline-block"
-                    :action="baseURL+'/receive/'"
+                    :action="baseURL+'receive/'"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
@@ -185,6 +186,7 @@
               </div>
             </div>
             <!-- 显示图片卡片 -->
+            <div v-loading="loadingNewPicture">
             <div
               v-for="singleImage in imageList"
               :key="singleImage"
@@ -353,6 +355,7 @@
                 </el-row>
               </el-card>
             </div>
+            </div>
           </div>
         </el-col>
         <!-- 右边的分页 -->
@@ -426,10 +429,15 @@
 
 <script>
 import { ElMessageBox, ElMessage } from 'element-plus'
+import MyEditer from './Edit.vue'
 export default {
   name: "Upload",
+  components:{
+    MyEditer,
+  },
   data() {
     return {
+      loadingNewPicture:false,
       baseURL:'http://localhost:8000/',
       pagenum: 1,
       pagesize: 5,
@@ -567,6 +575,7 @@ export default {
 
     },
     async getImageList() {
+      this.loadingNewPicture=true
       await new Promise((resolve) => {
         this.$http
           .post("/getList/", JSON.stringify({ title: this.searchTitle, user_id: this.$store.state.user_id, pagenum: this.pagenum, pagesize: this.pagesize }))
@@ -579,6 +588,7 @@ export default {
               else {
                 this.$message.error("获取列表失败")
               }
+              this.loadingNewPicture=false
             }
           });
         resolve();
@@ -590,11 +600,12 @@ export default {
         message: "上传成功",
         type: "success",
       });
+      this.loadingNewPicture=true
       //this.getImageList();
       setTimeout(() => {
         this.imageList = [];
         this.getImageList();
-      }, 15000)
+      }, 7000)
     },
     downloadIamge(imgsrc, name) {//下载图片地址和图片名
       let image = new Image();

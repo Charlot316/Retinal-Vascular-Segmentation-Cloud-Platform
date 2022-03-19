@@ -12,6 +12,7 @@
         "core-js": "~3.9.1",
         "echarts": "^5.1.2",
         "element-plus": "1.0.2-beta.33",
+        "tui-image-editor": "^3.15.2",
         "vue": "~3.0.7",
         "vue-cropperjs": "^5.0.0",
         "vue-i18n": "^9.0.0",

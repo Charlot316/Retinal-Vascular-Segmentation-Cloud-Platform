@@ -112,7 +112,7 @@ const customTheme = {
   "loadButton.color": "#222",
   "loadButton.fontFamily": "NotoSans, sans-serif",
   "loadButton.fontSize": "12px",
-  "loadButton.display": "none", // 可以直接隐藏掉
+  "loadButton.display": "", // 可以直接隐藏掉
 
   // download button
   "downloadButton.backgroundColor": "#fdba3b",
@@ -179,7 +179,7 @@ export default {
     }
   },
   mounted() {
-    var instance = new ImageEditor(document.querySelector('#tui-image-editor'), {
+    this.instance = new ImageEditor(document.querySelector('#tui-image-editor'), {
       includeUI: {
         loadImage: {
           path: 'static/test.jpg',

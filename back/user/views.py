@@ -139,7 +139,7 @@ def delete_picture(request):
                 if photo.photo_upload is not None:
                     os.remove('./media/test/' + save_name + '_upload.png')
                 os.remove('./media/test/' + save_name + '_promap.png')
-                os.remove('./media/test/' + save_name + '.png')
+                os.remove('./media/test/' + save_name + '_origin.png')
             except FileNotFoundError as e:
                 print(e)
             photo.delete()
