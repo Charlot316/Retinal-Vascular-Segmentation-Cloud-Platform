@@ -9,7 +9,7 @@ import axios from "axios";
 
 let config = {
     //baseURL: "http://localhost:8000/",
-    baseURL: "http://10.251.0.251:8000/",
+    baseURL: "http://localhost:8000/",
     timeout: 60 * 1000, // Timeout
     withCredentials: true, // Check cross-site Access-Control
 };

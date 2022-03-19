@@ -103,8 +103,8 @@ def get_photo_list_for_doctor(request):
 
 
 def receive_origin(request):
-    #BASEURL ="http://localhost:8000/media/test/"
-    BASEURL ="http://10.251.0.251:8000/media/test/"
+    BASEURL = "http://localhost:8000/media/test/"
+    # BASEURL ="http://10.251.0.251:8000/media/test/"
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
@@ -115,9 +115,10 @@ def receive_origin(request):
     obj.photo_origin = BASEURL + obj.photo_savename+"_origin.png"
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
-    subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
-    # os.remove('./media/test/test.tif')
-    # data = jsonResult.json_managresult(message="添加成功", result="success", data=[], form_data={})
+    if BASEURL=="http://10.251.0.251:8000/media/test/":
+        subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
+    else:
+        subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
 
     return JsonResponse('message="上传成功', safe=False)
 
