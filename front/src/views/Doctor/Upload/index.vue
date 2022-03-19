@@ -15,7 +15,7 @@
                 >
                   <el-upload
                     class="upload-demo"
-                    action="http://localhost:8000/receive/"
+                    :action="baseURL+'/receive/'"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
@@ -123,7 +123,7 @@
                 >
                   <el-upload
                     class="upload-demo inline-block"
-                    action="http://localhost:8000/receive/"
+                    :action="baseURL+'/receive/'"
                     :data="{user_id:$store.state.user_id}"
                     :on-success="handleAvatarSuccess"
                     list-type=false
@@ -430,6 +430,7 @@ export default {
   name: "Upload",
   data() {
     return {
+      baseURL:'http://localhost:8000/',
       pagenum: 1,
       pagesize: 5,
       searchTitle: "",
