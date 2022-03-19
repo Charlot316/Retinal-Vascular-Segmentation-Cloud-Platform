@@ -112,7 +112,7 @@ const customTheme = {
   "loadButton.color": "#222",
   "loadButton.fontFamily": "NotoSans, sans-serif",
   "loadButton.fontSize": "12px",
-  "loadButton.display": "", // 可以直接隐藏掉
+  "loadButton.display": "none", // 可以直接隐藏掉
 
   // download button
   "downloadButton.backgroundColor": "#fdba3b",
@@ -120,7 +120,7 @@ const customTheme = {
   "downloadButton.color": "#fff",
   "downloadButton.fontFamily": "NotoSans, sans-serif",
   "downloadButton.fontSize": "12px",
-  "downloadButton.display": "", // 可以直接隐藏掉
+  "downloadButton.display": "none", // 可以直接隐藏掉
 
   // icons default
   "menu.normalIcon.color": "#8a8a8a",
