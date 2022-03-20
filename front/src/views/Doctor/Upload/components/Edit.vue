@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-main>
-      <div id="tui-image-editor"></div>
+      <div  :id="'tui-image-editor'+singleImage.photo_id+index" ></div>
     </el-main>
     <el-footer>
       <el-button size="mini" @click="downloadImg">下载</el-button>
@@ -187,7 +187,7 @@ export default {
   },
   mounted() {
     this.instance = new ImageEditor(
-      document.querySelector("#tui-image-editor"),
+      document.querySelector("#tui-image-editor"+this.singleImage.photo_id+this.index),
       {
         includeUI: {
           loadImage: {
