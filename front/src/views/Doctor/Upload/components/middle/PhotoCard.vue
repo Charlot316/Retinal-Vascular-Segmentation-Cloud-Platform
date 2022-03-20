@@ -52,22 +52,41 @@
     <!-- 三张图片 -->
     <el-row>
       <el-col :span="8">
-        <single-photo
-          :singleImage="singleImage"
-          index="origin"
-        />
+        <single-photo :singleImage="singleImage" index="origin" />
       </el-col>
       <el-col :span="8">
         <single-photo
+          v-if="singleImage.photo_upload && singleImage.photo_upload.length > 0"
           :singleImage="singleImage"
           index="upload"
         />
+        <div v-else>
+          <el-upload
+            class="avatar-uploader"
+            :action="myProps.baseURL+'upload/'"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="checkFile"
+            list-type="false"
+          >
+            <el-card :body-style="{ padding: '0px' }">
+              <el-image
+                lazy
+                style="width: 100%;"
+                src="https://img0.baidu.com/it/u=101714381,3578597708&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500"
+                class="image"
+              >
+              </el-image>
+              <span>点击以上传</span>
+              <div style="padding: 14px">
+                <span>黄金标准</span>
+              </div>
+            </el-card>
+          </el-upload>
+        </div>
       </el-col>
       <el-col :span="8">
-        <single-photo
-          :singleImage="singleImage"
-          index="promap"
-        />
+        <single-photo :singleImage="singleImage" index="promap" />
       </el-col>
     </el-row>
   </el-card>
@@ -86,6 +105,18 @@ export default {
     };
   },
   methods: {
+    checkFile(file) {
+      var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      if (file.type.startsWith("image")) {
+        if (fileExtension === "gif") {
+          this.$message.error("不支持上传gif图片");
+          return false;
+        }
+      } else {
+        this.$message.error("请上传图片");
+        return false;
+      }
+    },
     downloadASetOfImage(singleImage) {
       this.downloadIamge(
         singleImage.photo_origin,

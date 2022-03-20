@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import UploadHead from "./Head.vue";
-import PhotoCard from "./PhotoCard.vue"
+import UploadHead from "./middle/Head.vue";
+import PhotoCard from "./middle/PhotoCard.vue"
 export default {
   props: ["props"],
   components: {

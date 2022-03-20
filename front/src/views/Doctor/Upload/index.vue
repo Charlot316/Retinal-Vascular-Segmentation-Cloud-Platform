@@ -78,8 +78,8 @@
 <script>
 import { ElMessageBox, ElMessage } from "element-plus";
 //import MyEditer from "./Edit.vue";
-import UploadMiddle from "./Middle.vue";
-import UploadLeft from "./Left.vue";
+import UploadMiddle from "./components/Middle.vue";
+import UploadLeft from "./components/Left.vue";
 
 export default {
   name: "Upload",

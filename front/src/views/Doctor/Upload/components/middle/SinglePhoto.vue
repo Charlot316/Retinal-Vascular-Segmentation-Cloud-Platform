@@ -13,7 +13,7 @@
           <el-image
             lazy
             style="width: 100%;"
-            :src="require('../../../assets/img/loading.gif')"
+            :src="require('../../../../../assets/img/loading.gif')"
             class="image"
           />
           <div style="text-align:center;">
@@ -31,7 +31,7 @@
         <el-button
           type="text"
           class="button"
-          @click="downloadIamge(src, singleImage.photo_savename + type)"
+          @click="downloadIamge(src, singleImage.photo_realname + type)"
           >下载图片</el-button
         >
       </div>
