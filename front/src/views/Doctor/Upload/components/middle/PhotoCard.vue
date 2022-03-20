@@ -167,9 +167,6 @@ export default {
       };
       image.src = imgsrc;
     },
-    getImageList() {
-      this.$emit("getImageList");
-    },
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
         this.$http

@@ -1,4 +1,5 @@
 <template>
+<div>
   <el-card :body-style="{ padding: '0px' }">
     <el-image
       lazy
@@ -34,15 +35,28 @@
           @click="downloadIamge(src, singleImage.photo_realname + type)"
           >下载图片</el-button
         >
+        <el-button
+          type="text"
+          class="button"
+          @click="showEdit"
+          >编辑图片</el-button
+        >
       </div>
     </div>
   </el-card>
+  <el-dialog v-model="editVisible" fullscreen=true>
+    <my-edit :singleImage="singleImage" :index="index"/>
+  </el-dialog>
+</div>
 </template>
 
 <script>
+import MyEdit from "../Edit.vue"
 export default {
   props: ["singleImage", "index"],
-  components: {},
+  components: {
+    MyEdit
+  },
   data() {
     return {
       myProps: this.props,
@@ -50,12 +64,16 @@ export default {
       name: "",
       type: "",
       src: "",
+      editVisible:false,
     };
   },
   created() {
     this.initialize();
   },
   methods: {
+    showEdit(){
+      this.editVisible=true
+    },
     initialize() {
       if (this.index == "origin") {
         this.list = [
