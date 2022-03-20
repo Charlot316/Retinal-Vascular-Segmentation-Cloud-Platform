@@ -1,7 +1,7 @@
-import datetime
-import operator
 import os
+import cv2
 import subprocess
+import sys
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.encoding import escape_uri_path
@@ -102,9 +102,13 @@ def get_photo_list_for_doctor(request):
         return JsonResponse({})
 
 
+BASEURL = "http://localhost:8000/media/test/"
+
+
+# BASEURL ="http://10.251.0.251:8000/media/test/"
+
+
 def receive_origin(request):
-    BASEURL = "http://localhost:8000/media/test/"
-    # BASEURL ="http://10.251.0.251:8000/media/test/"
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
@@ -123,10 +127,26 @@ def receive_origin(request):
     return JsonResponse('message="上传成功', safe=False)
 
 
+def receive_upload(request):
+    image = request.FILES.get('pic_img')
+    p_id = request.POST.get('photo_id')
+    photo = Photo.objects.get(photo_id=p_id)
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(base_dir, 'media', 'test', photo.photo_savename)
+    with open(file_path, 'wb+') as f:
+        for chunk in image.chunks():
+            f.write(chunk)
+    img = cv2.imread(file_path)
+    cv2.imwrite('./media/test/' + photo.photo_savename + '_upload.png', img, )  # 保存为png
+    os.remove(file_path)
+    photo.photo_upload=BASEURL + photo.photo_savename + "_upload.png"
+    photo.save()
+    return JsonResponse('message="上传成功', safe=False)
+
+
 def delete_picture(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
-
         photo_id = data_json.get('photoID')
         print(photo_id)
         p = Photo.objects.filter(photo_id=photo_id)
@@ -153,7 +173,6 @@ def revise_picture_name(request):
         data_json = json.loads(request.body)
         new_name = data_json.get('newName')
         photo_id = data_json.get('photoID')
-
         picture = Photo.objects.filter(photo_id=photo_id)
         if len(picture) == 0:
             return JsonResponse({'success': False, 'message': '不存在该图片'}, status=404)

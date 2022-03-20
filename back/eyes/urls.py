@@ -27,6 +27,7 @@ urlpatterns = [
     path('login/', user.views.login),
     path('register/', user.views.register),
     path('receive/', user.views.receive_origin),
+    path('upload/', user.views.receive_upload),
     path('getList/', user.views.get_photo_list_for_doctor),
     path('deletePicture/', user.views.delete_picture),
     path('revisePictureName/', user.views.revise_picture_name),

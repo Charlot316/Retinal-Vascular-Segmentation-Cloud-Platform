@@ -64,10 +64,12 @@
           <el-upload
             class="avatar-uploader"
             :action="myProps.baseURL+'upload/'"
+            :data="{ photo_id: singleImage.photo_id }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="checkFile"
             list-type="false"
+            name="pic_img"
           >
             <el-card :body-style="{ padding: '0px' }">
               <el-image
@@ -105,6 +107,20 @@ export default {
     };
   },
   methods: {
+    handleAvatarSuccess() {
+      this.$message({
+        message: "上传成功",
+        type: "success",
+      });
+      this.myProps.loadingNewPicture = true;
+      setTimeout(() => {
+        this.myProps.imageList = [];
+        this.getImageList();
+      }, 2000);
+    },
+    getImageList() {
+      this.$emit("getImageList");
+    },
     checkFile(file) {
       var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
       if (file.type.startsWith("image")) {
