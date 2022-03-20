@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="body">
+    <div class="body" style="min-width:1000px">
       <el-row>
         <!-- 左侧的固定快捷按钮 -->
         <el-col :span="4">
@@ -14,7 +14,7 @@
           </el-affix>
         </el-col>
         <!-- 中间主体部分 -->
-        <el-col :span="16">
+        <el-col :span="16" style="min-width:600px;">
           <upload-middle
             :props="props"
             @downloadAllImage="downloadAllImage"
@@ -125,7 +125,7 @@ export default {
       );
       this.downloadIamge(
         singleImage.photo_upload,
-        singleImage.photo_realname + "_bytemap"
+        singleImage.photo_realname + "_upload"
       );
       this.downloadIamge(
         singleImage.photo_promap,

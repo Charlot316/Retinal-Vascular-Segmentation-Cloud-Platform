@@ -139,12 +139,12 @@ export default {
         singleImage.photo_realname + "_origin"
       );
       this.downloadIamge(
-        singleImage.photo_promap,
-        singleImage.photo_realname + "_promap"
+        singleImage.photo_upload,
+        singleImage.photo_realname + "_upload"
       );
       this.downloadIamge(
-        singleImage.photo_upload,
-        singleImage.photo_realname + "_bytemap"
+        singleImage.photo_promap,
+        singleImage.photo_realname + "_promap"
       );
     },
     downloadIamge(imgsrc, name) {
