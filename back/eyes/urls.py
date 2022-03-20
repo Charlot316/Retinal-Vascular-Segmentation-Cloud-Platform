@@ -21,6 +21,7 @@ from django.views.static import serve
 
 import user.views
 from eyes import settings
+from user.views import ChatConsumer
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,4 +42,10 @@ urlpatterns = [
     # path('changeDoctor/', user.views.changeDoctor),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^', TemplateView.as_view(template_name="index.html")),
+]
+
+websocket_urlpatterns=[
+    # 前端请求websocket连接
+    path('wx/', ChatConsumer.as_asgi()),
+
 ]

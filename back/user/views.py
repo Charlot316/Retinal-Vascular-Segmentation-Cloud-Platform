@@ -1,16 +1,55 @@
-import os
-import cv2
 import subprocess
+import torch
+import numpy as np
+import cv2
+import os
 import sys
+import json
+import time
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.encoding import escape_uri_path
 from django.http import JsonResponse, FileResponse, StreamingHttpResponse
-import json
 from user.models import Doctor, Patient, Photo
 from django.views import View
 from eyes.settings import MEDIA_ROOT
 from django.contrib.auth.hashers import make_password, check_password
+from channels.generic.websocket import WebsocketConsumer
+from PIL import Image
+from torchvision import transforms
+
+BASEURL = "http://localhost:8000/media/test/"
+# BASEURL ="http://10.251.0.251:8000/media/test/"
+
+if BASEURL == "http://10.251.0.251:8000/media/test/":
+    unloader = transforms.ToPILImage()
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0,1,2,3'
+    model = torch.load('./test/DS_Model_100.pkl')
+
+
+class ChatConsumer(WebsocketConsumer):
+    def connect(self):
+        self.accept()
+
+    def disconnect(self, close_code):
+        pass
+
+    def receive(self, text_data):
+        """
+        接收消息
+        :param text_data: 客户端发送的消息
+        :return:
+        """
+        print(text_data)
+        poetryList = [
+            "云想衣裳花想容",
+            "春风拂槛露华浓",
+            "若非群玉山头见",
+            "会向瑶台月下逢",
+        ]
+        for i in poetryList:
+            time.sleep(0.5)
+            self.send(i)
 
 
 def login(request):
@@ -102,13 +141,35 @@ def get_photo_list_for_doctor(request):
         return JsonResponse({})
 
 
-BASEURL = "http://localhost:8000/media/test/"
+def processing_image(path):
+    image_path = './media/test/' + path
+    roi_path = './test/test_mask.gif'
+
+    img = cv2.imread(image_path)
+    cv2.imwrite('./media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png', img, )  # 保存为png
+    img = cv2.resize(img, (568, 584))
+    os.remove(image_path)
+    img = np.array(img, np.float32).transpose(2, 0, 1) / 255.0
+
+    roi = np.array(Image.open(roi_path))
+    roi = cv2.resize(roi, (568, 584))
+    roi[roi >= 0.5] = 1
+    roi[roi <= 0.5] = 0
+
+    img1 = torch.Tensor(img)
+    img1 = img1.unsqueeze(0)
+    img1 = img1.cuda()
+
+    pred = model(img1)
+    pred = (pred.squeeze(0)).squeeze(0)
+    pred = pred.cpu().detach().numpy()
+    pred = pred * roi
+
+    pred = Image.fromarray(np.uint8(pred * 255))
+    pred.convert('L').save('./media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png')
 
 
-# BASEURL ="http://10.251.0.251:8000/media/test/"
-
-
-def receive_origin(request):
+async def receive_origin(request):
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
@@ -120,7 +181,8 @@ def receive_origin(request):
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
     if BASEURL == "http://10.251.0.251:8000/media/test/":
-        subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
+        await processing_image(os.path.basename(obj.photo_img.path))
+        # subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
     else:
         subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
 
@@ -139,7 +201,7 @@ def receive_upload(request):
     img = cv2.imread(file_path)
     cv2.imwrite('./media/test/' + photo.photo_savename + '_upload.png', img, )  # 保存为png
     os.remove(file_path)
-    photo.photo_upload=BASEURL + photo.photo_savename + "_upload.png"
+    photo.photo_upload = BASEURL + photo.photo_savename + "_upload.png"
     photo.save()
     return JsonResponse('message="上传成功', safe=False)
 
