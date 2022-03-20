@@ -146,7 +146,7 @@ def processing_image(path):
     roi_path = './test/test_mask.gif'
 
     img = cv2.imread(image_path)
-    cv2.imwrite('./media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png', img, )  # 保存为png
+    cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(path))[0] + '_origin.png', img, )  # 保存为png
     img = cv2.resize(img, (568, 584))
     os.remove(image_path)
     img = np.array(img, np.float32).transpose(2, 0, 1) / 255.0
@@ -166,10 +166,10 @@ def processing_image(path):
     pred = pred * roi
 
     pred = Image.fromarray(np.uint8(pred * 255))
-    pred.convert('L').save('./media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png')
+    pred.convert('L').save('./media/test/' + path + '_promap.png')
 
 
-async def receive_origin(request):
+def receive_origin(request):
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     obj = Photo.objects.create(photo_img=image)
@@ -181,10 +181,16 @@ async def receive_origin(request):
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
     if BASEURL == "http://10.251.0.251:8000/media/test/":
-        await processing_image(os.path.basename(obj.photo_img.path))
+        processing_image(os.path.basename(obj.photo_img.path))
         # subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
     else:
-        subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
+        image_path = './media/test/' + os.path.basename(obj.photo_img.path)
+        img = cv2.imread(image_path)
+        cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(obj.photo_img.path))[0] + '_origin.png',
+                    img, )  # 保存为png
+        cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(obj.photo_img.path))[0] + '_promap.png',
+                    img, )  # 保存为png
+        os.remove(image_path)
 
     return JsonResponse('message="上传成功', safe=False)
 

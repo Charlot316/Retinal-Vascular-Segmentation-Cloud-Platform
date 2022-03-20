@@ -96,6 +96,7 @@ export default {
         this.$message.error("请上传图片");
         return false;
       }
+      this.myProps.loadingNewPicture = true;
     },
     handleAvatarSuccess() {
       this.$message({
@@ -103,10 +104,11 @@ export default {
         type: "success",
       });
       this.myProps.loadingNewPicture = true;
-      setTimeout(() => {
-        this.myProps.imageList = [];
-        this.getImageList();
-      }, 7000);
+      this.getImageList();
+      // setTimeout(() => {
+      //   this.myProps.imageList = [];
+      //   this.getImageList();
+      // }, 7000);
     },
     downloadAllImage() {
       this.$emit("downloadAllImage");

@@ -113,10 +113,11 @@ export default {
         type: "success",
       });
       this.myProps.loadingNewPicture = true;
-      setTimeout(() => {
-        this.myProps.imageList = [];
-        this.getImageList();
-      }, 2000);
+      this.getImageList()
+      // setTimeout(() => {
+      //   this.myProps.imageList = [];
+      //   this.getImageList();
+      // }, 2000);
     },
     getImageList() {
       this.$emit("getImageList");
@@ -132,6 +133,7 @@ export default {
         this.$message.error("请上传图片");
         return false;
       }
+      this.myProps.loadingNewPicture = true;
     },
     downloadASetOfImage(singleImage) {
       this.downloadIamge(
