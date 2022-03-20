@@ -16,6 +16,7 @@
             list-type="false"
             :show-file-list="false"
             :before-upload="checkFile"
+            :on-error="handleUploadError"
             name="pic_img"
           >
             <el-button
@@ -85,18 +86,24 @@ export default {
     getImageList() {
       this.$emit("getImageList");
     },
+    handleUploadError(){
+      this.myProps.loadingNewPicture = false;
+      this.$message.error("上传失败");
+    },
     checkFile(file) {
+      this.myProps.loadingNewPicture = true;
       var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
       if (file.type.startsWith("image")) {
         if (fileExtension === "gif") {
           this.$message.error("不支持上传gif图片");
+          this.myProps.loadingNewPicture = false;
           return false;
         }
       } else {
         this.$message.error("请上传图片");
+        this.myProps.loadingNewPicture = false;
         return false;
       }
-      this.myProps.loadingNewPicture = true;
     },
     handleAvatarSuccess() {
       this.$message({
@@ -104,11 +111,10 @@ export default {
         type: "success",
       });
       this.myProps.loadingNewPicture = true;
-      this.getImageList();
-      // setTimeout(() => {
-      //   this.myProps.imageList = [];
-      //   this.getImageList();
-      // }, 7000);
+      setTimeout(() => {
+        this.myProps.imageList = [];
+        this.getImageList();
+      }, 7000);
     },
     downloadAllImage() {
       this.$emit("downloadAllImage");

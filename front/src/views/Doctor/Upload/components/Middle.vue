@@ -47,31 +47,6 @@ export default {
     getImageList() {
       this.$emit("getImageList");
     },
-    checkFile(file) {
-      var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (file.type.startsWith("image")) {
-        if (fileExtension === "gif") {
-          this.$message.error("不支持上传gif图片");
-          return false;
-        }
-      } else {
-        this.$message.error("请上传图片");
-        return false;
-      }
-      this.myProps.loadingNewPicture = true;
-    },
-    handleAvatarSuccess() {
-      this.$message({
-        message: "上传成功",
-        type: "success",
-      });
-      this.myProps.loadingNewPicture = true;
-      this.getImageList();
-      // setTimeout(() => {
-      //   this.myProps.imageList = [];
-      //   this.getImageList();
-      // }, 7000);
-    },
     downloadAllImage() {
       this.$emit("downloadAllImage");
     },

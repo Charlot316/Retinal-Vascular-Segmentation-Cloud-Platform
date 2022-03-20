@@ -95,7 +95,8 @@ export default {
         total: 0,
         imageList: [],
         newName: "",
-        baseURL: "http://localhost:8000/",
+        //baseURL: "http://localhost:8000/",
+        baseURL:"http://10.251.0.251:8000/"
       },
     };
   },
