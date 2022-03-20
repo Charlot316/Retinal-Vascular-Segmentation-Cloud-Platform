@@ -136,7 +136,7 @@ export default {
       setTimeout(() => {
         this.myProps.imageList = [];
         this.getImageList();
-      }, 7000);
+      }, 2000);
     },
     getImageList() {
       this.$emit("getImageList");

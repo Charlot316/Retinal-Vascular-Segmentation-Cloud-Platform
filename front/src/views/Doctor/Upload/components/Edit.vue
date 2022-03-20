@@ -1,7 +1,7 @@
 <template>
-  <el-container>
-    <el-main>
-      <div  :id="'tui-image-editor'+singleImage.photo_id+index" ></div>
+  <el-container style="text-align:center">
+    <el-main style="text-align:center">
+      <div  :id="'tui-image-editor'+singleImage.photo_id+index" style="margin:0 auto"></div>
     </el-main>
     <el-footer>
       <el-button size="mini" @click="downloadImg">下载</el-button>
