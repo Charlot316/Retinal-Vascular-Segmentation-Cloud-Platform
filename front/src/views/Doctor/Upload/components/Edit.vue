@@ -180,7 +180,7 @@ export default {
     if (this.index == "origin") {
       this.src = this.singleImage.photo_origin;
     } else if (this.index == "upload") {
-      this.src = this.singleImage.photo_uplaod;
+      this.src = this.singleImage.photo_upload;
     } else {
       this.src = this.singleImage.photo_promap;
     }
