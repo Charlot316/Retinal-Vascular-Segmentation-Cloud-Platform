@@ -1,10 +1,6 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
-      <i v-if="!collapse" class="el-icon-s-fold"></i>
-      <i v-else class="el-icon-s-unfold"></i>
-    </div>
     <div class="logo">眼底血管分割云平台</div>
     <div class="header-right">
       <div class="header-user-con">
@@ -103,6 +99,7 @@
   .header .logo {
     float: left;
     width: 250px;
+    margin-left:50px;
     line-height: 70px;
   }
   .header-right {

@@ -19,10 +19,10 @@ class ImageStorage(FileSystemStorage):
         ext = os.path.splitext(name)[1]
         # 文件目录
         d = os.path.dirname(name)
-        origin=os.path.basename(os.path.splitext(name)[0])
+        origin = os.path.basename(os.path.splitext(name)[0])
         # 定义文件名，年月日时分秒随机数
         fn = time.strftime('%Y%m%d%H%M%S')
-        fn =origin+fn
+        fn = origin + fn
         # 重写合成文件名
         name = os.path.join(d, fn + ext)
 

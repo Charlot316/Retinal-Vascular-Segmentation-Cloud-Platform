@@ -1,46 +1,61 @@
 from django.db import models
-import os
 from eyes.storage import ImageStorage
 
 
-class Patient(models.Model):
-    pName = models.CharField(max_length=30)
-    pID = models.AutoField(primary_key=True)
-    pPwd = models.CharField(max_length=25)
-    pPhone = models.CharField(max_length=11)
-    pAddr = models.CharField(max_length=30)
-    pEmail = models.CharField(max_length=20)
-    pTall = models.DecimalField(max_digits=3, decimal_places=3)
-    pWeight = models.DecimalField(max_digits=3, decimal_places=3)
-    pAge = models.IntegerField()
-    pSex = models.CharField(max_length=1)
-    #F/M
-    pAller = models.TextField(max_length=200)
-    pCharacter = models.BooleanField(default=False)
-    # 上面那句是改之前的模板里的，为了测试的时候不出错，目前还是加上
-    # True是管理员，False是读者，默认是读者
-
-# 医生
 class Doctor(models.Model):
-    dID = models.AutoField(primary_key=True)
-    dName = models.CharField(max_length=20)
-    dPwd = models.CharField(max_length=25)
-    dInfo = models.TextField(max_length=200)
+    doctor_id = models.AutoField(db_column='doctor_ID', primary_key=True)  # Field name made lowercase.
+    doctor_username = models.CharField(max_length=255)
+    doctor_password = models.CharField(max_length=255)
+    doctor_realname = models.CharField(max_length=255, null=True)
+    doctor_email = models.CharField(max_length=255, blank=True, null=True)
+    doctor_icon = models.CharField(max_length=255, blank=True, null=True)
+    doctor_phone = models.CharField(max_length=255, blank=True, null=True)
+    doctor_sex = models.SmallIntegerField(blank=True, null=True)
 
-# 管理员
+    class Meta:
+        managed = False
+        db_table = 'user_doctor'
+
+
 class Manager(models.Model):
-    mID = models.AutoField(primary_key=True)
-    mName = models.CharField(max_length=20)
-    mPwd = models.CharField(max_length=25)
+    manager_id = models.AutoField(db_column='manager_ID', primary_key=True)  # Field name made lowercase.
+    manager_name = models.CharField(max_length=20)
+    manager_password = models.CharField(max_length=25)
+
+    class Meta:
+        managed = False
+        db_table = 'user_manager'
 
 
+class Patient(models.Model):
+    patient_name = models.CharField(max_length=30)
+    patient_id = models.AutoField(db_column='patient_ID', primary_key=True)  # Field name made lowercase.
+    patient_phone = models.CharField(max_length=11, blank=True, null=True)
+    patient_address = models.CharField(max_length=30, blank=True, null=True)
+    patient_email = models.CharField(max_length=255, blank=True, null=True)
+    patient_height = models.DecimalField(max_digits=3, decimal_places=3, blank=True, null=True)
+    patient_weight = models.DecimalField(max_digits=3, decimal_places=3, blank=True, null=True)
+    patient_age = models.IntegerField(blank=True, null=True)
+    patient_sex = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_patient'
 
 
-class Pho(models.Model):
-    name = models.CharField(max_length=255)
-    saveName = models.CharField(max_length=255)
-    uId=models.IntegerField(null=True)
-    origin = models.CharField(null=True,max_length=255)
-    bytemap = models.CharField(null=True,max_length=255)
-    promap = models.CharField(null=True,max_length=255)
-    img = models.FileField(blank=True, null=True, upload_to='test',storage=ImageStorage())
+class Photo(models.Model):
+    photo_id = models.AutoField(db_column='photo_ID', primary_key=True)  # Field name made lowercase.
+    photo_realname = models.CharField(max_length=255)
+    photo_img = models.FileField(max_length=255, upload_to='test', storage=ImageStorage())
+    photo_doctor = models.ForeignKey(Doctor, models.DO_NOTHING, db_column='photo_doctor_ID', blank=True,
+                                     null=True)  # Field name made lowercase.
+    photo_promap = models.CharField(max_length=255, blank=True, null=True)
+    photo_origin = models.CharField(max_length=255, blank=True, null=True)
+    photo_savename = models.CharField(max_length=255)
+    photo_patient = models.ForeignKey(Patient, models.DO_NOTHING, db_column='photo_patient_ID', blank=True,
+                                      null=True)  # Field name made lowercase.
+    photo_upload = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_photo'

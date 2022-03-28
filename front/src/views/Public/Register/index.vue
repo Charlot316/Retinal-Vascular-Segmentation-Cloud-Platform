@@ -1,92 +1,56 @@
 <template>
   <div class="register-wrap">
-    <el-scrollbar style="height:100%">
+    <el-scrollbar style="height: 100%">
       <div class="ms-register">
         <div class="ms-title">眼底血管分割云平台</div>
         <el-form
           :model="param"
           :rules="rules"
           ref="register"
-          label-width="0px"
-          class="ms-content"
+          class="demo-form-inline"
         >
-          <el-form-item prop="username">
-            <el-input
-              v-model="param.username"
-              placeholder="username"
-            >
-              <template #prepend>
-                <i class="el-icon-user">用户名</i>
-              </template>
+          <el-form-item prop="username" label="用户名">
+            <el-input v-model="param.username" placeholder="请输入用户名">
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" label="密码">
             <el-input
               type="password"
-              placeholder="password"
+              placeholder="请输入密码"
               v-model="param.password"
               @keyup.enter="submitForm()"
             >
-              <template #prepend>
-                <i class="el-icon-lock">密码</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="password">
+          <el-form-item prop="password" label="确认密码">
             <el-input
               type="password"
-              placeholder="password"
+              placeholder="请确认密码"
               v-model="param.tempPassword"
               @keyup.enter="submitForm()"
             >
-              <template #prepend>
-                <i class="el-icon-lock">确认密码</i>
-              </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="email">
-            <el-input
-              v-model="param.email"
-              placeholder="email"
-            >
-              <template #prepend>
-                <i class="el-icon-lock">邮箱</i>
-              </template>
+          <el-form-item prop="realname" label="真实姓名">
+            <el-input v-model="param.realname" placeholder="请输入真实姓名（选填）">
             </el-input>
           </el-form-item>
-          <el-form-item prop="phone">
-            <el-input
-              v-model="param.phone"
-              placeholder="phone"
-            >
-              <template #prepend>
-                <el-button icon="el-icon-lock">手机号</el-button>
-              </template>
+          <el-form-item prop="email" label="邮箱">
+            <el-input v-model="param.email" placeholder="请输入邮箱（选填）">
             </el-input>
           </el-form-item>
-          <el-form-item
-            label=""
-            prop="sex"
-          >
-            <el-radio-group
-              v-model="param.sex"
-              size="medium"
-            >
-              <el-radio
-                border
-                label="男"
-              ></el-radio>
-              <el-radio
-                border
-                label="女"
-              ></el-radio>
+          <el-form-item prop="phone" label="手机号">
+            <el-input v-model="param.phone" placeholder="请输入手机号（选填）">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="param.sex" size="medium">
+              <el-radio border label="1">男</el-radio>
+              <el-radio border label="0">女</el-radio>
             </el-radio-group>
           </el-form-item>
           <div class="register-btn">
-            <el-button
-              type="primary"
-              @click="submitForm()"
-            >注册</el-button>
+            <el-button type="primary" @click="submitForm()">注册</el-button>
           </div>
           <h>已有帐号？</h>
           <h class="h">
@@ -102,21 +66,22 @@
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+      const regEmail =
+        /(^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})+$)?/;
       if (regEmail.test(value)) {
         return callback();
       }
       callback(new Error("请输入合法的邮箱"));
     };
     var checkUsername = (rule, value, callback) => {
-      const regUsername = /^[0-9]+$/;
+      const regUsername = /(^[0-9]{11}$)*/;
       if (regUsername.test(value)) {
         return callback();
       }
       callback(new Error("请输入合法的用户名"));
     };
     var checkPhone = (rule, value, callback) => {
-      const regPhone = /^[0-9]+$/;
+      const regPhone = /(^[0-9]+$)*/;
       if (regPhone.test(value)) {
         return callback();
       }
@@ -137,7 +102,7 @@ export default {
             min: 1,
             max: 20,
             validator: checkUsername,
-            message: "用户名只能是数字，长度在1-20之间",
+            message: "用户名长度在1-20之间",
             trigger: "blur",
           },
         ],
@@ -151,20 +116,18 @@ export default {
           },
         ],
         email: [
-          { required: true, message: "请输入邮箱", trigger: "blur" },
           {
             validator: checkEmail,
             trigger: "blur",
           },
         ],
         phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
           {
             validator: checkPhone,
             trigger: "blur",
           },
         ],
-        sex: [{ requierd: true, message: "请选择性别", trigger: "blur" }],
+        sex: [{ requierd: false, message: "请选择性别", trigger: "blur" }],
       },
     };
   },
@@ -177,17 +140,14 @@ export default {
         if (valid) {
           if (this.param.password !== this.param.tempPassword) {
             return this.$message.error("输入的两次密码不一致");
-          }
-          if (this.param.sex === "") {
-            this.$message.error("请选择性别");
-          } else {
+          }else {
             await new Promise((resolve) => {
               this.$http
                 .post("/register/", JSON.stringify(this.param))
                 .then((res) => {
                   console.log(res);
-                  if (res.data.message === "用户名已存在")
-                    return this.$message.error("该用户名已被注册！");
+                  if (res.data.success === false)
+                    return this.$message.error(res.data.message);
                   this.$message.success("注册成功");
                   this.$router.push({ path: "/login" });
                 });

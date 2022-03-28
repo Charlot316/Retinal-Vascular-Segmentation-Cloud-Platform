@@ -20,23 +20,11 @@ a {
     text-decoration: none
 }
 
-
-.content-box {
-    position: absolute;
-    left: 250px;
-    right: 0;
-    top: 70px;
-    bottom: 0;
-    padding-bottom: 30px;
-    -webkit-transition: left .3s ease-in-out;
-    transition: left .3s ease-in-out;
-    background: #f0f0f0;
-}
-
 .content {
     width: auto;
-    height: 100%;
+    height: calc(100vh - 70px);
     padding: 10px;
+    background: #f0f0f0;
     overflow-y: scroll;
     box-sizing: border-box;
 }
@@ -92,6 +80,7 @@ a {
     opacity: 0;
 }
 
+
 /*BaseForm*/
 
 .form-box {
@@ -110,6 +99,7 @@ a {
 .el-time-spinner__wrapper .el-scrollbar__wrap:not(.el-scrollbar__wrap--hidden-default) {
     padding-bottom: 0;
 }
+
 
 /*Upload*/
 
@@ -156,6 +146,7 @@ a {
     font-style: normal;
 }
 
+
 /*VueEditor*/
 
 .ql-container {
@@ -169,6 +160,7 @@ a {
 .editor-btn {
     margin-top: 20px;
 }
+
 
 /*markdown*/
 
