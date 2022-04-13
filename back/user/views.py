@@ -1,7 +1,7 @@
 import subprocess
 import torch
 import numpy as np
-import cv2
+# import cv2  上线的时候记得解开
 import os
 import sys
 import json
@@ -16,7 +16,6 @@ from eyes.settings import MEDIA_ROOT
 from django.contrib.auth.hashers import make_password, check_password
 # from channels.generic.websocket import WebsocketConsumer
 from PIL import Image
-from torchvision import transforms
 
 # BASEURL = "http://localhost:8000/media/test/"
 BASEURL ="http://10.251.0.251:8000/media/test/"
@@ -252,6 +251,7 @@ def revise_picture_name(request):
             return JsonResponse({'success': True, 'message': '修改成功'}, status=200)
     else:
         return JsonResponse({})
+
 
 # def addPatient(request):
 #     if request.method == 'POST':
