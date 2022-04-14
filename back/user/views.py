@@ -18,6 +18,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from PIL import Image
 
 BASEURL = "http://localhost:8000/media/test/"
+
+
 # BASEURL ="http://10.251.0.251:8000/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
@@ -59,11 +61,10 @@ def login(request):
         print(uname)
         print(pwd)
         user = Doctor.objects.filter(doctor_username=uname)
-        # print(user[0].doctor_password)
         if len(user) == 0:
             return JsonResponse({'success': False, 'message': '用户不存在'})
         if len(user) > 0:
-            if pwd == user[0].doctor_password:
+            if check_password(pwd, (user[0]).doctor_password):
                 return JsonResponse({'success': True, 'message': '登录成功', 'userID': user[0].doctor_id,
                                      'role': 'Doctor'})
             else:
@@ -253,7 +254,8 @@ def revise_picture_name(request):
     else:
         return JsonResponse({})
 
-def addpatient(request):
+
+def add_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         name = data_json.get('name')
@@ -267,7 +269,8 @@ def addpatient(request):
     else:
         return JsonResponse({})
 
-def findpatient(request):
+
+def find_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         name = data_json.get('name')
@@ -284,12 +287,9 @@ def findpatient(request):
                 usr['patient_ID'] = pa.patient_id
                 usr['patient_name'] = pa.patient_name
                 res.append(usr)
-            return JsonResponse({'p_list':res,'success': True, 'message': '查询患者成功'}, status=200)
+            return JsonResponse({'p_list': res, 'success': True, 'message': '查询患者成功'}, status=200)
     else:
         return JsonResponse({})
-
-
-
 
 # def addPatient(request):
 #     if request.method == 'POST':

@@ -25,8 +25,8 @@ from eyes import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('addpatient/', user.views.addpatient),
-    path('findpatient/', user.views.findpatient),
+    path('addpatient/', user.views.add_patient),
+    path('findpatient/', user.views.find_patient),
     path('login/', user.views.login),
     path('register/', user.views.register),
     path('receive/', user.views.receive_origin),

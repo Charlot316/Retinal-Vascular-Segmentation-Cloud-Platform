@@ -44,7 +44,7 @@
       </div>
     </div>
   </el-card>
-  <el-dialog v-model="editVisible" :fullscreen="true" style="text-align:center" >
+  <el-dialog v-model="editVisible" :fullscreen="true"  >
     <my-edit :singleImage="singleImage" :index="index"/>
   </el-dialog>
 </div>
