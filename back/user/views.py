@@ -1,7 +1,7 @@
 import subprocess
 import torch
 import numpy as np
-# import cv2  上线的时候记得解开
+import cv2
 import os
 import sys
 import json
@@ -17,8 +17,8 @@ from django.contrib.auth.hashers import make_password, check_password
 # from channels.generic.websocket import WebsocketConsumer
 from PIL import Image
 
-# BASEURL = "http://localhost:8000/media/test/"
-BASEURL ="http://10.251.0.251:8000/media/test/"
+BASEURL = "http://localhost:8000/media/test/"
+# BASEURL ="http://10.251.0.251:8000/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
 #     unloader = transforms.ToPILImage()
@@ -63,7 +63,7 @@ def login(request):
         if len(user) == 0:
             return JsonResponse({'success': False, 'message': '用户不存在'})
         if len(user) > 0:
-            if check_password(pwd, (user[0]).doctor_password):
+            if pwd == user[0].doctor_password:
                 return JsonResponse({'success': True, 'message': '登录成功', 'userID': user[0].doctor_id,
                                      'role': 'Doctor'})
             else:
@@ -183,6 +183,7 @@ def receive_origin(request):
         # processing_image(os.path.basename(obj.photo_img.path))
         subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
     else:
+        print("dest_________________________________________")
         subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
         # image_path = './media/test/' + os.path.basename(obj.photo_img.path)
         # img = cv2.imread(image_path)
@@ -251,6 +252,43 @@ def revise_picture_name(request):
             return JsonResponse({'success': True, 'message': '修改成功'}, status=200)
     else:
         return JsonResponse({})
+
+def addpatient(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        name = data_json.get('name')
+        if len(name) == 0:
+            return JsonResponse({'success': False, 'message': ''}, status=404)
+        else:
+            new_p = Patient()
+            new_p.patient_name = name
+            new_p.save()
+            return JsonResponse({'success': True, 'message': '添加患者成功'}, status=200)
+    else:
+        return JsonResponse({})
+
+def findpatient(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        name = data_json.get('name')
+        p = Patient.objects.filter(patient_name=name)
+        res = []
+        if len(p) == 0:
+            new_p = Patient()
+            new_p.patient_name = name
+            new_p.save()
+            return JsonResponse({'success': True, 'message': '添加患者成功'}, status=200)
+        else:
+            for pa in p:
+                usr = {}
+                usr['patient_ID'] = pa.patient_id
+                usr['patient_name'] = pa.patient_name
+                res.append(usr)
+            return JsonResponse({'p_list':res,'success': True, 'message': '查询患者成功'}, status=200)
+    else:
+        return JsonResponse({})
+
+
 
 
 # def addPatient(request):
