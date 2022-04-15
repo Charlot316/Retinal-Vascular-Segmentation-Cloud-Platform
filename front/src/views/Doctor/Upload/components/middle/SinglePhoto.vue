@@ -3,8 +3,9 @@
   <el-card :body-style="{ padding: '0px' }">
     <el-image
       lazy
-      style="width: 100%;"
+      style="width: 100%;height:230px;"
       :src="src"
+      fit="fit"
       class="image"
       :preview-src-list="list"
     >
@@ -13,7 +14,7 @@
         <div class="image-slot">
           <el-image
             lazy
-            style="width: 100%;"
+            style="width: 100%;height:230px;"
             :src="require('../../../../../assets/img/loading.gif')"
             class="image"
           />
@@ -44,7 +45,7 @@
       </div>
     </div>
   </el-card>
-  <el-dialog v-model="editVisible" :fullscreen="true" style="text-align:center" >
+  <el-dialog v-model="editVisible" :fullscreen="true"  >
     <my-edit :singleImage="singleImage" :index="index"/>
   </el-dialog>
 </div>
@@ -130,3 +131,6 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+</style>

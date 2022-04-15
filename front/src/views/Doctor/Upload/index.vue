@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="body" style="min-width:1000px">
+    <div class="body" style="width:1200px">
       <el-row>
         <!-- 左侧的固定快捷按钮 -->
         <el-col :span="4">
@@ -71,6 +71,9 @@
         </el-col>
       </el-row>
     </div>
+    <el-dialog v-model="props.visible" title="Tips" width="1200px">
+      <my-uploader @getImageList="getImageList" :props="props"/>
+    </el-dialog>
   </div>
 </template>
 
@@ -78,12 +81,13 @@
 import { ElMessageBox, ElMessage } from "element-plus";
 import UploadMiddle from "./components/Middle.vue";
 import UploadLeft from "./components/Left.vue";
-
+import MyUploader from "./components/Uploader.vue";
 export default {
   name: "Upload",
   components: {
     UploadLeft,
     UploadMiddle,
+    MyUploader,
   },
   data() {
     return {
@@ -95,6 +99,7 @@ export default {
         total: 0,
         imageList: [],
         newName: "",
+        visible: false,
         baseURL: "http://localhost:8000/",
         //baseURL:"http://10.251.0.251:8000/"
       },
@@ -104,7 +109,6 @@ export default {
     this.getImageList();
   },
   methods: {
-
     handleSizeChange(size) {
       this.props.pagesize = size;
       this.getImageList();
@@ -160,7 +164,7 @@ export default {
           });
         });
     },
-    
+
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
         this.$http

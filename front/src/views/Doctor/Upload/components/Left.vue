@@ -7,24 +7,13 @@
         content="上传新的眼底血管图片"
         placement="right"
       >
-        <el-upload
-          class="upload-demo"
-          :action="myProps.baseURL + 'receive/'"
-          :data="{ user_id: $store.state.user_id }"
-          :on-success="handleAvatarSuccess"
-          :on-error="handleUploadError"
-          list-type="false"
-          :show-file-list="false"
-          :before-upload="checkFile"
-          name="pic_img"
-        >
           <el-button
             show-file-list="false"
             type="primary"
             icon="el-icon-upload"
             circle
+            @click="myProps.visible=true"
           ></el-button>
-        </el-upload>
       </el-tooltip>
     </el-row>
     <el-row>
@@ -109,36 +98,6 @@ export default {
   methods: {
     getImageList() {
       this.$emit("getImageList");
-    },
-    handleUploadError(){
-      this.myProps.loadingNewPicture = false;
-      this.$message.error("上传失败");
-    },
-    checkFile(file) {
-      this.myProps.loadingNewPicture = true;
-      var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (file.type.startsWith("image")) {
-        if (fileExtension === "gif") {
-          this.$message.error("不支持上传gif图片");
-          this.myProps.loadingNewPicture = false;
-          return false;
-        }
-      } else {
-        this.$message.error("请上传图片");
-        this.myProps.loadingNewPicture = false;
-        return false;
-      }
-    },
-    handleAvatarSuccess() {
-      this.$message({
-        message: "上传成功",
-        type: "success",
-      });
-      this.myProps.loadingNewPicture = true;
-      setTimeout(() => {
-        this.myProps.imageList = [];
-        this.getImageList();
-      }, 10000);
     },
     downloadAllImage() {
       this.$emit("downloadAllImage");
