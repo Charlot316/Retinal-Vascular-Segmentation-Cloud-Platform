@@ -85,10 +85,9 @@ def create_pred(model, tens, mask, coords_crop, original_sz, tta='no'):
     return full_pred
 
 
-def save_pred(full_pred, save_results_path, im_name):
-    os.makedirs(save_results_path, exist_ok=True)
+def save_pred(full_pred, im_name):
     im_name = im_name.rsplit('/', 1)[-1]
-    save_name = osp.join(save_results_path, im_name[:-4] + '.png')
+    save_name = im_name[:-4] + '.png'
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -106,7 +105,7 @@ def crop_to_fov(img, mask):
 if __name__ == '__main__':
     '''
     Example:
-    python test.py --config_file config.cfg --im_name 'picture.jpg' --im_size 512 --device cuda:0
+    python test.py --config_file experiments/drive/config.cfg --im_name 'picture.jpg' --im_size 512 --device cuda:0
     '''
 
     args = parser.parse_args()
@@ -129,7 +128,7 @@ if __name__ == '__main__':
     print('* image name parsed: ' + im_name)
     # parse experiment path
     # experiment_path = args.experiment_path
-    experiment_path = 'experiments/prime_trans'
+    experiment_path = 'experiments/drive'
     if experiment_path is None:
         raise Exception('must specify path to experiment')
 
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     model.eval()
     print('* Start predicting...')
 
-    mask = Image.open('test_mask.jpg').resize((512, 512), Image.ANTIALIAS).convert('L')
+    mask = Image.open('test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     # in numpy convention
     original_sz = image.size[1], image.size[0]
@@ -172,5 +171,5 @@ if __name__ == '__main__':
     mask = np.array(mask).astype(bool)
     full_pred = create_pred(model, image, mask, coords_crop, original_sz)
     print('* Saving predictions...')
-    save_pred(full_pred, '/home/zy/code', im_name)
+    save_pred(full_pred,  im_name)
     print('* Done')
