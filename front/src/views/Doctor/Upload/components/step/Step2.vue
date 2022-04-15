@@ -17,8 +17,10 @@
     <el-card class="box-card" v-loading="loading">
       <div v-if="patientList.length > 0">
         <div v-for="patient in patientList" :key="patient">
-          <img :src="patient.photo" /> {{ patient.patient_name }}
+          <div style="padding:10px;line-height:70px;">
+          <img :src="patient.photo" style="width:50px;height:50px;"/> {{ patient.patient_name }}
           <el-button @click="submit(patient)" type="primary">选择</el-button>
+          </div>
         </div>
       </div>
       <div v-else>

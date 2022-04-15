@@ -71,7 +71,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog v-model="props.visible" title="Tips" width="1200px">
+    <el-dialog v-model="props.visible" title="图片上传" width="1200px">
       <my-uploader @getImageList="getImageList" :props="props"/>
     </el-dialog>
   </div>
