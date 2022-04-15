@@ -1,86 +1,50 @@
 <template>
   <div>
-   
+    <el-card class="box-card">
+      <el-input
+        v-model="myParams.name"
+        @keyup.enter="submit"
+        placeholder="请输入患者姓名"
+        clearable
+      >
+        <template #append>
+          <el-button @click="submit" icon="el-icon-search"></el-button>
+        </template>
+      </el-input>
+    </el-card>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    method: {
-      type: String,
-      default: 'mail'
-    }
-  },
+  props: ["params"],
   data() {
     return {
-      code: '',
-      errorCode: false,
-      clicked: false
-    }
+      myParams: this.params,
+    };
   },
   updated() {
     //console.log(this.method);
   },
   methods: {
     submit() {
-      this.clicked = true
-      let authorId = this.$route.query.authorid
-      //console.log(authorId);
-      this.errorCode = !this.code.length > 0;
-      if (!this.errorCode) {
-        this.$http.get(`api/verifyEmail?code=${this.code}&authorId=${authorId}`).then(res => {
-          if (res.data.code == 0) {
-            this.$notify({
-              title: '成功',
-              message: '邮件验证成功',
-              type: 'success',
-            })
-            this.$store.commit("login", {
-              username: this.$store.state.user.username,
-              isAdministrator: this.$store.state.user.isAdministrator,
-              iconUrl: this.$store.state.user.iconUrl,
-              authorId: this.$route.query.authorid,
-              password: this.$store.state.user.password,
-              isAdminLogin: this.$store.state.user.isAdminLogin,
-            })
-            this.$emit('next-step');
-          }
-          this.clicked = false;
-        })
+      if (this.myParams.name.trim().length > 0) {
+        this.$emit("next-step");
+      } else {
+        this.$message({
+          title: "错误",
+          message: "请输入患者姓名",
+          type: "error",
+        });
       }
-      // this.$emit('next-step');
-      return;
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped>
 .box-card {
   width: 900px;
   margin: 0 auto;
-}
-.identify-choose {
-  display: inline-block;
-  width: 230px;
-  height: 120px;
-  margin: 30px;
-  border: solid 1px rgb(116, 179, 242);
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.identify-choose :hover {
-  cursor: pointer;
-}
-.hint:hover {
-  cursor: pointer;
-}
-.error-tip {
-  color: red;
-  font-size: 12px;
-  padding-top: 10px;
 }
 </style>

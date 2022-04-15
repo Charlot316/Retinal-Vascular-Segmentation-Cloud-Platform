@@ -172,9 +172,10 @@ def get_photo_list_for_doctor(request):
 def receive_origin(request):
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
+    p_id = request.POST.get('patient_id')
     obj = Photo.objects.create(photo_img=image)
     obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
-
+    obj.photo_patient = Patient.objects.get(patient_id=p_id)
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
     obj.photo_savename = os.path.basename(os.path.splitext(obj.photo_img.path)[0])
     obj.photo_origin = BASEURL + obj.photo_savename + "_origin.png"
@@ -260,12 +261,12 @@ def add_patient(request):
         data_json = json.loads(request.body)
         name = data_json.get('name')
         if len(name) == 0:
-            return JsonResponse({'success': False, 'message': ''}, status=404)
+            return JsonResponse({'success': False, 'message': '姓名不能为空'}, status=404)
         else:
             new_p = Patient()
             new_p.patient_name = name
             new_p.save()
-            return JsonResponse({'success': True, 'message': '添加患者成功'}, status=200)
+            return JsonResponse({'success': True, 'message': '添加患者成功','patient_ID':new_p.patient_id}, status=200)
     else:
         return JsonResponse({})
 
@@ -277,15 +278,22 @@ def find_patient(request):
         p = Patient.objects.filter(patient_name=name)
         res = []
         if len(p) == 0:
-            new_p = Patient()
-            new_p.patient_name = name
-            new_p.save()
-            return JsonResponse({'success': True, 'message': '添加患者成功'}, status=200)
+            # new_p = Patient()
+            # new_p.patient_name = name
+            # new_p.save()
+            return JsonResponse({'success': False, 'message': '未查询到患者'}, status=200)
         else:
             for pa in p:
                 usr = {}
                 usr['patient_ID'] = pa.patient_id
                 usr['patient_name'] = pa.patient_name
+                usr['photo'] = ""
+                photo = Photo.objects.filter(photo_patient__patient_id=pa.patient_id)
+                try:
+                    promap = photo.last().photo_promap
+                    usr['photo'] = promap
+                except:
+                    pass
                 res.append(usr)
             return JsonResponse({'p_list': res, 'success': True, 'message': '查询患者成功'}, status=200)
     else:

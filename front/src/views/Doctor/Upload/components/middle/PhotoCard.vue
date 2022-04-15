@@ -63,7 +63,7 @@
         <div v-else>
           <el-upload
             class="avatar-uploader"
-            :action="myProps.baseURL+'upload/'"
+            :action="myProps.baseURL + 'upload/'"
             :data="{ photo_id: singleImage.photo_id }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -75,14 +75,20 @@
             <el-card :body-style="{ padding: '0px' }">
               <el-image
                 lazy
-                style="width: 100%;"
+                style="width: 100%;height:230px;"
                 src="https://img0.baidu.com/it/u=101714381,3578597708&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500"
                 class="image"
               >
               </el-image>
-              <span>点击以上传</span>
               <div style="padding: 14px">
-                <span>黄金标准</span>
+                <span>金标准</span>
+                <div class="bottom">
+                  <el-button
+                    type="text"
+                    class="button"
+                    >点击上传</el-button
+                  >
+                </div>
               </div>
             </el-card>
           </el-upload>
@@ -108,7 +114,7 @@ export default {
     };
   },
   methods: {
-    handleUploadError(){
+    handleUploadError() {
       this.myProps.loadingNewPicture = false;
       this.$message.error("上传失败");
     },

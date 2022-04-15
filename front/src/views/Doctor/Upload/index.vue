@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="body" style="min-width:1000px">
+    <div class="body" style="width:1200px">
       <el-row>
         <!-- 左侧的固定快捷按钮 -->
         <el-col :span="4">
@@ -71,7 +71,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog v-model="props.visible" title="Tips" width="30%">
+    <el-dialog v-model="props.visible" title="Tips" width="1200px">
       <my-uploader @getImageList="getImageList" :props="props"/>
     </el-dialog>
   </div>

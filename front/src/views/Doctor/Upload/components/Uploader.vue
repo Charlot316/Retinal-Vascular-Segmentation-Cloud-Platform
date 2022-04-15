@@ -1,76 +1,99 @@
 <template>
-  <div class="card-header">
+  <div>
+    <div :style="{ margin: '20px auto', width: '1000px' }">
+      <el-steps :active="curStep" simple>
+        <el-step
+          title="检索患者名字"
+          :status="getStatus('1')"
+          @click="clickStep('1')"
+        ></el-step>
+        <el-step
+          title="患者选择"
+          :status="getStatus('2')"
+          @click="clickStep('2')"
+        ></el-step>
+        <el-step
+          title="上传图像"
+          :status="getStatus('3')"
+          @click="clickStep('3')"
+        ></el-step>
+      </el-steps>
+    </div>
     <div>
-      <!-- 上传新图片的按钮 -->
-      <el-tooltip
-        class="item"
-        effect="dark"
-        content="上传新的眼底血管图片"
-        placement="top"
-      >
-        <el-upload
-          class="upload-demo inline-block"
-          :action="props.baseURL + 'receive/'"
-          :data="{ user_id: $store.state.user_id }"
-          :on-success="handleAvatarSuccess"
-          list-type="false"
-          :show-file-list="false"
-          :before-upload="checkFile"
-          :on-error="handleUploadError"
-          name="pic_img"
-        >
-          <el-button show-file-list="false" type="primary" icon="el-icon-upload"
-            >上传</el-button
-          >
-        </el-upload>
-      </el-tooltip>
+    <step-1
+      v-if="curStep == 1"
+      @next-step="nextStep"
+      :params="params"
+    />
+    <step-2
+      v-if="curStep == 2"
+      @next-step="nextStep"
+      :params="params"
+    />
+    <step-3
+      v-if="curStep == 3"
+      @next-step="nextStep"
+      @back-step="backStep"
+      :params="params"
+      :props="props"
+      @getImageList="getImageList"
+    />
     </div>
   </div>
 </template>
 
 <script>
+import Step1 from "./step/Step1.vue";
+import Step2 from "./step/Step2.vue";
+import Step3 from "./step/Step3.vue";
 export default {
   props: ["props"],
+  components: {
+    Step1,
+    Step2,
+    Step3,
+  },
   data() {
     return {
       myProps: this.props,
+      curStep: 1,
+      params: {
+        name:"",
+        id: "",
+      },
     };
   },
   methods: {
+    getStatus(step) {
+      if (this.curStep === step) {
+        return "process";
+      } else if (this.curStep < step) {
+        return "wait";
+      } else if (this.curStep > step) {
+        return "success";
+      }
+    },
+    nextStep() {
+      this.curStep++;
+    },
+    clickStep(step) {
+      if (step < this.curStep) this.curStep = step;
+    },
     getImageList() {
       this.$emit("getImageList");
     },
-    handleUploadError() {
-      this.myProps.loadingNewPicture = false;
-      this.$message.error("上传失败");
-    },
-    checkFile(file) {
-      this.myProps.loadingNewPicture = true;
-      var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
-      if (file.type.startsWith("image")) {
-        if (fileExtension === "gif") {
-          this.$message.error("不支持上传gif图片");
-          this.myProps.loadingNewPicture = false;
-          return false;
-        }
-      } else {
-        this.$message.error("请上传图片");
-        this.myProps.loadingNewPicture = false;
-        return false;
+    backStep() {
+      this.curStep=1
+      this.params={
+        name:"",
+        id: "",
       }
-    },
-    handleAvatarSuccess() {
-      this.$message({
-        message: "上传成功",
-        type: "success",
-      });
-      this.myProps.loadingNewPicture = true;
-      this.myProps.visible = false;
-      setTimeout(() => {
-        this.myProps.imageList = [];
-        this.getImageList();
-      }, 10000);
     },
   },
 };
 </script>
+<style scoped>
+.el-step:hover {
+  cursor: pointer;
+}
+</style>
