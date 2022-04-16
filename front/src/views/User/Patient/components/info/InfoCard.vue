@@ -63,6 +63,7 @@ export default {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
+  width: 100%;
 }
 .title-liner {
   border: 1px solid rgb(230, 230, 230);
@@ -72,8 +73,5 @@ export default {
 .icon {
   margin-top: 30px;
   text-align: center;
-}
-.container {
-  width: 100%;
 }
 </style>

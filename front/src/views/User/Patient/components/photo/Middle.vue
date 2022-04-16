@@ -1,35 +1,35 @@
 <template>
   <div class="container">
     <div class="display">
-    <!-- 显示图片卡片 -->
-    <div v-loading="myProps.loadingNewPicture">
-      <div v-if="myProps.imageList.length > 0">
-        <div
-          v-for="singleImage in myProps.imageList"
-          :key="singleImage"
-          style="margin-top: 20px"
-        >
-          <photo-card
-            :singleImage="singleImage"
-            :props="myProps"
-            @getImageList="getImageList"
-          />
+      <!-- 显示图片卡片 -->
+      <div v-loading="myProps.loadingNewPicture">
+        <div v-if="myProps.imageList.length > 0">
+          <div
+            v-for="singleImage in myProps.imageList"
+            :key="singleImage"
+            style="margin-top: 20px"
+          >
+            <photo-card
+              :singleImage="singleImage"
+              :props="myProps"
+              @getImageList="getImageList"
+            />
+          </div>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="myProps.pagenum"
+            :page-sizes="[1, 3, 5, 10]"
+            :page-size="myProps.pagesize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="myProps.total"
+          >
+          </el-pagination>
         </div>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="myProps.pagenum"
-          :page-sizes="[1, 3, 5, 10]"
-          :page-size="myProps.pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="myProps.total"
-        >
-        </el-pagination>
+        <div v-else>
+          <el-empty description="该患者暂无图片" />
+        </div>
       </div>
-      <div v-else>
-        <el-empty description="该患者暂无图片" />
-      </div>
-    </div>
     </div>
   </div>
 </template>
@@ -52,11 +52,11 @@ export default {
       },
     };
   },
-  created(){
+  created() {
     this.getImageList();
   },
   methods: {
-      handleSizeChange(value) {
+    handleSizeChange(value) {
       this.myProps.pagesize = value;
       this.getImageList();
     },
@@ -95,16 +95,16 @@ export default {
 };
 </script>
 <style scoped>
-.container{
-  width:100%;
+.container {
+  width: 100%;
   text-align: center;
-  background-color: rgb(255,255,255,0);
+  background-color: rgb(255, 255, 255, 0);
   padding: 30px;
-    border: 0px solid #ddd;
-    border-radius: 5px;
+  border: 0px solid #ddd;
+  border-radius: 5px;
 }
-.display{
-  width:800px;
-  margin:0 auto;
+.display {
+  width: 800px;
+  margin: 0 auto;
 }
 </style>

@@ -4,16 +4,15 @@
     <template #header>
       <div class="card-header">
         <span
-          style="display: flex;justify-content: space-between;align-items: center;"
+          style="display: flex;justify-content: space-between;align-items: center; width:400px;"
         >
           <user-icon :user="singleImage.patient"></user-icon>
           <span>
             <span>{{ singleImage.photo_realname }}</span>
             <!-- 修改名字 -->
-            <el-popover placement="right" width="400" trigger="click">
+            <el-popover placement="right" trigger="click">
               <template #reference>
                 <el-button
-                  style="margin-right:10px"
                   icon="el-icon-edit"
                   type="text"
                   circle

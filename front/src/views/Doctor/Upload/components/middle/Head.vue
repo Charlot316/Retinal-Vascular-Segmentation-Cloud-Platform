@@ -54,7 +54,7 @@
         @keyup.enter="getImageList"
         placeholder="请输入图片名"
         clearable
-        style="width:20vw"
+        style="width:280px"
       >
         <template #append>
           <el-button @click="getImageList" icon="el-icon-search"></el-button>
