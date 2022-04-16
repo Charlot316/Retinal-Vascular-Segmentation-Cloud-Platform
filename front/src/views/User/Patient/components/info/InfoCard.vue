@@ -4,17 +4,10 @@
     <div class="title-liner"></div>
     <el-row>
       <el-col :span="16">
-        <my-info
-          v-if="mode==0"
-          :user="user"
-        />
-        <info-edit
-          v-if="mode==1"
-          :user="user"
-        />
+        <my-info v-if="mode == 0" :user="user" />
+        <info-edit v-if="mode == 1" :user="user" />
       </el-col>
-      <el-col :span="2">
-      </el-col>
+      <el-col :span="2"> </el-col>
       <el-col :span="6">
         <div class="icon">
           <right-tab
@@ -28,14 +21,14 @@
   </div>
 </template>
 <script>
-import RightTab from './RightTab'
-import MyInfo from './Info'
-import InfoEdit from './InfoEdit'
+import RightTab from "./RightTab";
+import MyInfo from "./Info";
+import InfoEdit from "./InfoEdit";
 export default {
-  props: ['user'],
+  props: ["user"],
   data() {
     return {
-      mode: 0,//0:展示信息的状态 1:编辑信息的状态
+      mode: 0, //0:展示信息的状态 1:编辑信息的状态
     };
   },
   components: {
@@ -44,27 +37,33 @@ export default {
     InfoEdit,
   },
   created() {
-    this.getInfo()
+    this.getInfo();
   },
   activated() {
-    this.getInfo()
+    this.getInfo();
   },
   methods: {
     fatherChangeEditMode(mode) {
-      this.mode = mode
+      this.mode = mode;
     },
     getInfo() {
-      this.$emit('getInfo')
+      this.$emit("getInfo");
     },
   },
   watch: {
     user() {
-      this.thisUser = this.user
-    }
-  }
+      this.thisUser = this.user;
+    },
+  },
 };
 </script>
 <style scoped>
+.container {
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
 .title-liner {
   border: 1px solid rgb(230, 230, 230);
   background-color: rgb(230, 230, 230);
@@ -73,5 +72,8 @@ export default {
 .icon {
   margin-top: 30px;
   text-align: center;
+}
+.container {
+  width: 100%;
 }
 </style>

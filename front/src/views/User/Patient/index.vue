@@ -1,27 +1,20 @@
 <template>
   <div>
-    <v-header/>
+    <v-header />
     <div class="main-content">
-      <el-row>
-        <el-col :span="4">
-          <div class="info-sider">
-            <el-affix :offset="80">
-              <my-menu :user="user" @changeSelectedMenu="changeSelectedMenu" />
-            </el-affix>
-          </div>
-        </el-col>
-        <el-col :span="1"> </el-col>
-        <el-col :span="18" class="info-content">
-          <div>
-            <div v-if="selectedMenu == 0">
-              <my-info @getInfo="getUserInfo" :user="user" />
-            </div>
-            <div v-if="selectedMenu == 1">
-              <photo-list/>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+      <div class="left">
+        <el-affix :offset="80">
+          <my-menu :user="user" @changeSelectedMenu="changeSelectedMenu" />
+        </el-affix>
+      </div>
+      <div class="right"> 
+        <div v-if="selectedMenu == 0">
+          <my-info @getInfo="getUserInfo" :user="user" />
+        </div>
+        <div v-if="selectedMenu == 1">
+          <photo-list />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -30,13 +23,13 @@
 import vHeader from "../../../components/Doctor/Header";
 import MyMenu from "./Menu";
 import MyInfo from "./components/info/InfoCard";
-import PhotoList from "./components/photo/Middle.vue"
+import PhotoList from "./components/photo/Middle.vue";
 export default {
   components: {
     MyMenu,
     MyInfo,
     vHeader,
-    PhotoList
+    PhotoList,
   },
   data() {
     return {
@@ -45,7 +38,7 @@ export default {
     };
   },
   created() {
-    this.getUserInfo()
+    this.getUserInfo();
   },
   methods: {
     changeSelectedMenu(i) {
@@ -53,15 +46,18 @@ export default {
     },
     async getUserInfo() {
       await new Promise((resolve) => {
-        this.$http.post("/getPatientInfo/", JSON.stringify({id:this.$route.query.id})).then((res) => {
-          if (res.data.success === false)
-            return this.$message.error(res.data.message);
-          this.user=res.data.user
-        });
+        this.$http
+          .post(
+            "/getPatientInfo/",
+            JSON.stringify({ id: this.$route.query.id })
+          )
+          .then((res) => {
+            if (res.data.success === false)
+              return this.$message.error(res.data.message);
+            this.user = res.data.user;
+          });
         resolve();
-      }).then(() => {
-
-      });
+      }).then(() => {});
     },
   },
 };
@@ -70,15 +66,18 @@ export default {
 <style scoped>
 .main-content {
   overflow: auto;
-  height:calc(100vh - 70px);
+  height: calc(100vh - 70px);
   width: 100%;
   background-color: #f0f0f0;
 }
-.info-sider {
-  margin-left: 30px;
+.left{
+width:450px;
+padding:50px
 }
-.info-content {
-  margin-top: 70px;
-  width: 100%;
+.right{
+width:calc(100vw - 450px);
+margin-left:350px;
+margin-top:-220px;
+min-width:800px;
 }
 </style>

@@ -76,5 +76,6 @@ export default {
 
 .left-menu{
   width:240px;
+  margin: 0px;
 }
 </style>

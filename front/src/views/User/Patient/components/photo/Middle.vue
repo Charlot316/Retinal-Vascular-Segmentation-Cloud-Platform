@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="display">
     <!-- 显示图片卡片 -->
     <div v-loading="myProps.loadingNewPicture">
       <div v-if="myProps.imageList.length > 0">
@@ -28,6 +29,7 @@
       <div v-else>
         <el-empty description="该患者暂无图片" />
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -92,3 +94,17 @@ export default {
   },
 };
 </script>
+<style scoped>
+.container{
+  width:100%;
+  text-align: center;
+  background-color: rgb(255,255,255,0);
+  padding: 30px;
+    border: 0px solid #ddd;
+    border-radius: 5px;
+}
+.display{
+  width:800px;
+  margin:0 auto;
+}
+</style>
