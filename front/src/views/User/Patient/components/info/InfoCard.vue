@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>个人信息</h1>
+    <h1>患者信息</h1>
     <div class="title-liner"></div>
     <el-row>
       <el-col :span="16">
