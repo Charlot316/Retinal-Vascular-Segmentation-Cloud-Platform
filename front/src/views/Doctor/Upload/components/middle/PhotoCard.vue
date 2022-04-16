@@ -10,7 +10,7 @@
           <span>
             <span>{{ singleImage.photo_realname }}</span>
             <!-- 修改名字 -->
-            <el-popover placement="right" trigger="click">
+            <el-popover placement="right" width="400" trigger="click">
               <template #reference>
                 <el-button
                   icon="el-icon-edit"

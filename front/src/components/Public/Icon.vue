@@ -61,7 +61,9 @@ export default {
 .icon-container {
   display: flex;
   align-items: left;
-  min-width: 20vw;
+  min-width: 200px;
+  max-width:300px;
+  margin:0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -69,9 +71,9 @@ export default {
   margin-left: 10px;
 }
 .user-name {
-  text-align: center;
+  text-align: left;
   font-size: 18px;
-  max-width: 18vw;
+  max-width: 200px;
   font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,7 +83,7 @@ export default {
 .info {
   font-size: 15px;
   color: #696969;
-  max-width: 18vw;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
