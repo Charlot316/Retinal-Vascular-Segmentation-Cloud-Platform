@@ -53,6 +53,19 @@ BASEURL = "http://localhost:8000/media/test/"
 #             self.send(i)
 
 
+def get_patient_icon(id):
+    patient = Patient.objects.get(patient_id=id)
+    if patient.patient_icon is not None and len(patient.patient_icon) > 0:
+        return patient.patient_icon
+    else:
+        photo = Photo.objects.filter(photo_patient__patient_id=patient.patient_id)
+        try:
+            return photo.last().photo_promap
+        except:
+            return ""
+            pass
+
+
 def login(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
@@ -121,7 +134,7 @@ def get_photo_list_for_doctor(request):
         result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
             result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
-                          'photo_promap', 'photo_patient__patient_id'))
+                          'photo_promap'))
         total = len(apply_list)
         paginator = Paginator(apply_list, pagesize)
         try:
@@ -133,7 +146,27 @@ def get_photo_list_for_doctor(request):
                 p_list = paginator.page(paginator.num_pages)  # pagenum大于页码范围->获取最后一页数据
             else:
                 p_list = paginator.page(1)  # pagenum小于页码范围->获取第一页数据
-
+        for photo in p_list:
+            patient = Photo.objects.get(photo_id=photo['photo_id']).photo_patient
+            doctor = Photo.objects.get(photo_id=photo['photo_id']).photo_doctor
+            photo['patient'] = {
+                'patient_ID': patient.patient_id,
+                'name': patient.patient_name,
+                'icon': get_patient_icon(patient.patient_id),
+                'isDoctor': False,
+                'age': patient.patient_age,
+            }
+            if doctor.doctor_realname is not None and doctor.doctor_realname != '':
+                name = doctor.doctor_realname
+            else:
+                name = doctor.doctor_username
+            photo['doctor'] = {
+                'doctor_ID': doctor.doctor_id,
+                'name': name,
+                'icon': doctor.doctor_icon,
+                'isDoctor': True,
+                'age': doctor.doctor_age,
+            }
         return JsonResponse({'success': True, 'message': '返回list成功', 'imageList': list(p_list), 'total': total},
                             safe=False, status=200,
                             json_dumps_params={'ensure_ascii': False})
@@ -275,7 +308,7 @@ def find_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         name = data_json.get('name')
-        p = Patient.objects.filter(patient_name=name)
+        p = Patient.objects.filter(patient_name__contains=name)
         res = []
         if len(p) == 0:
             # new_p = Patient()
@@ -287,18 +320,10 @@ def find_patient(request):
                 usr = {}
                 usr['patient_ID'] = pa.patient_id
                 usr['name'] = pa.patient_name
-                usr['icon'] = ""
                 usr['isDoctor'] = False
                 usr['age'] = pa.patient_age
-                if pa.patient_icon is not None and len(pa.patient_icon) > 0:
-                    usr['icon'] = pa.patient_icon
-                else:
-                    photo = Photo.objects.filter(photo_patient__patient_id=pa.patient_id)
-                    try:
-                        promap = photo.last().photo_promap
-                        usr['icon'] = promap
-                    except:
-                        pass
+                usr['icon'] = get_patient_icon(pa.patient_id)
+
                 res.append(usr)
             return JsonResponse({'p_list': res, 'success': True, 'message': '查询患者成功'}, status=200)
     else:

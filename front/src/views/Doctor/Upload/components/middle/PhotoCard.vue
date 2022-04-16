@@ -3,33 +3,38 @@
     <!-- 卡片头栏 -->
     <template #header>
       <div class="card-header">
-        <span>
-          <span>{{ singleImage.photo_realname }}</span>
-          <!-- 修改名字 -->
-          <el-popover placement="right" width="400" trigger="click">
-            <template #reference>
-              <el-button
-                style="margin-right:10px"
-                icon="el-icon-edit"
-                type="text"
-                circle
-                @click="myProps.newName = singleImage.photo_realname"
-              ></el-button>
-            </template>
-            <el-input
-              v-model="myProps.newName"
-              @keyup.enter="revisePictureName(singleImage)"
-              placeholder="请输入修改后的图片名称"
-              clearable
-            >
-              <template #append>
+        <span
+          style="display: flex;justify-content: space-between;align-items: center;"
+        >
+          <user-icon :user="singleImage.patient"></user-icon>
+          <span>
+            <span>{{ singleImage.photo_realname }}</span>
+            <!-- 修改名字 -->
+            <el-popover placement="right" width="400" trigger="click">
+              <template #reference>
                 <el-button
-                  @click="revisePictureName(singleImage)"
-                  icon="el-icon-check"
+                  style="margin-right:10px"
+                  icon="el-icon-edit"
+                  type="text"
+                  circle
+                  @click="myProps.newName = singleImage.photo_realname"
                 ></el-button>
               </template>
-            </el-input>
-          </el-popover>
+              <el-input
+                v-model="myProps.newName"
+                @keyup.enter="revisePictureName(singleImage)"
+                placeholder="请输入修改后的图片名称"
+                clearable
+              >
+                <template #append>
+                  <el-button
+                    @click="revisePictureName(singleImage)"
+                    icon="el-icon-check"
+                  ></el-button>
+                </template>
+              </el-input>
+            </el-popover>
+          </span>
         </span>
         <span>
           <!-- 下载图片 -->
@@ -83,11 +88,7 @@
               <div style="padding: 14px">
                 <span>金标准</span>
                 <div class="bottom">
-                  <el-button
-                    type="text"
-                    class="button"
-                    >点击上传</el-button
-                  >
+                  <el-button type="text" class="button">点击上传</el-button>
                 </div>
               </div>
             </el-card>
@@ -101,12 +102,14 @@
   </el-card>
 </template>
 <script>
+import UserIcon from "@/components/Public/Icon";
 import { ElMessageBox, ElMessage } from "element-plus";
 import SinglePhoto from "./SinglePhoto.vue";
 export default {
   props: ["props", "singleImage"],
   components: {
     SinglePhoto,
+    UserIcon,
   },
   data() {
     return {
