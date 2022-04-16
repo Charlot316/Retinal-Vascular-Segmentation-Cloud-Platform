@@ -37,6 +37,7 @@ class Patient(models.Model):
     patient_weight = models.DecimalField(max_digits=3, decimal_places=3, blank=True, null=True)
     patient_age = models.IntegerField(blank=True, null=True)
     patient_sex = models.CharField(max_length=1, blank=True, null=True)
+    patient_icon = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

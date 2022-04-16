@@ -266,7 +266,7 @@ def add_patient(request):
             new_p = Patient()
             new_p.patient_name = name
             new_p.save()
-            return JsonResponse({'success': True, 'message': '添加患者成功','patient_ID':new_p.patient_id}, status=200)
+            return JsonResponse({'success': True, 'message': '添加患者成功', 'patient_ID': new_p.patient_id}, status=200)
     else:
         return JsonResponse({})
 
@@ -286,14 +286,19 @@ def find_patient(request):
             for pa in p:
                 usr = {}
                 usr['patient_ID'] = pa.patient_id
-                usr['patient_name'] = pa.patient_name
-                usr['photo'] = ""
-                photo = Photo.objects.filter(photo_patient__patient_id=pa.patient_id)
-                try:
-                    promap = photo.last().photo_promap
-                    usr['photo'] = promap
-                except:
-                    pass
+                usr['name'] = pa.patient_name
+                usr['icon'] = ""
+                usr['isDoctor'] = False
+                usr['age'] = pa.patient_age
+                if pa.patient_icon is not None and len(pa.patient_icon) > 0:
+                    usr['icon'] = pa.patient_icon
+                else:
+                    photo = Photo.objects.filter(photo_patient__patient_id=pa.patient_id)
+                    try:
+                        promap = photo.last().photo_promap
+                        usr['icon'] = promap
+                    except:
+                        pass
                 res.append(usr)
             return JsonResponse({'p_list': res, 'success': True, 'message': '查询患者成功'}, status=200)
     else:

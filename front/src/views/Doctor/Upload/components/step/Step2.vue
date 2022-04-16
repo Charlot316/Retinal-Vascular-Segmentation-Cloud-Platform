@@ -17,9 +17,13 @@
     <el-card class="box-card" v-loading="loading">
       <div v-if="patientList.length > 0">
         <div v-for="patient in patientList" :key="patient">
-          <div style="padding:10px;line-height:70px;">
-          <img :src="patient.photo" style="width:50px;height:50px;"/> {{ patient.patient_name }}
-          <el-button @click="submit(patient)" type="primary">选择</el-button>
+          <div
+            style="display: flex;
+  justify-content: space-between;
+  align-items: center;"
+          >
+            <user-icon :user="patient"></user-icon>
+            <el-button @click="submit(patient)" type="primary">选择</el-button>
           </div>
         </div>
       </div>
@@ -31,8 +35,12 @@
 </template>
 
 <script>
+import UserIcon from "@/components/Public/Icon";
 export default {
   props: ["params"],
+  components: {
+    UserIcon,
+  },
   data() {
     return {
       myParams: this.params,
