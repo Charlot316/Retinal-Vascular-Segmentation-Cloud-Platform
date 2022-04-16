@@ -55,7 +55,7 @@
                 </el-button>
               </el-button-group>
             </div>
-            <div style="width:100px;margin-left:5px;margin:0 auto;text-align:center">
+            <div style="width:100px;margin:0 auto;text-align:center">
               <el-pagination
                 :currentPage="props.pagenum"
                 :page-size="props.pagesize"
