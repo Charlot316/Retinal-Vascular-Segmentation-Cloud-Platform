@@ -127,7 +127,6 @@ def get_photo_list_for_doctor(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         u_id = data_json.get('user_id')
-        print(u_id)
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         title = data_json.get('title')  # 每页显示条目数
@@ -173,6 +172,56 @@ def get_photo_list_for_doctor(request):
     else:
         return JsonResponse({})
 
+
+
+def get_photo_list_for_patient(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        u_id = data_json.get('user_id')
+        pagenum = data_json.get('pagenum')  # 当前页码数
+        pagesize = data_json.get('pagesize')  # 每页显示条目数
+        print(u_id)
+        result = Photo.objects.filter(photo_patient__patient_id=u_id)
+        apply_list = list(
+            result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
+                          'photo_promap'))
+        total = len(apply_list)
+        paginator = Paginator(apply_list, pagesize)
+        try:
+            p_list = paginator.page(pagenum)
+        except PageNotAnInteger as e:
+            p_list = paginator.page(1)  # pagenum不是整数->返回第一页数据
+        except EmptyPage as e:
+            if int(pagenum) > paginator.num_pages:
+                p_list = paginator.page(paginator.num_pages)  # pagenum大于页码范围->获取最后一页数据
+            else:
+                p_list = paginator.page(1)  # pagenum小于页码范围->获取第一页数据
+        for photo in p_list:
+            patient = Photo.objects.get(photo_id=photo['photo_id']).photo_patient
+            doctor = Photo.objects.get(photo_id=photo['photo_id']).photo_doctor
+            photo['patient'] = {
+                'id': patient.patient_id,
+                'name': patient.patient_name,
+                'icon': get_patient_icon(patient.patient_id),
+                'isDoctor': False,
+                'age': patient.patient_age,
+            }
+            if doctor.doctor_realname is not None and doctor.doctor_realname != '':
+                name = doctor.doctor_realname
+            else:
+                name = doctor.doctor_username
+            photo['doctor'] = {
+                'id': doctor.doctor_id,
+                'name': name,
+                'icon': doctor.doctor_icon,
+                'isDoctor': True,
+                'age': doctor.doctor_age,
+            }
+        return JsonResponse({'success': True, 'message': '返回list成功', 'imageList': list(p_list), 'total': total},
+                            safe=False, status=200,
+                            json_dumps_params={'ensure_ascii': False})
+    else:
+        return JsonResponse({})
 
 # def processing_image(path):
 #     image_path = './media/test/' + path

@@ -1,63 +1,37 @@
 <template>
-<div>
-  <el-card :body-style="{ padding: '0px' }">
-    <el-image
-      lazy
-      style="width: 100%;height:230px;"
-      :src="src"
-      fit="fit"
-      class="image"
-      :preview-src-list="list"
-    >
-      <!-- 图片加载出错的情况 -->
-      <template #error>
-        <div class="image-slot">
-          <el-image
-            lazy
-            style="width: 100%;height:230px;"
-            :src="require('../../../../../assets/img/loading.gif')"
-            class="image"
-          />
-          <div style="text-align:center;">
-            <h3 style="text-align:center">
-              图片加载中，请稍后刷新
-            </h3>
-            <el-button @click="getImageList">强制刷新</el-button>
-          </div>
+  <div>
+    <el-card :body-style="{ padding: '0px' }">
+      <el-image
+        lazy
+        style="width: 100%;height:230px;"
+        :src="src"
+        fit="fit"
+        class="image"
+        :preview-src-list="list"
+      >
+      </el-image>
+      <div style="padding: 14px">
+        <span>{{ name }}</span>
+        <div class="bottom">
+          <el-button
+            type="text"
+            class="button"
+            @click="downloadIamge(src, singleImage.photo_realname + type)"
+            >下载图片</el-button
+          >
         </div>
-      </template>
-    </el-image>
-    <div style="padding: 14px">
-      <span>{{ name }}</span>
-      <div class="bottom">
-        <el-button
-          type="text"
-          class="button"
-          @click="downloadIamge(src, singleImage.photo_realname + type)"
-          >下载图片</el-button
-        >
-        <el-button
-          type="text"
-          class="button"
-          @click="showEdit"
-          >编辑图片</el-button
-        >
       </div>
-    </div>
-  </el-card>
-  <el-dialog v-model="editVisible" :fullscreen="true"  >
-    <my-edit :singleImage="singleImage" :index="index"/>
-  </el-dialog>
-</div>
+    </el-card>
+    <el-dialog v-model="editVisible" :fullscreen="true">
+      <my-edit :singleImage="singleImage" :index="index" />
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-import MyEdit from "../Edit.vue"
 export default {
   props: ["singleImage", "index"],
-  components: {
-    MyEdit
-  },
+  components: {},
   data() {
     return {
       myProps: this.props,
@@ -65,15 +39,15 @@ export default {
       name: "",
       type: "",
       src: "",
-      editVisible:false,
+      editVisible: false,
     };
   },
   created() {
     this.initialize();
   },
   methods: {
-    showEdit(){
-      this.editVisible=true
+    showEdit() {
+      this.editVisible = true;
     },
     initialize() {
       if (
@@ -156,6 +130,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

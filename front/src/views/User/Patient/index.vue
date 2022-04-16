@@ -16,7 +16,9 @@
             <div v-if="selectedMenu == 0">
               <my-info @getInfo="getUserInfo" :user="user" />
             </div>
-            <div v-if="selectedMenu == 1"></div>
+            <div v-if="selectedMenu == 1">
+              <photo-list/>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -28,11 +30,13 @@
 import vHeader from "../../../components/Doctor/Header";
 import MyMenu from "./Menu";
 import MyInfo from "./components/info/InfoCard";
+import PhotoList from "./components/photo/Middle.vue"
 export default {
   components: {
     MyMenu,
     MyInfo,
-    vHeader
+    vHeader,
+    PhotoList
   },
   data() {
     return {
@@ -53,8 +57,6 @@ export default {
           if (res.data.success === false)
             return this.$message.error(res.data.message);
           this.user=res.data.user
-
-          console.log(res)
         });
         resolve();
       }).then(() => {
@@ -68,7 +70,9 @@ export default {
 <style scoped>
 .main-content {
   overflow: auto;
-  height:calc(100vh - 70px)
+  height:calc(100vh - 70px);
+  width: 100%;
+  background-color: #f0f0f0;
 }
 .info-sider {
   margin-left: 30px;

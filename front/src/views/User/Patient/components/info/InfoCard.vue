@@ -1,5 +1,5 @@
 <template>
-  <div class="info-card">
+  <div class="container">
     <h1>个人信息</h1>
     <div class="title-liner"></div>
     <el-row>

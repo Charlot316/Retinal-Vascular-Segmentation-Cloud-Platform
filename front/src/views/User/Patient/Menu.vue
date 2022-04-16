@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="left-menu">
     <div class="icon-container">
       <img
         style="width:50px;height:50px;border-radius:50%;object-fit:fill;flex-shrink:0;"
@@ -16,7 +16,6 @@
       <el-menu
         default-active="0"
         class="el-menu-vertical-demo"
-        style="width:15vw;"
         @select="handleSelectMenu"
       >
         <el-menu-item index="0">
@@ -64,9 +63,6 @@ export default {
   font-size: 25px;
   margin-bottom: 10px;
 }
-.menu-text {
-  font-size: 1vw;
-}
 .user-name {
   font-size: 25px;
   font-weight: 800;
@@ -76,11 +72,9 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  width: 15vw;
 }
-.menu-container {
-  width: 15vw;
-  background-color: rgb(230, 230, 230);
-  padding: 1px 0px 1px 1px;
+
+.left-menu{
+  width:240px;
 }
 </style>

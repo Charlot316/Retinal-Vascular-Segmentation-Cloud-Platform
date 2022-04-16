@@ -189,7 +189,7 @@ export default {
       await new Promise((resolve) => {
         this.$http
           .post(
-            "/getList/",
+            "/getListForDoctor/",
             JSON.stringify({
               title: this.props.searchTitle,
               user_id: this.$store.state.user_id,
