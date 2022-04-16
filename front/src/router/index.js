@@ -36,7 +36,8 @@ const routes = [
         name: "Patient",
         component: () =>
             import (
-                "../views/Patient/Info"
+                /* webpackChunkName: "login" */
+                "../views/User/Patient"
             ),
     },
     // /* 患者的页面的路由*/

@@ -329,6 +329,34 @@ def find_patient(request):
     else:
         return JsonResponse({})
 
+
+def get_patient_info(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        patient_id = data_json.get('id')
+        p = Patient.objects.filter(patient_id=patient_id)
+        if len(p) == 0:
+            return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
+        else:
+            patient = Patient.objects.get(patient_id=patient_id)
+            return JsonResponse(
+                {'success': True, 'message': '查询成功',
+                 'user': {'name': patient.patient_name,
+                          'age': patient.patient_age,
+                          'height': patient.patient_height,
+                          'weight': patient.patient_weight,
+                          'sex':patient.patient_sex,
+                          'email':patient.patient_email,
+                          'icon':patient.patient_icon,
+                          'phone':patient.patient_phone,
+                          'address':patient.patient_address,
+                          'isDoctor':False,
+                          }
+                 },
+                status=200)
+    else:
+        return JsonResponse({})
+
 # def addPatient(request):
 #     if request.method == 'POST':
 #         data_json = json.loads(request.body)

@@ -9,29 +9,27 @@
       <el-radio :label="0">女</el-radio>
     </el-radio-group>
 
-    <div class="prop-name">
-      <span>身高:</span>
-      <el-input-number
-        v-model="thisUser.height"
-        class="prop-special-value"
-        :min="1"
-        :max="300"
-      />
-      <span>体重:</span>
-      <el-input-number
-        v-model="thisUser.height"
-        class="prop-special-value"
-        :min="1"
-        :max="500"
-      />
-      <span>年龄:</span>
-      <el-input-number
-        v-model="thisUser.height"
-        class="prop-special-value"
-        :min="1"
-        :max="150"
-      />
-    </div>
+    <div class="prop-name">身高:</div>
+    <el-input-number
+      v-model="thisUser.height"
+      class="prop-special-value"
+      :min="1"
+      :max="300"
+    />
+    <div class="prop-name">体重:</div>
+    <el-input-number
+      v-model="thisUser.weight"
+      class="prop-special-value"
+      :min="1"
+      :max="500"
+    />
+    <div class="prop-name">年龄:</div>
+    <el-input-number
+      v-model="thisUser.age"
+      class="prop-special-value"
+      :min="1"
+      :max="150"
+    />
 
     <div class="prop-name">手机号</div>
     <el-input v-model="thisUser.phone" class="prop-value" />
