@@ -35,6 +35,7 @@ urlpatterns = [
     path('deletePicture/', user.views.delete_picture),
     path('revisePictureName/', user.views.revise_picture_name),
     path('getPatientInfo/', user.views.get_patient_info),
+    path('uploadPatientIcon/', user.views.receive_patient_icon),
     # path('addPatient/', user.views.addPatient),
     # path('delePatient/', user.views.delePatient),
     # path('addDoctor/', user.views.addDoctor),

@@ -1,5 +1,4 @@
 from django.db import models
-from eyes.storage import ImageStorage
 
 
 class Doctor(models.Model):
@@ -48,7 +47,6 @@ class Patient(models.Model):
 class Photo(models.Model):
     photo_id = models.AutoField(db_column='photo_ID', primary_key=True)  # Field name made lowercase.
     photo_realname = models.CharField(max_length=255)
-    photo_img = models.FileField(max_length=255, upload_to='test', storage=ImageStorage())
     photo_doctor = models.ForeignKey(Doctor, models.DO_NOTHING, db_column='photo_doctor_ID', blank=True,
                                      null=True)  # Field name made lowercase.
     photo_promap = models.CharField(max_length=255, blank=True, null=True)

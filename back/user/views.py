@@ -56,7 +56,7 @@ BASEURL = "http://localhost:8000/media/test/"
 def get_patient_icon(id):
     patient = Patient.objects.get(patient_id=id)
     if patient.patient_icon is not None and len(patient.patient_icon) > 0:
-        return patient.patient_icon
+        return BASEURL+'patient/'+patient.patient_icon+'.png'
     else:
         photo = Photo.objects.filter(photo_patient__patient_id=patient.patient_id)
         try:
@@ -206,20 +206,36 @@ def receive_origin(request):
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
     p_id = request.POST.get('patient_id')
-    obj = Photo.objects.create(photo_img=image)
+
+    obj =Photo()
     obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
     obj.photo_patient = Patient.objects.get(patient_id=p_id)
+
+
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    fn = time.strftime('%Y%m%d%H%M%S')
+    file_path = os.path.join(base_dir, 'media', 'test', str(obj.photo_id))
+    with open(file_path, 'wb+') as f:
+        for chunk in image.chunks():
+            f.write(chunk)
+    img = cv2.imread(file_path)
+    new_path='./media/test/' + str(obj.photo_patient.patient_id) + '-'+ str(obj.photo_doctor.doctor_id)+'-'+ fn + '.png'
+    cv2.imwrite(new_path, img, )  # 保存为png
+    os.remove(file_path)
+
+
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
-    obj.photo_savename = os.path.basename(os.path.splitext(obj.photo_img.path)[0])
+    obj.photo_savename =  str(obj.photo_patient.patient_id) + '-'+ str(obj.photo_doctor.doctor_id)+'-'+ fn
     obj.photo_origin = BASEURL + obj.photo_savename + "_origin.png"
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
     if BASEURL == "http://10.251.0.251:8000/media/test/":
         # processing_image(os.path.basename(obj.photo_img.path))
-        subprocess.Popen("python ./test/test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
+        subprocess.Popen("python ./test/test.py" + " " + os.path.basename(new_path), shell=True)
     else:
         print("dest_________________________________________")
-        subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(obj.photo_img.path), shell=True)
+        subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(new_path), shell=True)
         # image_path = './media/test/' + os.path.basename(obj.photo_img.path)
         # img = cv2.imread(image_path)
         # cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(obj.photo_img.path))[0] + '_origin.png',
@@ -232,20 +248,23 @@ def receive_origin(request):
 
 
 def receive_upload(request):
-    image = request.FILES.get('pic_img')
-    p_id = request.POST.get('photo_id')
-    photo = Photo.objects.get(photo_id=p_id)
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    file_path = os.path.join(base_dir, 'media', 'test', photo.photo_savename)
-    with open(file_path, 'wb+') as f:
-        for chunk in image.chunks():
-            f.write(chunk)
-    img = cv2.imread(file_path)
-    cv2.imwrite('./media/test/' + photo.photo_savename + '_upload.png', img, )  # 保存为png
-    os.remove(file_path)
-    photo.photo_upload = BASEURL + photo.photo_savename + "_upload.png"
-    photo.save()
-    return JsonResponse('message="上传成功', safe=False)
+    if request.method == 'POST':
+        image = request.FILES.get('pic_img')
+        p_id = request.POST.get('photo_id')
+        photo = Photo.objects.get(photo_id=p_id)
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        file_path = os.path.join(base_dir, 'media', 'test', photo.photo_savename)
+        with open(file_path, 'wb+') as f:
+            for chunk in image.chunks():
+                f.write(chunk)
+        img = cv2.imread(file_path)
+        cv2.imwrite('./media/test/' + photo.photo_savename + '_upload.png', img, )  # 保存为png
+        os.remove(file_path)
+        photo.photo_upload = BASEURL + photo.photo_savename + "_upload.png"
+        photo.save()
+        return JsonResponse('message="上传成功', safe=False)
+    else:
+        return JsonResponse({})
 
 
 def delete_picture(request):
@@ -345,17 +364,44 @@ def get_patient_info(request):
                           'age': patient.patient_age,
                           'height': patient.patient_height,
                           'weight': patient.patient_weight,
-                          'sex':patient.patient_sex,
-                          'email':patient.patient_email,
-                          'icon':patient.patient_icon,
-                          'phone':patient.patient_phone,
-                          'address':patient.patient_address,
-                          'isDoctor':False,
+                          'sex': patient.patient_sex,
+                          'email': patient.patient_email,
+                          'icon': get_patient_icon(patient_id),
+                          'phone': patient.patient_phone,
+                          'address': patient.patient_address,
+                          'isDoctor': False,
                           }
                  },
                 status=200)
     else:
         return JsonResponse({})
+
+
+def receive_patient_icon(request):
+    if request.method == 'POST':
+        image = request.FILES.get('pic_img')
+        p_id = request.POST.get('id')
+        patient =Patient.objects.get(patient_id=p_id)
+        if patient.patient_icon is not None and patient.patient_icon != '':
+            try:
+                os.remove("./media/test/patient/"+patient.patient_icon+".png")
+            except Exception as e:
+                pass
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        fn = time.strftime('%Y%m%d%H%M%S')
+        file_path = os.path.join(base_dir, 'media', 'test', 'patient', str(patient.patient_id))
+        with open(file_path, 'wb+') as f:
+            for chunk in image.chunks():
+                f.write(chunk)
+        img = cv2.imread(file_path)
+        cv2.imwrite('./media/test/patient/' + str(patient.patient_id)+'-'+fn + '.png', img, )  # 保存为png
+        os.remove(file_path)
+        patient.patient_icon=  str(patient.patient_id)+'-'+fn
+        patient.save()
+        return JsonResponse('message="上传成功', safe=False)
+    else:
+        return JsonResponse({})
+
 
 # def addPatient(request):
 #     if request.method == 'POST':

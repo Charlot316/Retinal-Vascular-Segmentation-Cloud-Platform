@@ -8,112 +8,112 @@
       />
     </div>
     <br />
-    <div v-if="mode==0">
+    <div v-if="mode == 0">
       <el-upload
+        :data="{ id: $route.query.id }"
+        name="pic_img"
         class="upload-demo"
-        action="http://119.3.233.208:8090/api/imageUpload"
+        action="http://localhost:8000/uploadPatientIcon/"
         :on-success="onSuccess"
         :on-preview="handlePreview"
-        accept=".jpg, .png"
-        :limit="1"
-        list-type=false
+        :before-upload="checkFile"
+        list-type="false"
         :show-file-list="false"
         with-credentials="true"
       >
-        <el-button
-          class="edit-button-upload"
-          type="info"
-          plain
-        >上传头像</el-button>
+        <el-button class="edit-button-upload" type="info" plain
+          >上传头像</el-button
+        >
       </el-upload>
       <br />
-      <el-button
-        class="edit-button"
-        type="info"
-        @click="changeEditMode"
-        plain
-      >编辑信息</el-button>
-
+      <el-button class="edit-button" type="info" @click="changeEditMode" plain
+        >编辑信息</el-button
+      >
     </div>
     <div v-else>
-      <el-button
-        class="edit-button"
-        type="info"
-        @click="editFinished"
-        plain
-      >修改完成</el-button>
+      <el-button class="edit-button" type="info" @click="editFinished" plain
+        >修改完成</el-button
+      >
 
-      <el-button
-        class="edit-button"
-        type="info"
-        @click="editCanceled"
-        plain
-      >取消修改</el-button>
-
+      <el-button class="edit-button" type="info" @click="editCanceled" plain
+        >取消修改</el-button
+      >
     </div>
   </div>
 </template>
 <script>
-import { ElNotification } from 'element-plus'
 export default {
-  props: ['user'],
+  props: ["user"],
   data() {
     return {
       thisUser: this.user,
-      mode: 0,//0:展示信息的状态 1:编辑信息的状态
+      mode: 0, //0:展示信息的状态 1:编辑信息的状态
       changePassword: false,
       param: {
-        oldPassword: '',
-        newPassword: '',
-        newPassword2: '',
+        oldPassword: "",
+        newPassword: "",
+        newPassword2: "",
       },
-      tmpEducation: '',
+      tmpEducation: "",
     };
   },
 
-  created() {
-  },
+  created() {},
   methods: {
     changeEditMode() {
       if (this.mode == 0) this.mode = 1;
       else this.mode = 0;
-      this.$emit('fatherChangeEditMode', this.mode)
+      this.$emit("fatherChangeEditMode", this.mode);
     },
     //编辑完成
     async editFinished() {
       if (this.mode == 0) this.mode = 1;
       else this.mode = 0;
-      this.$emit('fatherChangeEditMode', this.mode)
-     
-      
-      this.$emit('getInfo')
+      this.$emit("fatherChangeEditMode", this.mode);
+
+
+      this.$emit("getInfo");
     },
-   
+
     //上传头像
     onSuccess() {
-      ElNotification({
-        title: '成功',
-        message: '上传成功！',
-        type: 'success',
+      this.$message.success({
+        title: "成功",
+        message: "上传成功！",
+        type: "success",
       });
-      this.$emit('getInfo');
+        this.$emit("getInfo");
+   
+      
     },
     handlePreview(file) {
       window.open(file.response.url);
     },
     //取消修改
     async editCanceled() {
-      this.$emit('getInfo');
+      this.$emit("getInfo");
       if (this.mode == 0) this.mode = 1;
       else this.mode = 0;
-      this.$emit('fatherChangeEditMode', this.mode)
-    }
+      this.$emit("fatherChangeEditMode", this.mode);
+    },
+    checkFile(file) {
+      var fileExtension = file.name.substring(file.name.lastIndexOf(".") + 1);
+      if (file.type.startsWith("image")) {
+        if (fileExtension === "gif") {
+          this.$message.error("不支持上传gif图片");
+          return false;
+        }
+      } else {
+        this.$message.error("请上传图片");
+        return false;
+      }
+    },
   },
   watch: {
     user() {
-      this.thisUser = this.user
-    }
-  }
+      this.thisUser = this.user;
+    },
+  },
 };
 </script>
 <style scoped>
