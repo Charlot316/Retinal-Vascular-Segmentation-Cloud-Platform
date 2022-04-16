@@ -1,24 +1,53 @@
 #img {
-  font-size: 15px;
-  border-radius: 25px;
-  border: 2px solid #004b97;
-  padding: 20px;
-  width: 500px;
-  height: 50px;
+    font-size: 15px;
+    border-radius: 25px;
+    border: 2px solid #004b97;
+    padding: 20px;
+    width: 500px;
+    height: 50px;
 }
+
 .inline-block {
-  display: inline-block;
-  margin-right: 30px;
+    display: inline-block;
+    margin-right: 30px;
 }
+
 .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
 .el-pager {
-  display: flex;
-  flex-direction: column;
-}  
-.el-pager > li {
-  width: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.el-pager>li {
+    width: 100px;
+}
+
+.left {
+    width: calc(50vw - 400px);
+    position: absolute;
+    top: 70;
+    left: 0;
+}
+
+.middle {
+    width: 800px;
+    margin-left: calc(50vw - 400px);
+    float: left;
+}
+
+.right {
+    position: absolute;
+    top: 70;
+    right: 0;
+    width: calc(50vw - 400px);
+}
+
+.body {
+    width: 100%;
+    min-width: 1200px;
 }

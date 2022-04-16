@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-left:6vw;">
-    <el-row>
+  <div style="margin:0 auto;text-align:center">
+    <div style="margin:0 auto;text-align:center"> 
       <el-tooltip
         class="item"
         effect="dark"
@@ -15,8 +15,8 @@
             @click="myProps.visible=true"
           ></el-button>
       </el-tooltip>
-    </el-row>
-    <el-row>
+    </div>
+    <div style="margin:0 auto;text-align:center">
       <el-tooltip
         class="item"
         effect="dark"
@@ -31,8 +31,8 @@
           circle
         ></el-button>
       </el-tooltip>
-    </el-row>
-    <el-row>
+    </div>
+    <div style="margin:0 auto;text-align:center">
       <el-tooltip
         class="item"
         effect="dark"
@@ -47,8 +47,8 @@
           circle
         ></el-button>
       </el-tooltip>
-    </el-row>
-    <el-row>
+    </div>
+    <div style="margin:0 auto;text-align:center">
       <el-tooltip
         class="item"
         effect="dark"
@@ -83,7 +83,7 @@
           </el-popover>
         </div>
       </el-tooltip>
-    </el-row>
+    </div>
   </div>
 </template>
 
