@@ -4,6 +4,7 @@
     style="cursor:pointer;"
     @click="$router.push({ path: '/research', query: { id: user.id }})"
   > -->
+  <router-link target="_blank" :to="{ path: '/patient' , query: { id: user.id } }">
   <div
     class="icon-container"
     style="cursor:pointer;"
@@ -36,6 +37,7 @@
       </div>
     </div>
   </div>
+  </router-link>
 </template>
 
 <script>

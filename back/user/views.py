@@ -150,7 +150,7 @@ def get_photo_list_for_doctor(request):
             patient = Photo.objects.get(photo_id=photo['photo_id']).photo_patient
             doctor = Photo.objects.get(photo_id=photo['photo_id']).photo_doctor
             photo['patient'] = {
-                'patient_ID': patient.patient_id,
+                'id': patient.patient_id,
                 'name': patient.patient_name,
                 'icon': get_patient_icon(patient.patient_id),
                 'isDoctor': False,
@@ -161,7 +161,7 @@ def get_photo_list_for_doctor(request):
             else:
                 name = doctor.doctor_username
             photo['doctor'] = {
-                'doctor_ID': doctor.doctor_id,
+                'id': doctor.doctor_id,
                 'name': name,
                 'icon': doctor.doctor_icon,
                 'isDoctor': True,
@@ -370,6 +370,7 @@ def get_patient_info(request):
                           'phone': patient.patient_phone,
                           'address': patient.patient_address,
                           'isDoctor': False,
+                          'id': patient_id
                           }
                  },
                 status=200)
@@ -401,6 +402,32 @@ def receive_patient_icon(request):
         return JsonResponse('message="上传成功', safe=False)
     else:
         return JsonResponse({})
+
+
+def edit_patient_info(request):
+        if request.method == 'POST':
+            data_json = json.loads(request.body)
+            patient_id = data_json.get('id')
+            p = Patient.objects.filter(patient_id=patient_id)
+            if len(p) == 0:
+                return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
+            else:
+                patient = Patient.objects.get(patient_id=patient_id)
+                patient.patient_name = data_json.get('name')
+                patient.patient_age = int(data_json.get('age'))
+                patient.patient_height = int(data_json.get('height'))
+                patient.patient_weight = int(data_json.get('weight'))
+                patient.patient_address = data_json.get('address')
+                patient.patient_phone = data_json.get('phone')
+                patient.patient_email = data_json.get('email')
+                if data_json.get('sex') is not None:
+                    patient.patient_sex = int(data_json.get('sex'))
+                    print("??")
+                patient.save()
+                return JsonResponse({'success': True, 'message': '修改信息成功'}, status=200)
+        else:
+            return JsonResponse({})
+
 
 
 # def addPatient(request):

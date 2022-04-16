@@ -33,10 +33,10 @@ class Patient(models.Model):
     patient_phone = models.CharField(max_length=11, blank=True, null=True)
     patient_address = models.CharField(max_length=30, blank=True, null=True)
     patient_email = models.CharField(max_length=255, blank=True, null=True)
-    patient_height = models.DecimalField(max_digits=3, decimal_places=3, blank=True, null=True)
-    patient_weight = models.DecimalField(max_digits=3, decimal_places=3, blank=True, null=True)
+    patient_height = models.IntegerField(blank=True, null=True)
+    patient_weight = models.IntegerField(blank=True, null=True)
     patient_age = models.IntegerField(blank=True, null=True)
-    patient_sex = models.CharField(max_length=1, blank=True, null=True)
+    patient_sex = models.IntegerField(blank=True, null=True)
     patient_icon = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:

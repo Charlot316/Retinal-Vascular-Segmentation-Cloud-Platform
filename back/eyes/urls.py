@@ -36,6 +36,7 @@ urlpatterns = [
     path('revisePictureName/', user.views.revise_picture_name),
     path('getPatientInfo/', user.views.get_patient_info),
     path('uploadPatientIcon/', user.views.receive_patient_icon),
+    path('editPatientInfo/', user.views.edit_patient_info),
     # path('addPatient/', user.views.addPatient),
     # path('delePatient/', user.views.delePatient),
     # path('addDoctor/', user.views.addDoctor),

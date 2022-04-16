@@ -19,7 +19,6 @@
         :before-upload="checkFile"
         list-type="false"
         :show-file-list="false"
-        with-credentials="true"
       >
         <el-button class="edit-button-upload" type="info" plain
           >上传头像</el-button
@@ -67,12 +66,20 @@ export default {
     },
     //编辑完成
     async editFinished() {
+      
       if (this.mode == 0) this.mode = 1;
       else this.mode = 0;
       this.$emit("fatherChangeEditMode", this.mode);
-
-
-      this.$emit("getInfo");
+      await new Promise((resolve) => {
+        this.$http
+          .post("/editPatientInfo/", JSON.stringify(this.thisUser))
+          .then((res) => {
+            if (res.data.success === false)
+              return this.$message.error(res.data.message);
+            this.$message.success(res.data.message);
+          });
+        resolve();
+      }).then(() => {});
     },
 
     //上传头像
@@ -82,9 +89,7 @@ export default {
         message: "上传成功！",
         type: "success",
       });
-        this.$emit("getInfo");
-   
-      
+      this.$emit("getInfo");
     },
     handlePreview(file) {
       window.open(file.response.url);
