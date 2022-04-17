@@ -1,26 +1,17 @@
 import subprocess
-import torch
-import numpy as np
 import cv2
 import os
-import sys
 import json
 import time
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.utils.encoding import escape_uri_path
 from django.http import JsonResponse, FileResponse, StreamingHttpResponse
 from user.models import Doctor, Patient, Photo
-from django.views import View
-from eyes.settings import MEDIA_ROOT
 from django.contrib.auth.hashers import make_password, check_password
-# from channels.generic.websocket import WebsocketConsumer
-from PIL import Image
 
 BASEURL = "http://localhost:8000/media/test/"
 
-
-# BASEURL ="http://10.251.0.251:8000/media/test/"
+# BASEURL ="http://10.251.0.251:8001/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
 #     unloader = transforms.ToPILImage()
@@ -279,7 +270,7 @@ def receive_origin(request):
     obj.photo_origin = BASEURL + obj.photo_savename + "_origin.png"
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
-    if BASEURL == "http://10.251.0.251:8000/media/test/":
+    if BASEURL.startswith("http://10.251.0.251"):
         # processing_image(os.path.basename(obj.photo_img.path))
         subprocess.Popen("python ./test/test.py" + " " + os.path.basename(new_path), shell=True)
     else:
