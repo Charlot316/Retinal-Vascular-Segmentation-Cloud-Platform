@@ -69,7 +69,7 @@ export default {
             this.singleImage.photo_promap,
             this.singleImage.photo_origin,
           ];
-          this.name = "黄金标准";
+          this.name = "金标准";
           this.type = "_upload";
           this.src = this.singleImage.photo_upload;
         } else {
