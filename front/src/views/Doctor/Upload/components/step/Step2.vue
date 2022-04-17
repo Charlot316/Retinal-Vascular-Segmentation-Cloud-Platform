@@ -18,7 +18,7 @@
       <div v-if="patientList.length > 0">
         <div v-for="patient in patientList" :key="patient">
           <div
-            style="display: flex;justify-content: space-between;align-items: center;"
+            style="display: flex;justify-content: space-between;align-items: center;padding:5px;"
           >
             <user-icon :user="patient"></user-icon>
             <el-button @click="submit(patient)" type="primary">选择</el-button>

@@ -377,7 +377,7 @@ def find_patient(request):
         else:
             for pa in p:
                 usr = {}
-                usr['patient_ID'] = pa.patient_id
+                usr['id'] = pa.patient_id
                 usr['name'] = pa.patient_name
                 usr['isDoctor'] = False
                 usr['age'] = pa.patient_age
