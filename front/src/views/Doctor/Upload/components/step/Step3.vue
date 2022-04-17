@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <el-upload
         :action="props.baseURL + 'receive/'"
-        :data="{ user_id: $store.state.user_id,patient_id: params.id }"
+        :data="{ user_id: $store.state.user_id, id: params.id }"
         :on-success="handleAvatarSuccess"
         class="upload-demo"
         drag

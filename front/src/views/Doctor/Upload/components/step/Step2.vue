@@ -88,7 +88,7 @@ export default {
       }).then(() => {});
     },
     submit(patient) {
-      this.myParams.id = patient.patient_ID;
+      this.myParams.id = patient.id;
       this.$emit("next-step");
     },
   },

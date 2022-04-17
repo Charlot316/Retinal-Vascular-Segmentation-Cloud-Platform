@@ -79,7 +79,7 @@
             <el-card :body-style="{ padding: '0px' }">
               <el-image
                 lazy
-                style="width: 100%;height:230px;"
+                style="width: 230px;height:230px;"
                 src="https://img0.baidu.com/it/u=101714381,3578597708&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500"
                 class="image"
               >

@@ -245,10 +245,11 @@ def get_photo_list_for_patient(request):
 def receive_origin(request):
     image = request.FILES.get('pic_img')
     u_id = request.POST.get('user_id')
-    p_id = request.POST.get('patient_id')
+    p_id = request.POST.get('id')
 
     obj =Photo()
     obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
+    print(p_id)
     obj.photo_patient = Patient.objects.get(patient_id=p_id)
 
 
