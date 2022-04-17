@@ -76,7 +76,7 @@ export default {
           .then((res) => {
             {
               if (res.data.success == true) {
-                this.myParams.id = res.data.patient_ID;
+                this.myParams.id = res.data.id;
                 this.$message.success(res.data.message);
                 this.$emit("next-step");
               } else {
