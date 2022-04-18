@@ -22,6 +22,10 @@
           <i class="el-icon-document"></i>
           <span class="menu-text">个人信息</span>
         </el-menu-item>
+        <el-menu-item index="1">
+          <i class="el-icon-menu"></i>
+          <span class="menu-text">图像列表</span>
+        </el-menu-item>
       </el-menu>
     </div>
 

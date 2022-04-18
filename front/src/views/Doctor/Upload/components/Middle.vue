@@ -31,7 +31,7 @@
 
 <script>
 import UploadHead from "./middle/Head.vue";
-import PhotoCard from "./middle/PhotoCard.vue";
+import PhotoCard from "@/components/Public/PhotoCard.vue";
 export default {
   props: ["props"],
   components: {

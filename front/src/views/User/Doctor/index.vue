@@ -11,6 +11,9 @@
         <div v-if="selectedMenu == 0">
           <my-info @getInfo="getUserInfo" :user="user" />
         </div>
+         <div v-if="selectedMenu == 1">
+          <photo-list />
+        </div>
       </div>
     </div>
   </div>
@@ -20,11 +23,13 @@
 import vHeader from "../../../components/Doctor/Header";
 import MyMenu from "./Menu";
 import MyInfo from "./components/info/InfoCard";
+import PhotoList from "./components/photo/Middle.vue";
 export default {
   components: {
     MyMenu,
     MyInfo,
     vHeader,
+    PhotoList,
   },
   data() {
     return {

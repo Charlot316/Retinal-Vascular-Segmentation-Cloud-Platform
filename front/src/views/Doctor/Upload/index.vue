@@ -3,70 +3,70 @@
     <div class="body">
       <!-- 左侧的固定快捷按钮 -->
       <div class="left">
-          <upload-left
-            :props="props"
-            @downloadAllImage="downloadAllImage"
-            @deleteAllImage="deleteAllImage"
-            @getImageList="getImageList"
-          />
-      </div>
-      <!-- 中间主体部分 -->
-      <div class="middle">
-        <div style="width:800px;margin:0 auto"> 
-        <upload-middle
+        <upload-left
           :props="props"
           @downloadAllImage="downloadAllImage"
           @deleteAllImage="deleteAllImage"
           @getImageList="getImageList"
         />
+      </div>
+      <!-- 中间主体部分 -->
+      <div class="middle">
+        <div style="width:800px;margin:0 auto">
+          <upload-middle
+            :props="props"
+            @downloadAllImage="downloadAllImage"
+            @deleteAllImage="deleteAllImage"
+            @getImageList="getImageList"
+          />
         </div>
       </div>
       <!-- 右边的分页 -->
       <div class="right">
-       
+        <div style="margin:0 auto;text-align:center">
           <div style="margin:0 auto;text-align:center">
-            <div style="margin:0 auto;text-align:center">
-              <el-select
-                v-model="props.pagesize"
-                placeholder="Select"
-                style="width:100px;margin-left:5px"
-                @change="handleSizeChange(props.pagesize)"
-              >
-                <el-option label="1条/页" :value="1"> </el-option>
-                <el-option label="3条/页" :value="3"> </el-option>
-                <el-option label="5条/页" :value="5"> </el-option>
-                <el-option label="10条/页" :value="10"> </el-option>
-              </el-select>
-            </div>
-            <div style="padding-left:5px;inline-block;margin:0 auto;text-align:center">
-              <el-button-group>
-                <el-button
-                  style="width:50px; inline-block;"
-                  icon="el-icon-arrow-left"
-                  :disabled="props.pagenum <= 1"
-                  @click="handleCurrentChange(props.pagenum - 1)"
-                ></el-button>
-                <el-button
-                  style="width:50px; inline-block;"
-                  icon="el-icon-arrow-right"
-                  :disabled="props.pagenum >= props.total / props.pagesize"
-                  @click="handleCurrentChange(props.pagenum + 1)"
-                >
-                </el-button>
-              </el-button-group>
-            </div>
-            <div style="width:100px;margin:0 auto;text-align:center">
-              <el-pagination
-                :currentPage="props.pagenum"
-                :page-size="props.pagesize"
-                layout="pager"
-                :total="props.total"
-                @current-change="handleCurrentChange"
-              >
-              </el-pagination>
-            </div>
+            <el-select
+              v-model="props.pagesize"
+              placeholder="Select"
+              style="width:100px;margin-left:5px"
+              @change="handleSizeChange(props.pagesize)"
+            >
+              <el-option label="1条/页" :value="1"> </el-option>
+              <el-option label="3条/页" :value="3"> </el-option>
+              <el-option label="5条/页" :value="5"> </el-option>
+              <el-option label="10条/页" :value="10"> </el-option>
+            </el-select>
           </div>
-      
+          <div
+            style="padding-left:5px;inline-block;margin:0 auto;text-align:center"
+          >
+            <el-button-group>
+              <el-button
+                style="width:50px; inline-block;"
+                icon="el-icon-arrow-left"
+                :disabled="props.pagenum <= 1"
+                @click="handleCurrentChange(props.pagenum - 1)"
+              ></el-button>
+              <el-button
+                style="width:50px; inline-block;"
+                icon="el-icon-arrow-right"
+                :disabled="props.pagenum >= props.total / props.pagesize"
+                @click="handleCurrentChange(props.pagenum + 1)"
+              >
+              </el-button>
+            </el-button-group>
+          </div>
+          <div style="width:100px;margin:0 auto;text-align:center">
+            <el-pagination
+              :currentPage="props.pagenum"
+              :page-size="props.pagesize"
+              layout="pager"
+              :total="props.total"
+              @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+          </div>
+        </div>
       </div>
     </div>
     <el-dialog v-model="props.visible" title="图片上传" width="1200px">
@@ -98,6 +98,7 @@ export default {
         imageList: [],
         newName: "",
         visible: false,
+        showAll:false,
         baseURL: "http://localhost:8000/",
         //baseURL:"http://localhost:8000/"
       },
@@ -148,7 +149,11 @@ export default {
         .then(() => {
           var i, len;
           for (i = 0, len = this.props.imageList.length; i < len; i++) {
-            this.deleteASetOfImage(this.props.imageList[i]);
+            if (
+              this.props.imageList[i].doctor.id == this.$store.state.user_id
+            ) {
+              this.deleteASetOfImage(this.props.imageList[i]);
+            }
           }
           ElMessage({
             type: "success",
@@ -164,6 +169,9 @@ export default {
     },
 
     async deleteASetOfImage(singleImage) {
+      if (singleImage.doctor.id != this.$store.state.user_id) {
+        return;
+      }
       await new Promise((resolve) => {
         this.$http
           .post(

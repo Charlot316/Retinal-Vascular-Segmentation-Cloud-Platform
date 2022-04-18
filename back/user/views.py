@@ -6,7 +6,7 @@ import time
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse, FileResponse, StreamingHttpResponse
-from user.models import Doctor, Patient, Photo
+from user.models import Doctor, Patient, Photo,Upload,Comment
 from django.contrib.auth.hashers import make_password, check_password
 
 BASEURL = "http://localhost:8000/media/test/"
@@ -132,8 +132,7 @@ def get_photo_list_for_doctor(request):
         title = data_json.get('title')  # 每页显示条目数
         result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
-            result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
-                          'photo_promap'))
+            result.values('photo_id', 'photo_realname', 'photo_savename'))
         total = len(apply_list)
         paginator = Paginator(apply_list, pagesize)
         try:
@@ -155,6 +154,13 @@ def get_photo_list_for_doctor(request):
                 'isDoctor': False,
                 'age': patient.patient_age,
             }
+            photo['photo_origin'] = BASEURL + photo['photo_savename']+'_origin.png'
+            photo['photo_promap'] = BASEURL + photo['photo_savename']+'_origin.png'
+            upload=Upload.objects.filter(doctor_id=u_id)
+            if len(upload)>0:
+                photo['photo_upload'] = BASEURL + upload[0].upload_savename+'_upload.png'
+            else:
+                photo['photo_upload'] = ''
             if doctor.doctor_realname is not None and doctor.doctor_realname != '':
                 name = doctor.doctor_realname
             else:
@@ -205,6 +211,13 @@ def get_photo_list_for_patient(request):
                 'isDoctor': False,
                 'age': patient.patient_age,
             }
+            photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            upload = Upload.objects.filter(doctor_id=u_id)
+            if len(upload) > 0:
+                photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
+            else:
+                photo['photo_upload'] = ''
             if doctor.doctor_realname is not None and doctor.doctor_realname != '':
                 name = doctor.doctor_realname
             else:
@@ -275,8 +288,6 @@ def receive_origin(request):
 
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
     obj.photo_savename = str(obj.photo_patient.patient_id) + '-' + str(obj.photo_doctor.doctor_id) + '-' + fn
-    obj.photo_origin = BASEURL + obj.photo_savename + "_origin.png"
-    obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
     if BASEURL.startswith("http://10.251.0.251"):
         # processing_image(os.path.basename(obj.photo_img.path))
@@ -284,13 +295,6 @@ def receive_origin(request):
     else:
         print("dest_________________________________________")
         subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(new_path), shell=True)
-        # image_path = './media/test/' + os.path.basename(obj.photo_img.path)
-        # img = cv2.imread(image_path)
-        # cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(obj.photo_img.path))[0] + '_origin.png',
-        #             img, )  # 保存为png
-        # cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(obj.photo_img.path))[0] + '_promap.png',
-        #             img, )  # 保存为png
-        # os.remove(image_path)
 
     return JsonResponse('message="上传成功', safe=False)
 
