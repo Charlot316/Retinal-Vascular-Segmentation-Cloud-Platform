@@ -74,6 +74,7 @@ export default {
               pagenum: this.myProps.pagenum,
               pagesize: this.myProps.pagesize,
               title:"",
+              showAll:false
             })
           )
           .then((res) => {

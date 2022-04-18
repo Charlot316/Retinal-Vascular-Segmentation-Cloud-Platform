@@ -130,7 +130,11 @@ def get_photo_list_for_doctor(request):
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         title = data_json.get('title')  # 每页显示条目数
-        result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
+        show_all=data_json.get('showAll')
+        if show_all:
+            result = Photo.objects.filter(photo_realname__contains=title)
+        else:
+            result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
             result.values('photo_id', 'photo_realname', 'photo_savename'))
         total = len(apply_list)
@@ -234,34 +238,6 @@ def get_photo_list_for_patient(request):
                             json_dumps_params={'ensure_ascii': False})
     else:
         return JsonResponse({})
-
-
-# def processing_image(path):
-#     image_path = './media/test/' + path
-#     roi_path = './test/test_mask.gif'
-#
-#     img = cv2.imread(image_path)
-#     cv2.imwrite('./media/test/' + os.path.splitext(os.path.basename(path))[0] + '_origin.png', img, )  # 保存为png
-#     img = cv2.resize(img, (568, 584))
-#     os.remove(image_path)
-#     img = np.array(img, np.float32).transpose(2, 0, 1) / 255.0
-#
-#     roi = np.array(Image.open(roi_path))
-#     roi = cv2.resize(roi, (568, 584))
-#     roi[roi >= 0.5] = 1
-#     roi[roi <= 0.5] = 0
-#
-#     img1 = torch.Tensor(img)
-#     img1 = img1.unsqueeze(0)
-#     img1 = img1.cuda()
-#
-#     pred = model(img1)
-#     pred = (pred.squeeze(0)).squeeze(0)
-#     pred = pred.cpu().detach().numpy()
-#     pred = pred * roi
-#
-#     pred = Image.fromarray(np.uint8(pred * 255))
-#     pred.convert('L').save('./media/test/' + path + '_promap.png')
 
 
 def receive_origin(request):

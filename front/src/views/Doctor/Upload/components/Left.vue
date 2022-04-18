@@ -32,7 +32,7 @@
         ></el-button>
       </el-tooltip>
     </div>
-    <div style="margin:0 auto;text-align:center">
+    <div style="margin:0 auto;text-align:center" v-if="!myProps.showAll">
       <el-tooltip
         class="item"
         effect="dark"

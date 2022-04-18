@@ -198,6 +198,7 @@ export default {
               user_id: this.$store.state.user_id,
               pagenum: this.props.pagenum,
               pagesize: this.props.pagesize,
+              showAll:this.props.showAll,
             })
           )
           .then((res) => {

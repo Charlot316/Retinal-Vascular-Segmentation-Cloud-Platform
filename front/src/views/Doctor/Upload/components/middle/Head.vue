@@ -24,7 +24,7 @@
         placement="top"
       >
         <el-button
-          style="margin-left:30px"
+          style="margin-left:20px"
           type="success"
           @click="downloadAllImage()"
           icon="el-icon-download"
@@ -37,9 +37,10 @@
         effect="dark"
         content="清空本页所有图片"
         placement="top"
+        v-if="!myProps.showAll"
       >
         <el-button
-          style="margin-left:30px"
+          style="margin-left:20px"
           @click="deleteAllImage()"
           type="danger"
           icon="el-icon-delete"
@@ -48,6 +49,16 @@
       </el-tooltip>
     </div>
     <div>
+       <el-tooltip
+        class="item"
+        effect="dark"
+        style="margin-right:20px"
+        :content="myProps.showAll?'当前：全部显示 点按以只显示自己上传的图片':'当前：只显示自己上传的图片 点按以显示所有图片'"
+        placement="top"
+      >
+        <el-switch active-text="全部"
+    inactive-text="自己" v-model="myProps.showAll" @change="getImageList"/>
+      </el-tooltip>
       <!-- 搜索框 -->
       <el-input
         v-model="myProps.searchTitle"
