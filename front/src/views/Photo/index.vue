@@ -7,6 +7,7 @@
       </div>
       <!-- 中间主体部分 -->
       <div class="middle">
+        <head-content/>
         <middle-content/>
       </div>
       <!-- 右边的分页 -->
@@ -18,11 +19,13 @@
 </template>
 
 <script>
+import HeadContent from "./components/Head.vue";
 import MiddleContent from "./components/Middle.vue";
 export default {
   
   name: "Upload",
   components: {
+    HeadContent,
     MiddleContent
   },
   data() {
