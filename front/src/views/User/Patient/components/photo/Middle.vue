@@ -48,7 +48,6 @@ export default {
         pagesize: 5,
         total: 0,
         imageList: [],
-        baseURL: "http://localhost:8000/",
       },
     };
   },

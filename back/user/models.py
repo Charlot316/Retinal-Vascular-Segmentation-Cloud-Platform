@@ -7,16 +7,17 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+
 class Comment(models.Model):
-    comment_id = models.IntegerField(db_column='comment_ID', blank=True, null=True)  # Field name made lowercase.
-    photo = models.ForeignKey('Photo', models.CASCADE, db_column='photo_ID', blank=True, null=True)  # Field name made lowercase.
-    doctor = models.ForeignKey('Doctor', models.CASCADE, db_column='doctor_ID', blank=True, null=True)  # Field name made lowercase.
-    reply_to = models.ForeignKey('self', models.CASCADE, db_column='reply_to', blank=True, null=True)
+    comment_id = models.AutoField(db_column='comment_ID', primary_key=True)  # Field name made lowercase.
+    photo = models.ForeignKey('Photo', models.DO_NOTHING, db_column='photo_ID', blank=True, null=True)  # Field name made lowercase.
+    doctor = models.ForeignKey('Doctor', models.DO_NOTHING, db_column='doctor_ID', blank=True, null=True)  # Field name made lowercase.
+    reply_to = models.ForeignKey('self', models.DO_NOTHING, db_column='reply_to', blank=True, null=True)
     content = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'user_comment'
+        db_table = 'comment'
 
 
 class Doctor(models.Model):
@@ -32,7 +33,7 @@ class Doctor(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'user_doctor'
+        db_table = 'doctor'
 
 
 class Manager(models.Model):
@@ -42,7 +43,7 @@ class Manager(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'user_manager'
+        db_table = 'manager'
 
 
 class Patient(models.Model):
@@ -59,30 +60,27 @@ class Patient(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'user_patient'
+        db_table = 'patient'
 
 
 class Photo(models.Model):
     photo_id = models.AutoField(db_column='photo_ID', primary_key=True)  # Field name made lowercase.
     photo_realname = models.CharField(max_length=255)
-    photo_doctor = models.ForeignKey(Doctor, models.CASCADE, db_column='photo_doctor_ID', blank=True, null=True)  # Field name made lowercase.
-    photo_promap = models.CharField(max_length=255, blank=True, null=True)
-    photo_origin = models.CharField(max_length=255, blank=True, null=True)
+    photo_doctor = models.ForeignKey(Doctor, models.DO_NOTHING, db_column='photo_doctor_ID', blank=True, null=True)  # Field name made lowercase.
     photo_savename = models.CharField(max_length=255)
-    photo_patient = models.ForeignKey(Patient, models.CASCADE, db_column='photo_patient_ID', blank=True, null=True)  # Field name made lowercase.
-    photo_upload = models.CharField(max_length=255, blank=True, null=True)
+    photo_patient = models.ForeignKey(Patient, models.DO_NOTHING, db_column='photo_patient_ID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 'user_photo'
+        db_table = 'photo'
 
 
 class Upload(models.Model):
     upload_id = models.AutoField(db_column='upload_ID', primary_key=True)  # Field name made lowercase.
-    photo = models.ForeignKey(Photo, models.CASCADE, db_column='photo_ID', blank=True, null=True)  # Field name made lowercase.
-    doctor = models.ForeignKey(Doctor, models.CASCADE, db_column='doctor_ID', blank=True, null=True)  # Field name made lowercase.
-    save_name = models.CharField(max_length=255, blank=True, null=True)
+    photo = models.ForeignKey(Photo, models.DO_NOTHING, db_column='photo_ID', blank=True, null=True)  # Field name made lowercase.
+    doctor = models.ForeignKey(Doctor, models.DO_NOTHING, db_column='doctor_ID', blank=True, null=True)  # Field name made lowercase.
+    upload_savename = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'user_upload'
+        db_table = 'upload'

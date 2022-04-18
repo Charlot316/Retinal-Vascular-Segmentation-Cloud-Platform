@@ -6,7 +6,7 @@ import time
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import JsonResponse, FileResponse, StreamingHttpResponse
-from user.models import Doctor, Patient, Photo,Upload,Comment
+from user.models import Doctor, Patient, Photo, Upload, Comment
 from django.contrib.auth.hashers import make_password, check_password
 
 BASEURL = "http://localhost:8000/media/test/"
@@ -154,11 +154,11 @@ def get_photo_list_for_doctor(request):
                 'isDoctor': False,
                 'age': patient.patient_age,
             }
-            photo['photo_origin'] = BASEURL + photo['photo_savename']+'_origin.png'
-            photo['photo_promap'] = BASEURL + photo['photo_savename']+'_origin.png'
-            upload=Upload.objects.filter(doctor_id=u_id)
-            if len(upload)>0:
-                photo['photo_upload'] = BASEURL + upload[0].upload_savename+'_upload.png'
+            photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            upload = Upload.objects.filter(doctor_id=u_id, photo_id=photo['photo_id'])
+            if len(upload) > 0:
+                photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
             else:
                 photo['photo_upload'] = ''
             if doctor.doctor_realname is not None and doctor.doctor_realname != '':
@@ -213,7 +213,7 @@ def get_photo_list_for_patient(request):
             }
             photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
             photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
-            upload = Upload.objects.filter(doctor_id=u_id)
+            upload = Upload.objects.filter(doctor_id=u_id, photo_id=photo['photo_id'])
             if len(upload) > 0:
                 photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
             else:
@@ -290,7 +290,6 @@ def receive_origin(request):
     obj.photo_savename = str(obj.photo_patient.patient_id) + '-' + str(obj.photo_doctor.doctor_id) + '-' + fn
     obj.save()
     if BASEURL.startswith("http://10.251.0.251"):
-        # processing_image(os.path.basename(obj.photo_img.path))
         subprocess.Popen("python ./test/test.py" + " " + os.path.basename(new_path), shell=True)
     else:
         print("dest_________________________________________")
@@ -303,17 +302,23 @@ def receive_upload(request):
     if request.method == 'POST':
         image = request.FILES.get('pic_img')
         p_id = request.POST.get('photo_id')
+        d_id = request.POST.get('id')
         photo = Photo.objects.get(photo_id=p_id)
+        doctor = Doctor.objects.get(doctor_id=d_id)
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         file_path = os.path.join(base_dir, 'media', 'test', photo.photo_savename)
         with open(file_path, 'wb+') as f:
             for chunk in image.chunks():
                 f.write(chunk)
         img = cv2.imread(file_path)
-        cv2.imwrite('./media/test/' + photo.photo_savename + '_upload.png', img, )  # 保存为png
+        fn = time.strftime('%Y%m%d%H%M%S')
+        upload = Upload()
+        upload.doctor = doctor
+        upload.photo = photo
+        upload.upload_savename = str(photo.photo_id)+'-'+str(doctor.doctor_id)+'-'+fn
+        cv2.imwrite('./media/test/' + upload.upload_savename + '_upload.png', img, )  # 保存为png
         os.remove(file_path)
-        photo.photo_upload = BASEURL + photo.photo_savename + "_upload.png"
-        photo.save()
+        upload.save()
         return JsonResponse('message="上传成功', safe=False)
     else:
         return JsonResponse({})
@@ -331,12 +336,15 @@ def delete_picture(request):
             photo = Photo.objects.get(photo_id=photo_id)
             save_name = photo.photo_savename
             try:
-                if photo.photo_upload is not None:
-                    os.remove('./media/test/' + save_name + '_upload.png')
                 os.remove('./media/test/' + save_name + '_promap.png')
                 os.remove('./media/test/' + save_name + '_origin.png')
             except FileNotFoundError as e:
                 print(e)
+            Comment.objects.filter(photo=photo).delete()
+            photos=Upload.objects.filter(photo=photo)
+            for single_photo in photos:
+                os.remove('./media/test/' + single_photo.upload_savename + '_upload.png')
+            photos.delete()
             photo.delete()
             return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
     else:

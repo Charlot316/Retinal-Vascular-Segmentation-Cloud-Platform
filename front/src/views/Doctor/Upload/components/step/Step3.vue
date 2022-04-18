@@ -2,7 +2,7 @@
   <div style="text-align:center">
     <el-card class="box-card">
       <el-upload
-        :action="props.baseURL + 'receive/'"
+        action="http://localhost:8000/receive/"
         :data="{ user_id: $store.state.user_id, id: params.id }"
         :on-success="handleAvatarSuccess"
         class="upload-demo"
@@ -27,7 +27,7 @@ export default {
       code: "",
       errorCode: false,
       clicked: false,
-      myProps:this.props,
+      myProps: this.props,
     };
   },
   updated() {

@@ -99,8 +99,6 @@ export default {
         newName: "",
         visible: false,
         showAll:false,
-        baseURL: "http://localhost:8000/",
-        //baseURL:"http://localhost:8000/"
       },
     };
   },
