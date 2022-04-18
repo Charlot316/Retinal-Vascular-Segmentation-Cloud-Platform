@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import make_password, check_password
 
 BASEURL = "http://localhost:8000/media/test/"
 
+
 # BASEURL ="http://10.251.0.251:8001/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
@@ -47,7 +48,7 @@ BASEURL = "http://localhost:8000/media/test/"
 def get_patient_icon(id):
     patient = Patient.objects.get(patient_id=id)
     if patient.patient_icon is not None and len(patient.patient_icon) > 0:
-        return BASEURL+'patient/'+patient.patient_icon+'.png'
+        return BASEURL + 'patient/' + patient.patient_icon + '.png'
     else:
         photo = Photo.objects.filter(photo_patient__patient_id=patient.patient_id)
         try:
@@ -55,6 +56,14 @@ def get_patient_icon(id):
         except:
             return ""
             pass
+
+
+def get_doctor_icon(id):
+    doctor = Doctor.objects.get(doctor_id=id)
+    if doctor.doctor_icon is not None and len(doctor.doctor_icon) > 0:
+        return BASEURL + 'doctor/' + doctor.doctor_icon + '.png'
+    else:
+        return ""
 
 
 def login(request):
@@ -164,7 +173,6 @@ def get_photo_list_for_doctor(request):
         return JsonResponse({})
 
 
-
 def get_photo_list_for_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
@@ -214,6 +222,7 @@ def get_photo_list_for_patient(request):
     else:
         return JsonResponse({})
 
+
 # def processing_image(path):
 #     image_path = './media/test/' + path
 #     roi_path = './test/test_mask.gif'
@@ -247,12 +256,10 @@ def receive_origin(request):
     u_id = request.POST.get('user_id')
     p_id = request.POST.get('id')
 
-    obj =Photo()
+    obj = Photo()
     obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
     print(p_id)
     obj.photo_patient = Patient.objects.get(patient_id=p_id)
-
-
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     fn = time.strftime('%Y%m%d%H%M%S')
@@ -261,13 +268,13 @@ def receive_origin(request):
         for chunk in image.chunks():
             f.write(chunk)
     img = cv2.imread(file_path)
-    new_path='./media/test/' + str(obj.photo_patient.patient_id) + '-'+ str(obj.photo_doctor.doctor_id)+'-'+ fn + '.png'
+    new_path = './media/test/' + str(obj.photo_patient.patient_id) + '-' + str(
+        obj.photo_doctor.doctor_id) + '-' + fn + '.png'
     cv2.imwrite(new_path, img, )  # 保存为png
     os.remove(file_path)
 
-
     obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
-    obj.photo_savename =  str(obj.photo_patient.patient_id) + '-'+ str(obj.photo_doctor.doctor_id)+'-'+ fn
+    obj.photo_savename = str(obj.photo_patient.patient_id) + '-' + str(obj.photo_doctor.doctor_id) + '-' + fn
     obj.photo_origin = BASEURL + obj.photo_savename + "_origin.png"
     obj.photo_promap = BASEURL + obj.photo_savename + "_promap.png"
     obj.save()
@@ -423,10 +430,10 @@ def receive_patient_icon(request):
     if request.method == 'POST':
         image = request.FILES.get('pic_img')
         p_id = request.POST.get('id')
-        patient =Patient.objects.get(patient_id=p_id)
+        patient = Patient.objects.get(patient_id=p_id)
         if patient.patient_icon is not None and patient.patient_icon != '':
             try:
-                os.remove("./media/test/patient/"+patient.patient_icon+".png")
+                os.remove("./media/test/patient/" + patient.patient_icon + ".png")
             except Exception as e:
                 pass
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -436,9 +443,9 @@ def receive_patient_icon(request):
             for chunk in image.chunks():
                 f.write(chunk)
         img = cv2.imread(file_path)
-        cv2.imwrite('./media/test/patient/' + str(patient.patient_id)+'-'+fn + '.png', img, )  # 保存为png
+        cv2.imwrite('./media/test/patient/' + str(patient.patient_id) + '-' + fn + '.png', img, )  # 保存为png
         os.remove(file_path)
-        patient.patient_icon=  str(patient.patient_id)+'-'+fn
+        patient.patient_icon = str(patient.patient_id) + '-' + fn
         patient.save()
         return JsonResponse('message="上传成功', safe=False)
     else:
@@ -446,30 +453,104 @@ def receive_patient_icon(request):
 
 
 def edit_patient_info(request):
-        if request.method == 'POST':
-            data_json = json.loads(request.body)
-            patient_id = data_json.get('id')
-            p = Patient.objects.filter(patient_id=patient_id)
-            if len(p) == 0:
-                return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
-            else:
-                patient = Patient.objects.get(patient_id=patient_id)
-                patient.patient_name = data_json.get('name')
-                patient.patient_age = int(data_json.get('age'))
-                patient.patient_height = int(data_json.get('height'))
-                patient.patient_weight = int(data_json.get('weight'))
-                patient.patient_address = data_json.get('address')
-                patient.patient_phone = data_json.get('phone')
-                patient.patient_email = data_json.get('email')
-                if data_json.get('sex') is not None:
-                    patient.patient_sex = int(data_json.get('sex'))
-                    print("??")
-                patient.save()
-                return JsonResponse({'success': True, 'message': '修改信息成功'}, status=200)
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        patient_id = data_json.get('id')
+        p = Patient.objects.filter(patient_id=patient_id)
+        if len(p) == 0:
+            return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
         else:
-            return JsonResponse({})
+            patient = Patient.objects.get(patient_id=patient_id)
+            patient.patient_name = data_json.get('name')
+            patient.patient_age = int(data_json.get('age'))
+            patient.patient_height = int(data_json.get('height'))
+            patient.patient_weight = int(data_json.get('weight'))
+            patient.patient_address = data_json.get('address')
+            patient.patient_phone = data_json.get('phone')
+            patient.patient_email = data_json.get('email')
+            if data_json.get('sex') is not None:
+                patient.patient_sex = int(data_json.get('sex'))
+                print("??")
+            patient.save()
+            return JsonResponse({'success': True, 'message': '修改信息成功'}, status=200)
+    else:
+        return JsonResponse({})
 
 
+def get_doctor_info(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        doctor_id = data_json.get('id')
+        p = Doctor.objects.filter(doctor_id=doctor_id)
+        if len(p) == 0:
+            return JsonResponse({'success': False, 'message': '不存在该医生'}, status=404)
+        else:
+            doctor = Doctor.objects.get(doctor_id=doctor_id)
+            return JsonResponse(
+                {'success': True, 'message': '查询成功',
+                 'user': {
+                     'username': doctor.doctor_username,
+                     'name': doctor.doctor_realname,
+                     'age': doctor.doctor_age,
+                     'sex': doctor.doctor_sex,
+                     'email': doctor.doctor_email,
+                     'icon': get_doctor_icon(doctor_id),
+                     'phone': doctor.doctor_phone,
+                     'isDoctor': True,
+                     'id': doctor_id
+                 }
+                 },
+                status=200)
+    else:
+        return JsonResponse({})
+
+
+def receive_doctor_icon(request):
+    if request.method == 'POST':
+        image = request.FILES.get('pic_img')
+        p_id = request.POST.get('id')
+        doctor = Doctor.objects.get(doctor_id=p_id)
+        if doctor.doctor_icon is not None and doctor.doctor_icon != '':
+            try:
+                os.remove("./media/test/doctor/" + doctor.doctor_icon + ".png")
+            except Exception as e:
+                pass
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        fn = time.strftime('%Y%m%d%H%M%S')
+        file_path = os.path.join(base_dir, 'media', 'test', 'doctor', str(doctor.doctor_id))
+        with open(file_path, 'wb+') as f:
+            for chunk in image.chunks():
+                f.write(chunk)
+        img = cv2.imread(file_path)
+        cv2.imwrite('./media/test/doctor/' + str(doctor.doctor_id) + '-' + fn + '.png', img, )  # 保存为png
+        os.remove(file_path)
+        doctor.doctor_icon = str(doctor.doctor_id) + '-' + fn
+        doctor.save()
+        return JsonResponse('message="上传成功', safe=False)
+    else:
+        return JsonResponse({})
+
+
+def edit_doctor_info(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        doctor_id = data_json.get('id')
+        p = Doctor.objects.filter(doctor_id=doctor_id)
+        if len(p) == 0:
+            return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
+        else:
+            doctor = Doctor.objects.get(doctor_id=doctor_id)
+            doctor.doctor_name = data_json.get('name')
+            doctor.doctor_age = int(data_json.get('age'))
+            doctor.doctor_phone = data_json.get('phone')
+            doctor.doctor_email = data_json.get('email')
+            if data_json.get('sex') is not None:
+                doctor.doctor_sex = int(data_json.get('sex'))
+                print("??")
+            doctor.save()
+            return JsonResponse({'success': True, 'message': '修改信息成功'}, status=200)
+    else:
+        return JsonResponse({})
 
 # def addPatient(request):
 #     if request.method == 'POST':
