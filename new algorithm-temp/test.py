@@ -1,11 +1,8 @@
 import os
-import json
 import sys
-import os.path as osp
 import argparse
 import warnings
-from tqdm import tqdm
-import time
+import cv2
 from PIL import Image
 from skimage.measure import regionprops
 
@@ -14,13 +11,11 @@ from skimage.io import imsave
 from skimage.util import img_as_ubyte
 from skimage.transform import resize
 import torch
-from utils.model_saving_loading import str2bool
 from models.get_model import get_arch
-from utils.get_loaders import get_test_dataset
 from utils.model_saving_loading import load_model
-from sobel import edge_conv2d
 from utils import paired_transforms_tv04 as p_tr
 
+"""
 # argument parsing
 parser = argparse.ArgumentParser()
 required_named = parser.add_argument_group('required arguments')
@@ -32,7 +27,7 @@ parser.add_argument('--im_name', help='the path of the image', type=str)
 parser.add_argument('--device', type=str, default='cpu',
                     help='where to run the training code (e.g. "cpu" or "cuda:0") [default: %(default)s]')
 parser.add_argument('--result_path', type=str, default='results', help='path to save predictions (defaults to results')
-
+"""
 
 def flip_ud(tens):
     return torch.flip(tens, dims=[1])
@@ -108,13 +103,17 @@ if __name__ == '__main__':
     python test.py --config_file experiments/drive/config.cfg --im_name 'picture.jpg' --im_size 512 --device cuda:0
     '''
 
-    args = parser.parse_args()
+    # args = parser.parse_args()
     print('* args parsed...')
     # parse device
+    os.environ['CUDA_VISIBLE_DEVICES'] = '2,1,0,3'
+    device = torch.device("cuda")
+    """
     if args.device.startswith("cuda"):
         # In case one has multiple devices, we must first set the one
         # we would like to use so pytorch can find it.
         os.environ['CUDA_VISIBLE_DEVICES'] = args.device.split(":", 1)[1]
+        print(os.environ['CUDA_VISIBLE_DEVICES'])
         if not torch.cuda.is_available():
             raise RuntimeError("cuda is not currently available!")
         print(f"* Running prediction on device '{args.device}'...")
@@ -122,25 +121,36 @@ if __name__ == '__main__':
     else:
         # cpu
         device = torch.device(args.device)
+    """
 
     # parse image path
-    im_name = args.im_name
+    # im_name = args.im_name
+    im_name = "code/picture.jpg"
     print('* image name parsed: ' + im_name)
+    """
+    im_name = './media/test/' + sys.argv[1]
+    img = cv2.imread(im_name)
+    im_name = './media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
+    cv2.imwrite(im_name, img)
+    """
     # parse experiment path
     # experiment_path = args.experiment_path
-    experiment_path = 'experiments/drive'
+    experiment_path = 'code/experiments/drive'
     if experiment_path is None:
         raise Exception('must specify path to experiment')
 
     # parse config file if provided
-    config_file = args.config_file
+    # config_file = args.config_file
+    config_file = "code/experiments/drive/config.cfg"
+    """
     if config_file is not None:
         if not osp.isfile(config_file):
             raise Exception('non-existent config file')
         with open(args.config_file, 'r') as f:
             args.__dict__.update(json.load(f))
-
-    im_size = tuple([int(item) for item in args.im_size.split(',')])
+    """
+    # im_size = tuple([int(item) for item in args.im_size.split(',')])
+    im_size = (512, 512)
     if isinstance(im_size, tuple) and len(im_size) == 1:
         tg_size = (im_size[0], im_size[0])
     elif isinstance(im_size, tuple) and len(im_size) == 2:
@@ -148,7 +158,8 @@ if __name__ == '__main__':
     else:
         sys.exit('im_size should be a number or a tuple of two numbers')
 
-    model_name = args.model_name
+    # model_name = args.model_name
+    model_name = "unet"
     print('* Instantiating model  = ' + model_name)
     model = get_arch(model_name).to(device)
     print('* Loading trained weights...')
@@ -159,7 +170,7 @@ if __name__ == '__main__':
     model.eval()
     print('* Start predicting...')
 
-    mask = Image.open('test_mask.jpg').convert('L')
+    mask = Image.open('code/test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     # in numpy convention
     original_sz = image.size[1], image.size[0]

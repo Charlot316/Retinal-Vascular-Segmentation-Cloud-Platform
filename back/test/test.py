@@ -1,16 +1,18 @@
-import numpy as np
-import torch
-import cv2
-from PIL import Image
-from torchvision import transforms
 import os
 import sys
+import warnings
+import cv2
+from PIL import Image
+from skimage.measure import regionprops
 
-unloader = transforms.ToPILImage()
-
-os.environ["CUDA_VISIBLE_DEVICES"] = '2,1,0,3'
-
-model = torch.load('./test/DS_Model_100.pkl')
+import numpy as np
+from skimage.io import imsave
+from skimage.util import img_as_ubyte
+from skimage.transform import resize
+import torch
+from models.get_model import get_arch
+from utils.model_saving_loading import load_model
+from utils import paired_transforms_tv04 as p_tr
 
 
 def test():
