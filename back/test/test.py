@@ -15,9 +15,6 @@ from utils.model_saving_loading import load_model
 from utils import paired_transforms_tv04 as p_tr
 
 
-sys.argv[1] = "home/zy/code/picture.jpg"
-
-
 def flip_ud(tens):
     return torch.flip(tens, dims=[1])
 
@@ -70,8 +67,8 @@ def create_pred(model, tens, mask, coords_crop, original_sz, tta='no'):
 
 
 def save_pred(full_pred, im_name):
-    im_name = im_name.rsplit('/', 1)[-1]
-    save_name = '/media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png'
+    # im_name = im_name.rsplit('/', 1)[-1]
+    save_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png'
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         # this casts preds to int, loses precision but meh
@@ -89,15 +86,15 @@ def test():
     os.environ['CUDA_VISIBLE_DEVICES'] = '2,1,0,3'
     device = torch.device("cuda")
 
-    im_name = './media/test/' + sys.argv[1]
+    im_name = sys.argv[1]
     img = cv2.imread(im_name)
-    im_name = './media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
+    im_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
     cv2.imwrite(im_name, img)
     print(im_name + ' saved')
 
-    experiment_path = 'home/zy/code/experiments/drive'
+    experiment_path = '/home/zy/code/experiments/drive'
 
-    config_file = "home/zy/code/experiments/drive/config.cfg"
+    config_file = "/home/zy/code/experiments/drive/config.cfg"
 
     im_size = (512, 512)
     tg_size = (512, 512)
@@ -115,7 +112,7 @@ def test():
 
     print('* Start predicting...')
 
-    mask = Image.open('home/zy/code/test_mask.jpg').convert('L')
+    mask = Image.open('/home/zy/code/test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     # in numpy convention
     original_sz = image.size[1], image.size[0]
