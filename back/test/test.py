@@ -15,6 +15,9 @@ from utils.model_saving_loading import load_model
 from utils import paired_transforms_tv04 as p_tr
 
 
+sys.argv[1] = "home/zy/code/picture.jpg"
+
+
 def flip_ud(tens):
     return torch.flip(tens, dims=[1])
 
@@ -92,9 +95,9 @@ def test():
     cv2.imwrite(im_name, img)
     print(im_name + ' saved')
 
-    experiment_path = 'code/experiments/drive'
+    experiment_path = 'home/zy/code/experiments/drive'
 
-    config_file = "code/experiments/drive/config.cfg"
+    config_file = "home/zy/code/experiments/drive/config.cfg"
 
     im_size = (512, 512)
     tg_size = (512, 512)
@@ -112,7 +115,7 @@ def test():
 
     print('* Start predicting...')
 
-    mask = Image.open('code/test_mask.jpg').convert('L')
+    mask = Image.open('home/zy/code/test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     # in numpy convention
     original_sz = image.size[1], image.size[0]
