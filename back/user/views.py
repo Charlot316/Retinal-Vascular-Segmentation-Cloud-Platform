@@ -130,12 +130,13 @@ def get_photo_list_for_doctor(request):
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         title = data_json.get('title')  # 每页显示条目数
-        show_all=data_json.get('showAll')
+        show_all = data_json.get('showAll')
         if show_all:
             result = Photo.objects.filter(photo_realname__contains=title)
         else:
             if data_json.get('other_user_id') is not None:
-                result = Photo.objects.filter(photo_realname__contains=title, photo_doctor__doctor_id=data_json.get('other_user_id'))
+                result = Photo.objects.filter(photo_realname__contains=title,
+                                              photo_doctor__doctor_id=data_json.get('other_user_id'))
             else:
                 result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
@@ -190,7 +191,7 @@ def get_photo_list_for_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         u_id = data_json.get('user_id')
-        d_id=data_json.get('id')
+        d_id = data_json.get('id')
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         print(u_id)
@@ -243,38 +244,94 @@ def get_photo_list_for_patient(request):
         return JsonResponse({})
 
 
-def receive_origin(request):
-    image = request.FILES.get('pic_img')
-    u_id = request.POST.get('user_id')
-    p_id = request.POST.get('id')
+def get_photo_info(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        p_id = data_json.get('photo_id')
+        photo = Photo.objects.get(photo_id=p_id)
+        return_object = {}
+        patient = Photo.objects.get(photo_id=photo['photo_id']).photo_patient
+        doctor = Photo.objects.get(photo_id=photo['photo_id']).photo_doctor
+        return_object['patient'] = {
+            'id': patient.patient_id,
+            'name': patient.patient_name,
+            'icon': get_patient_icon(patient.patient_id),
+            'isDoctor': False,
+            'age': patient.patient_age,
+        }
+        if doctor.doctor_realname is not None and doctor.doctor_realname != '':
+            name = doctor.doctor_realname
+        else:
+            name = doctor.doctor_username
+        return_object['doctor'] = {
+            'id': doctor.doctor_id,
+            'name': name,
+            'icon': get_doctor_icon(doctor.doctor_id),
+            'isDoctor': True,
+            'age': doctor.doctor_age,
+        }
+        return_object['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
+        return_object['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
+        upload = Upload.objects.filter(photo_id=photo['photo_id'])
+        if len(upload) > 0:
+            upload_list = []
+            for single_upload in upload:
+                temp_doctor=single_upload.doctor
+                upload_list.append({
+                    'id': single_upload.upload_id,
+                    'savename': single_upload.upload_savename,
+                    'photo_upload': BASEURL + single_upload.upload_savename + '_upload.png',
+                    'doctor': {
+                        'id': temp_doctor.doctor_id,
+                        'name': name,
+                        'icon': get_doctor_icon(temp_doctor.doctor_id),
+                        'isDoctor': True,
+                        'age': temp_doctor.doctor_age,
+                    }
+                })
+        else:
+            return_object['photo_upload'] = []
 
-    obj = Photo()
-    obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
-    print(p_id)
-    obj.photo_patient = Patient.objects.get(patient_id=p_id)
-
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    fn = time.strftime('%Y%m%d%H%M%S')
-    file_path = os.path.join(base_dir, 'media', 'test', str(obj.photo_id))
-    with open(file_path, 'wb+') as f:
-        for chunk in image.chunks():
-            f.write(chunk)
-    img = cv2.imread(file_path)
-    new_path = './media/test/' + str(obj.photo_patient.patient_id) + '-' + str(
-        obj.photo_doctor.doctor_id) + '-' + fn + '.png'
-    cv2.imwrite(new_path, img, )  # 保存为png
-    os.remove(file_path)
-
-    obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
-    obj.photo_savename = str(obj.photo_patient.patient_id) + '-' + str(obj.photo_doctor.doctor_id) + '-' + fn
-    obj.save()
-    if BASEURL.startswith("http://10.251.0.251"):
-        subprocess.Popen("python ./test/test.py" + " " + os.path.basename(new_path), shell=True)
+        return JsonResponse({'success': True, 'message': '返回list成功', 'photo': return_object}, status=200)
     else:
-        print("dest_________________________________________")
-        subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(new_path), shell=True)
+        return JsonResponse({})
 
-    return JsonResponse('message="上传成功', safe=False)
+
+def receive_origin(request):
+    if request.method == 'POST':
+        image = request.FILES.get('pic_img')
+        u_id = request.POST.get('user_id')
+        p_id = request.POST.get('id')
+
+        obj = Photo()
+        obj.photo_doctor = Doctor.objects.get(doctor_id=u_id)
+        print(p_id)
+        obj.photo_patient = Patient.objects.get(patient_id=p_id)
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        fn = time.strftime('%Y%m%d%H%M%S')
+        file_path = os.path.join(base_dir, 'media', 'test', str(obj.photo_id))
+        with open(file_path, 'wb+') as f:
+            for chunk in image.chunks():
+                f.write(chunk)
+        img = cv2.imread(file_path)
+        new_path = './media/test/' + str(obj.photo_patient.patient_id) + '-' + str(
+            obj.photo_doctor.doctor_id) + '-' + fn + '.png'
+        cv2.imwrite(new_path, img, )  # 保存为png
+        os.remove(file_path)
+
+        obj.photo_realname = os.path.basename(os.path.splitext(image.name)[0])
+        obj.photo_savename = str(obj.photo_patient.patient_id) + '-' + str(obj.photo_doctor.doctor_id) + '-' + fn
+        obj.save()
+        if BASEURL.startswith("http://10.251.0.251"):
+            subprocess.Popen("python ./test/test.py" + " " + os.path.basename(new_path), shell=True)
+        else:
+            print("dest_________________________________________")
+            subprocess.Popen("python ./test/local_test.py" + " " + os.path.basename(new_path), shell=True)
+
+        return JsonResponse('message="上传成功', safe=False)
+    else:
+        return JsonResponse({})
 
 
 def receive_upload(request):
@@ -294,7 +351,7 @@ def receive_upload(request):
         upload = Upload()
         upload.doctor = doctor
         upload.photo = photo
-        upload.upload_savename = str(photo.photo_id)+'-'+str(doctor.doctor_id)+'-'+fn
+        upload.upload_savename = str(photo.photo_id) + '-' + str(doctor.doctor_id) + '-' + fn
         cv2.imwrite('./media/test/' + upload.upload_savename + '_upload.png', img, )  # 保存为png
         os.remove(file_path)
         upload.save()
@@ -320,7 +377,7 @@ def delete_picture(request):
             except FileNotFoundError as e:
                 print(e)
             Comment.objects.filter(photo=photo).delete()
-            photos=Upload.objects.filter(photo=photo)
+            photos = Upload.objects.filter(photo=photo)
             for single_photo in photos:
                 os.remove('./media/test/' + single_photo.upload_savename + '_upload.png')
             photos.delete()

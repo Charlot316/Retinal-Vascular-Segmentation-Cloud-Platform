@@ -41,6 +41,15 @@ const routes = [
             ),
     },
     {
+        path: "/photo",
+        name: "Photo",
+        component: () =>
+            import (
+                /* webpackChunkName: "login" */
+                "../views/Photo"
+            ),
+    },
+    {
         path: "/doctor/info",
         name: "Doctor/Info",
         component: () =>
