@@ -5,16 +5,16 @@
     <div class="header-right">
       <div class="header-user-con">
         <!-- 消息中心 -->
-        <div class="btn-bell">
+        <!-- <div class="btn-bell">
           <el-tooltip effect="dark" placement="bottom">
             <router-link to="/Notification">
               <i class="el-icon-bell"></i>
             </router-link>
           </el-tooltip>
-        </div>
+        </div> -->
         <!-- 用户头像 -->
         <div class="user-avator">
-          <router-link to="/user"> </router-link>
+          <router-link to="/doctor/user"> </router-link>
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">

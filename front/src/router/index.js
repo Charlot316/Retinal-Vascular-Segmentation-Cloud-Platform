@@ -41,10 +41,19 @@ const routes = [
             ),
     },
     {
+        path: "/doctor/info",
+        name: "Doctor/Info",
+        component: () =>
+            import (
+                /* webpackChunkName: "login" */
+                "../views/User/Doctor"
+            ),
+    },
+    {
         path: "/doctor/user",
         name: "Doctor/User",
         component: () =>
-            import ("../views/User/Doctor"),
+            import ("../views/Doctor/User"),
     },
     // /* 患者的页面的路由*/
     // {

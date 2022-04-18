@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="prop-name">姓名</div>
-    <el-input v-model="thisUser.name" class="prop-value" readonly />
+    <div class="prop-value">
+      {{ thisUser.name ? thisUser.name : "未填写姓名" }}
+    </div>
 
     <div class="prop-name">性别</div>
     <el-radio-group v-model="thisUser.sex" class="prop-value" disabled>

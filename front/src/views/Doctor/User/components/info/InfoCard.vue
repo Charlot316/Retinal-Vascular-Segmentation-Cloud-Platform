@@ -4,7 +4,8 @@
     <div class="title-liner"></div>
     <el-row>
       <el-col :span="16">
-        <my-info :user="user" />
+        <my-info v-if="mode == 0" :user="user" />
+        <info-edit v-if="mode == 1" :user="user" />
       </el-col>
       <el-col :span="2"> </el-col>
       <el-col :span="6">
@@ -22,6 +23,7 @@
 <script>
 import RightTab from "./RightTab";
 import MyInfo from "./Info";
+import InfoEdit from "./InfoEdit";
 export default {
   props: ["user"],
   data() {
@@ -32,6 +34,7 @@ export default {
   components: {
     RightTab,
     MyInfo,
+    InfoEdit,
   },
   created() {
     this.getInfo();

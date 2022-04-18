@@ -7,11 +7,11 @@
           <my-menu :user="user" @changeSelectedMenu="changeSelectedMenu" />
         </el-affix>
       </div>
-      <div class="right"> 
+      <div class="right">
         <div v-if="selectedMenu == 0">
           <my-info @getInfo="getUserInfo" :user="user" />
         </div>
-         <div v-if="selectedMenu == 1">
+        <div v-if="selectedMenu == 1">
           <photo-list />
         </div>
       </div>
@@ -39,6 +39,11 @@ export default {
   },
   created() {
     this.getUserInfo();
+    if (this.$route.query.id == this.$store.state.user_id) {
+      this.$router.replace({
+        path: "/doctor/user",
+      });
+    }
   },
   methods: {
     changeSelectedMenu(i) {
@@ -47,10 +52,7 @@ export default {
     async getUserInfo() {
       await new Promise((resolve) => {
         this.$http
-          .post(
-            "/getDoctorInfo/",
-            JSON.stringify({ id: this.$store.state.user_id})
-          )
+          .post("/getDoctorInfo/", JSON.stringify({ id: this.$route.query.id }))
           .then((res) => {
             if (res.data.success === false)
               return this.$message.error(res.data.message);
@@ -70,14 +72,14 @@ export default {
   width: 100%;
   background-color: #f0f0f0;
 }
-.left{
-width:450px;
-padding:50px
+.left {
+  width: 450px;
+  padding: 50px;
 }
-.right{
-width:calc(100vw - 450px);
-margin-left:350px;
-margin-top:-220px;
-min-width:800px;
+.right {
+  width: calc(100vw - 450px);
+  margin-left: 350px;
+  margin-top: -220px;
+  min-width: 800px;
 }
 </style>

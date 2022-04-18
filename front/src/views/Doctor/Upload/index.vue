@@ -12,7 +12,7 @@
       </div>
       <!-- 中间主体部分 -->
       <div class="middle">
-        <div style="width:800px;margin:0 auto">
+        <div class="middle-container">
           <upload-middle
             :props="props"
             @downloadAllImage="downloadAllImage"

@@ -3,7 +3,7 @@
   <el-card :body-style="{ padding: '0px' }">
     <el-image
       lazy
-      style="width: 100%;height:230px;"
+      style="width: 297px;height:297px;"
       :src="src"
       fit="fit"
       class="image"
@@ -14,7 +14,7 @@
         <div class="image-slot">
           <el-image
             lazy
-            style="width: 100%;height:230px;"
+            style="width: 297px;height:297px;"
             :src="require('../../assets/img/loading.gif')"
             class="image"
           />

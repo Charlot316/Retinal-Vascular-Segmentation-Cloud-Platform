@@ -8,6 +8,36 @@
       />
     </div>
     <br />
+    <div v-if="mode == 0">
+      <el-upload
+        :data="{ id: $store.state.user_id }"
+        name="pic_img"
+        class="upload-demo"
+        action="http://localhost:8000/uploadDoctorIcon/"
+        :on-success="onSuccess"
+        :on-preview="handlePreview"
+        :before-upload="checkFile"
+        list-type="false"
+        :show-file-list="false"
+      >
+        <el-button class="edit-button-upload" type="info" plain
+          >上传头像</el-button
+        >
+      </el-upload>
+      <br />
+      <el-button class="edit-button" type="info" @click="changeEditMode" plain
+        >编辑信息</el-button
+      >
+    </div>
+    <div v-else>
+      <el-button class="edit-button" type="info" @click="editFinished" plain
+        >修改完成</el-button
+      >
+
+      <el-button class="edit-button" type="info" @click="editCanceled" plain
+        >取消修改</el-button
+      >
+    </div>
   </div>
 </template>
 <script>

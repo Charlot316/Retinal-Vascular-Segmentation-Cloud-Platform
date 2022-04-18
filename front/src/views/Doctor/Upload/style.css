@@ -28,23 +28,28 @@
 }
 
 .left {
-    width: calc(50vw - 400px);
+    width: calc(50vw - 500px);
     position: absolute;
     top: 70;
     left: 0;
 }
 
 .middle {
-    width: 800px;
-    margin-left: calc(50vw - 400px);
+    width: 1000px;
+    margin-left: calc(50vw - 500px);
     float: left;
+}
+
+.middle-container {
+    width: 100%;
+    margin: 0 auto;
 }
 
 .right {
     position: absolute;
     top: 70;
     right: 0;
-    width: calc(50vw - 400px);
+    width: calc(50vw - 500px);
 }
 
 .body {

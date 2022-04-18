@@ -134,7 +134,10 @@ def get_photo_list_for_doctor(request):
         if show_all:
             result = Photo.objects.filter(photo_realname__contains=title)
         else:
-            result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
+            if data_json.get('other_user_id') is not None:
+                result = Photo.objects.filter(photo_realname__contains=title, photo_doctor__doctor_id=data_json.get('other_user_id'))
+            else:
+                result = Photo.objects.filter(photo_doctor__doctor_id=u_id, photo_realname__contains=title)
         apply_list = list(
             result.values('photo_id', 'photo_realname', 'photo_savename'))
         total = len(apply_list)
@@ -172,7 +175,7 @@ def get_photo_list_for_doctor(request):
             photo['doctor'] = {
                 'id': doctor.doctor_id,
                 'name': name,
-                'icon': doctor.doctor_icon,
+                'icon': get_doctor_icon(doctor.doctor_id),
                 'isDoctor': True,
                 'age': doctor.doctor_age,
             }
@@ -229,7 +232,7 @@ def get_photo_list_for_patient(request):
             photo['doctor'] = {
                 'id': doctor.doctor_id,
                 'name': name,
-                'icon': doctor.doctor_icon,
+                'icon': get_doctor_icon(doctor.doctor_id),
                 'isDoctor': True,
                 'age': doctor.doctor_age,
             }

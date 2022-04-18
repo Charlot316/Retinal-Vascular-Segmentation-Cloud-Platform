@@ -1,12 +1,14 @@
 <template>
-  <el-card shadow="hover">
+  <el-card style="width:940px;" shadow="hover">
     <!-- 卡片头栏 -->
     <template #header>
       <div class="card-header">
         <span
-          style="display: flex;justify-content: space-between;align-items: center; width:400px;"
-        >
+          style="display: flex;justify-content: space-between;align-items: center; width:500px;"
+        ><span style="display: flex;justify-content: space-between;align-items: center; width:350px;">
           <user-icon :user="singleImage.patient"></user-icon>
+          <user-icon :user="singleImage.doctor"></user-icon>
+          </span>
           <span>
             <span>{{ singleImage.photo_realname }}</span>
             <!-- 修改名字 -->
@@ -39,7 +41,6 @@
           <!-- 下载图片 -->
           <el-button
             @click="downloadASetOfImage(singleImage)"
-            style="margin-right:10px"
             icon="el-icon-download"
             >下载</el-button
           >
@@ -50,6 +51,11 @@
             icon="el-icon-delete"
             v-if="singleImage.doctor.id == $store.state.user_id"
             >删除</el-button
+          >
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            >详情</el-button
           >
         </span>
       </div>
@@ -80,7 +86,7 @@
             <el-card :body-style="{ padding: '0px' }">
               <el-image
                 lazy
-                style="width: 230px;height:230px;"
+                style="width: 297px;height:297px;"
                 src="https://img0.baidu.com/it/u=101714381,3578597708&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500"
                 class="image"
               >

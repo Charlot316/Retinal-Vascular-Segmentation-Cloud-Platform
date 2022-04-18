@@ -27,7 +27,7 @@
           </el-pagination>
         </div>
         <div v-else>
-          <el-empty description="该患者暂无图片" />
+          <el-empty description="暂未上传图片" />
         </div>
       </div>
     </div>
@@ -68,12 +68,13 @@ export default {
       await new Promise((resolve) => {
         this.$http
           .post(
-            "/getListForPatient/",
+            "/getListForDoctor/",
             JSON.stringify({
-              user_id: this.$route.query.id,
-              id:this.$store.state.user_id,
+              user_id: this.$store.state.user_id,
               pagenum: this.myProps.pagenum,
               pagesize: this.myProps.pagesize,
+              title:"",
+              showAll:false
             })
           )
           .then((res) => {

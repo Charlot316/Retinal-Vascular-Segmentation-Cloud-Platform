@@ -73,6 +73,7 @@ export default {
               user_id: this.$store.state.user_id,
               pagenum: this.myProps.pagenum,
               pagesize: this.myProps.pagesize,
+              other_user_id: this.$route.query.id,
               title:"",
               showAll:false
             })
@@ -104,7 +105,7 @@ export default {
   border-radius: 5px;
 }
 .display {
-  width: 800px;
+  width: 100%;
   margin: 0 auto;
 }
 </style>
