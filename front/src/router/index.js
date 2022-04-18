@@ -40,6 +40,12 @@ const routes = [
                 "../views/User/Patient"
             ),
     },
+    {
+        path: "/doctor/user",
+        name: "Doctor/User",
+        component: () =>
+            import ("../views/User/Doctor"),
+    },
     // /* 患者的页面的路由*/
     // {
     //   path: "/patient",
@@ -57,40 +63,19 @@ const routes = [
     //       path: "user",
     //       name: "/patient/user",
     //       meta: {
-    //         title: "个人中心",
-    //       },
-    //       component: () => import("../views/Patient/User"),
-    //     },
-    //   ],
-    //   component: () =>
-    //     import(
-    //       /* webpackChunkName: "login" */
-    //       "../views/Patient/Home"
-    //     ),
-    // },
     /* 医生的页面的路由*/
     {
         path: "/doctor",
         name: "Doctor",
         children: [{
-                path: "user",
-                name: "/doctor/user",
-                meta: {
-                    title: "个人中心",
-                },
-                component: () =>
-                    import ("../views/Doctor/User"),
+            path: "upload",
+            name: "/doctor/upload",
+            meta: {
+                title: "上传",
             },
-            {
-                path: "upload",
-                name: "/doctor/upload",
-                meta: {
-                    title: "上传",
-                },
-                component: () =>
-                    import ("../views/Doctor/Upload"),
-            },
-        ],
+            component: () =>
+                import ("../views/Doctor/Upload"),
+        }, ],
         component: () =>
             import (
                 /* webpackChunkName: "login" */
