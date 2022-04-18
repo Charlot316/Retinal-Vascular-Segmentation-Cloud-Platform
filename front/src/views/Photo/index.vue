@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import MiddleContent from "./componets/Middle.vue";
+import MiddleContent from "./components/Middle.vue";
 export default {
   
   name: "Upload",
