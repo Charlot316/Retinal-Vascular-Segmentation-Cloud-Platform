@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import vHeader from "../../../components/Doctor/Header";
+import vHeader from "@/components/Doctor/Header";
 import MyMenu from "./Menu";
 import MyInfo from "./components/info/InfoCard";
 import PhotoList from "./components/photo/Middle.vue";

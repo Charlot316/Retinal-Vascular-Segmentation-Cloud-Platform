@@ -96,7 +96,6 @@ export default {
         searchTitle: "",
         total: 0,
         imageList: [],
-        newName: "",
         visible: false,
         showAll:false,
       },

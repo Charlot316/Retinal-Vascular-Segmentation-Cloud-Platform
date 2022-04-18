@@ -183,13 +183,13 @@ def get_photo_list_for_patient(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         u_id = data_json.get('user_id')
+        d_id=data_json.get('id')
         pagenum = data_json.get('pagenum')  # 当前页码数
         pagesize = data_json.get('pagesize')  # 每页显示条目数
         print(u_id)
         result = Photo.objects.filter(photo_patient__patient_id=u_id)
         apply_list = list(
-            result.values('photo_id', 'photo_realname', 'photo_savename', 'photo_origin', 'photo_upload',
-                          'photo_promap'))
+            result.values('photo_id', 'photo_realname', 'photo_savename'))
         total = len(apply_list)
         paginator = Paginator(apply_list, pagesize)
         try:
@@ -213,7 +213,7 @@ def get_photo_list_for_patient(request):
             }
             photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
             photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
-            upload = Upload.objects.filter(doctor_id=u_id, photo_id=photo['photo_id'])
+            upload = Upload.objects.filter(doctor_id=d_id, photo_id=photo['photo_id'])
             if len(upload) > 0:
                 photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
             else:

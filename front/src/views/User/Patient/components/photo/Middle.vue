@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import PhotoCard from "./middle/PhotoCard.vue";
+import PhotoCard from "@/components/Public/PhotoCard.vue";
 export default {
   components: {
     PhotoCard,
@@ -71,6 +71,7 @@ export default {
             "/getListForPatient/",
             JSON.stringify({
               user_id: this.$route.query.id,
+              id:this.$store.state.user_id,
               pagenum: this.myProps.pagenum,
               pagesize: this.myProps.pagesize,
             })
@@ -79,7 +80,6 @@ export default {
             {
               if (res.data.message === "返回list成功") {
                 this.myProps.imageList = res.data.imageList;
-                console.log(res.data.imageList);
                 this.myProps.total = res.data.total;
               } else {
                 this.$message.error("获取列表失败");

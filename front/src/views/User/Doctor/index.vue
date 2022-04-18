@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import vHeader from "../../../components/Doctor/Header";
+import vHeader from "@/components/Doctor/Header";
 import MyMenu from "./Menu";
 import MyInfo from "./components/info/InfoCard";
 import PhotoList from "./components/photo/Middle.vue";
@@ -77,7 +77,7 @@ padding:50px
 .right{
 width:calc(100vw - 450px);
 margin-left:350px;
-margin-top:-150px;
+margin-top:-220px;
 min-width:800px;
 }
 </style>

@@ -27,7 +27,7 @@
           </el-pagination>
         </div>
         <div v-else>
-          <el-empty description="该患者暂无图片" />
+          <el-empty description="暂未上传图片" />
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import PhotoCard from "./middle/PhotoCard.vue";
+import PhotoCard from "@/components/Public/PhotoCard.vue";
 export default {
   components: {
     PhotoCard,
@@ -68,18 +68,18 @@ export default {
       await new Promise((resolve) => {
         this.$http
           .post(
-            "/getListForPatient/",
+            "/getListForDoctor/",
             JSON.stringify({
-              user_id: this.$route.query.id,
+              user_id: this.$store.state.user_id,
               pagenum: this.myProps.pagenum,
               pagesize: this.myProps.pagesize,
+              title:"",
             })
           )
           .then((res) => {
             {
               if (res.data.message === "返回list成功") {
                 this.myProps.imageList = res.data.imageList;
-                console.log(res.data.imageList);
                 this.myProps.total = res.data.total;
               } else {
                 this.$message.error("获取列表失败");

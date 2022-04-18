@@ -10,17 +10,17 @@
           <span>
             <span>{{ singleImage.photo_realname }}</span>
             <!-- 修改名字 -->
-            <el-popover placement="right" width="400" trigger="click">
+            <el-popover v-if="singleImage.doctor.id == $store.state.user_id" placement="right" width="400" trigger="click">
               <template #reference>
                 <el-button
                   icon="el-icon-edit"
                   type="text"
                   circle
-                  @click="myProps.newName = singleImage.photo_realname"
+                  @click="newName = singleImage.photo_realname"
                 ></el-button>
               </template>
               <el-input
-                v-model="myProps.newName"
+                v-model="newName"
                 @keyup.enter="revisePictureName(singleImage)"
                 placeholder="请输入修改后的图片名称"
                 clearable
@@ -41,15 +41,15 @@
             @click="downloadASetOfImage(singleImage)"
             style="margin-right:10px"
             icon="el-icon-download"
-            >下载全部</el-button
+            >下载</el-button
           >
           <!-- 删除图片 -->
           <el-button
             @click="deleteAGroupOfImage(singleImage)"
             type="danger"
             icon="el-icon-delete"
-            v-if="singleImage.doctor.id === $store.state.user.id"
-            >删除全部</el-button
+            v-if="singleImage.doctor.id == $store.state.user_id"
+            >删除</el-button
           >
         </span>
       </div>
@@ -69,7 +69,7 @@
           <el-upload
             class="avatar-uploader"
             :action="'http://localhost:8000/upload/'"
-            :data="{ photo_id: singleImage.photo_id,id:$store.state.user_id }"
+            :data="{ photo_id: singleImage.photo_id, id: $store.state.user_id }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="checkFile"
@@ -114,7 +114,11 @@ export default {
   data() {
     return {
       myProps: this.props,
+      newName: "",
     };
+  },
+  created() {
+    console.log(this.singleImage);
   },
   methods: {
     handleUploadError() {
@@ -228,7 +232,7 @@ export default {
         });
     },
     async revisePictureName(singleImage) {
-      if (this.props.newName.trim().length == 0)
+      if (this.newName.trim().length == 0)
         return this.$message.error("图片命名不能为空");
       await new Promise((resolve) => {
         this.$http
@@ -236,13 +240,13 @@ export default {
             "/revisePictureName/",
             JSON.stringify({
               photoID: singleImage.photo_id,
-              newName: this.props.newName,
+              newName: this.newName,
             })
           )
           .then((res) => {
             {
               if (res.data.message === "修改成功") {
-                singleImage.photo_realname = this.props.newName;
+                singleImage.photo_realname = this.newName;
                 this.$message.success("图片名修改成功");
               } else {
                 this.$message.error("修改失败");
@@ -255,3 +259,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
