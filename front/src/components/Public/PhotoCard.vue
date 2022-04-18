@@ -48,6 +48,7 @@
             @click="deleteAGroupOfImage(singleImage)"
             type="danger"
             icon="el-icon-delete"
+            v-if="singleImage.doctor.id === $store.state.user.id"
             >删除全部</el-button
           >
         </span>
@@ -67,8 +68,8 @@
         <div v-else>
           <el-upload
             class="avatar-uploader"
-            :action="myProps.baseURL + 'upload/'"
-            :data="{ photo_id: singleImage.photo_id }"
+            :action="'http://localhost:8000/upload/'"
+            :data="{ photo_id: singleImage.photo_id,id:$store.state.user_id }"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="checkFile"
