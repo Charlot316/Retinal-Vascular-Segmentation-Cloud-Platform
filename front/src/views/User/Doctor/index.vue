@@ -72,7 +72,7 @@ padding:50px
 .right{
 width:calc(100vw - 450px);
 margin-left:350px;
-margin-top:-220px;
+margin-top:-150px;
 min-width:800px;
 }
 </style>
