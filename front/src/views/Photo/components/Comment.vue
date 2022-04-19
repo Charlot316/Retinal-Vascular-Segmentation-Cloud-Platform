@@ -1,8 +1,8 @@
 <template>
   <div class="comment-box">
-    <div>
+    <div class="comment-content">
       <user-icon :user="comment.doctor" />
-      {{comment.content}}
+      <span>{{ myComment.content }}</span>
     </div>
   </div>
 </template>
@@ -14,17 +14,27 @@ export default {
   components: {
     UserIcon,
   },
-  methods:{
-      getPhotoInfo() {
+  data() {
+    return {
+      myComment: this.comment,
+    };
+  },
+  methods: {
+    getPhotoInfo() {
       this.$emit("getPhotoInfo");
     },
-  }
+  },
 };
 </script>
 
 <style scope>
-.comment-box{
-    width:100%;
-    background-color: white;
+.comment-box {
+  width: 100%;
+  background-color: white;
+}
+.comment-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

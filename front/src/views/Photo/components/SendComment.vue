@@ -30,7 +30,6 @@ export default {
     async submit() {
       if (this.content.trim().length == 0)
         return this.$message.error("评论不能为空");
-        console.log(this.$store.state.user_id)
       await new Promise((resolve) => {
         this.$http
           .post(
