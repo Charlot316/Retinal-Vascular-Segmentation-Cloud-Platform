@@ -286,6 +286,10 @@ def get_photo_info(request):
             upload_list = []
             for single_upload in upload:
                 temp_doctor = single_upload.doctor
+                if temp_doctor.doctor_realname is not None and temp_doctor.doctor_realname != '':
+                    name = temp_doctor.doctor_realname
+                else:
+                    name = temp_doctor.doctor_username
                 upload_list.append({
                     'id': single_upload.upload_id,
                     'savename': single_upload.upload_savename,

@@ -4,6 +4,17 @@
       <el-row :gutter="50">
         <el-col :span="8">
           <single-photo :singleImage="singleImage" index="origin" />
+          <div
+            style="width:100%;margin:0 auto;text-align:center;height:100px;line-height:100px"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-arrow-left"
+              circle
+              :disabled="!(index>-1)"
+              @click="index>-1?index--:index=-1"
+            ></el-button>
+          </div>
         </el-col>
         <el-col :span="8">
           <div v-if="index == -1">
@@ -46,18 +57,32 @@
                 </el-card>
               </el-upload>
             </div>
-            <div style="width:100%;margin:0 auto;text-align:center;height:100px;line-height:100px">自己上传的图像</div>
+            <div
+              style="width:100%;margin:0 auto;text-align:center;height:100px;line-height:100px"
+            >
+              自己上传的图像
+            </div>
           </div>
           <div v-else>
-          <upload-photo
-            
-            :uploadImage="singleImage.photo_upload_list[index]"
-          />
-          <user-icon :user="singleImage.photo_upload_list[index].doctor" />
+            <upload-photo :uploadImage="singleImage.photo_upload_list[index]" />
+            <div style="width:100%;margin:0 auto;">
+              <user-icon style="margin-left:200px;" :user="singleImage.photo_upload_list[index].doctor" />
+            </div>
           </div>
         </el-col>
         <el-col :span="8">
           <single-photo :singleImage="singleImage" index="promap" />
+          <div
+            style="width:100%;margin:0 auto;text-align:center;height:100px;line-height:100px"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-arrow-right"
+              circle
+              :disabled="!(index+1<singleImage.photo_upload_list.length)"
+              @click="index+1<singleImage.photo_upload_list.length?index++:index=singleImage.photo_upload_list.length-1"
+            ></el-button>
+          </div>
         </el-col>
       </el-row>
     </div>
