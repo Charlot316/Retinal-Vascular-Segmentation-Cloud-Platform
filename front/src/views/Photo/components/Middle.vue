@@ -28,7 +28,7 @@
             <div v-else>
               <el-upload
                 class="avatar-uploader"
-                :action="'http://localhost:8000/upload/'"
+                :action="'http://10.251.0.251:8000/upload/'"
                 :data="{
                   photo_id: singleImage.photo_id,
                   id: $store.state.user_id,

@@ -9,10 +9,10 @@ from django.http import JsonResponse, FileResponse, StreamingHttpResponse
 from user.models import Doctor, Patient, Photo, Upload, Comment
 from django.contrib.auth.hashers import make_password, check_password
 
-BASEURL = "http://localhost:8000/media/test/"
+#BASEURL = "http://localhost:8000/media/test/"
 
 
-# BASEURL ="http://10.251.0.251:8000/media/test/"
+BASEURL ="http://10.251.0.251:8000/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
 #     unloader = transforms.ToPILImage()

@@ -13,7 +13,7 @@
         :data="{ id: $route.query.id }"
         name="pic_img"
         class="upload-demo"
-        action="http://localhost:8000/uploadPatientIcon/"
+        action="http://10.251.0.251:8000/uploadPatientIcon/"
         :on-success="onSuccess"
         :on-preview="handlePreview"
         :before-upload="checkFile"

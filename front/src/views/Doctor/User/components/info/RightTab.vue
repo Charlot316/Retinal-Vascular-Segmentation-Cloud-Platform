@@ -13,7 +13,7 @@
         :data="{ id: $store.state.user_id }"
         name="pic_img"
         class="upload-demo"
-        action="http://localhost:8000/uploadDoctorIcon/"
+        action="http://10.251.0.251:8000/uploadDoctorIcon/"
         :on-success="onSuccess"
         :on-preview="handlePreview"
         :before-upload="checkFile"
