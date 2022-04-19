@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-card :body-style="{ padding: '0px' }">
+  <el-card :body-style="{ padding: '0px', width:'197px'}" >
     <el-image
       lazy
       style="width: 297px;height:297px;"

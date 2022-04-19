@@ -5,14 +5,21 @@
       <div class="card-header">
         <span
           style="display: flex;justify-content: space-between;align-items: center; width:500px;"
-        ><span style="display: flex;justify-content: space-between;align-items: center; width:350px;">
-          <user-icon :user="singleImage.patient"></user-icon>
-          <user-icon :user="singleImage.doctor"></user-icon>
+          ><span
+            style="display: flex;justify-content: space-between;align-items: center; width:350px;"
+          >
+            <user-icon :user="singleImage.patient"></user-icon>
+            <user-icon :user="singleImage.doctor"></user-icon>
           </span>
           <span>
             <span>{{ singleImage.photo_realname }}</span>
             <!-- 修改名字 -->
-            <el-popover v-if="singleImage.doctor.id == $store.state.user_id" placement="right" width="400" trigger="click">
+            <el-popover
+              v-if="singleImage.doctor.id == $store.state.user_id"
+              placement="right"
+              width="400"
+              trigger="click"
+            >
               <template #reference>
                 <el-button
                   icon="el-icon-edit"
@@ -52,9 +59,8 @@
             v-if="singleImage.doctor.id == $store.state.user_id"
             >删除</el-button
           >
-          <el-button
-            type="primary"
-            icon="el-icon-search"
+
+          <el-button type="primary" icon="el-icon-search" @click="openWindow"
             >详情</el-button
           >
         </span>
@@ -127,6 +133,13 @@ export default {
     console.log(this.singleImage);
   },
   methods: {
+    openWindow() {
+      let routeData = this.$router.resolve({
+        path: "/photo",
+        query: { id: this.singleImage.photo_id },
+      });
+      window.open(routeData.href, "_blank");
+    },
     handleUploadError() {
       this.myProps.loadingNewPicture = false;
       this.$message.error("上传失败");

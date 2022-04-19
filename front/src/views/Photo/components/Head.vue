@@ -57,7 +57,6 @@
           v-if="singleImage.doctor.id == $store.state.user_id"
           >删除</el-button
         >
-        <el-button type="primary" icon="el-icon-search">详情</el-button>
       </span>
     </div>
   </div>
@@ -65,10 +64,15 @@
 
 <script>
 import { ElMessageBox, ElMessage } from "element-plus";
+import UserIcon from "@/components/Public/Icon";
 export default {
+  props: ["image"],
+  components:{
+    UserIcon,
+  },
   data() {
     return {
-      singleImage: {},
+      singleImage: this.image,
       newName: "",
     };
   },
@@ -179,6 +183,11 @@ export default {
           });
         resolve();
       }).then(() => {});
+    },
+  },
+  watch: {
+    image() {
+      this.singleImage = this.image;
     },
   },
 };

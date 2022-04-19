@@ -248,10 +248,11 @@ def get_photo_info(request):
     if request.method == 'POST':
         data_json = json.loads(request.body)
         p_id = data_json.get('photo_id')
+        d_id = data_json.get('id')
         photo = Photo.objects.get(photo_id=p_id)
         return_object = {}
-        patient = Photo.objects.get(photo_id=photo['photo_id']).photo_patient
-        doctor = Photo.objects.get(photo_id=photo['photo_id']).photo_doctor
+        patient = Photo.objects.get(photo_id=photo.photo_id).photo_patient
+        doctor = Photo.objects.get(photo_id=photo.photo_id).photo_doctor
         return_object['patient'] = {
             'id': patient.patient_id,
             'name': patient.patient_name,
@@ -270,13 +271,21 @@ def get_photo_info(request):
             'isDoctor': True,
             'age': doctor.doctor_age,
         }
-        return_object['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
-        return_object['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
-        upload = Upload.objects.filter(photo_id=photo['photo_id'])
+        return_object['photo_id'] = photo.photo_id
+        return_object['photo_savename'] = photo.photo_savename
+        return_object['photo_realname'] = photo.photo_realname
+        return_object['photo_origin'] = BASEURL + photo.photo_savename + '_origin.png'
+        return_object['photo_promap'] = BASEURL + photo.photo_savename + '_origin.png'
+        upload_single = Upload.objects.filter(doctor_id=d_id, photo_id=p_id)
+        if len(upload_single) > 0:
+            return_object['photo_upload'] = BASEURL + upload_single[0].upload_savename + '_upload.png'
+        else:
+            return_object['photo_upload'] = ''
+        upload = Upload.objects.filter(photo_id=photo.photo_id)
         if len(upload) > 0:
             upload_list = []
             for single_upload in upload:
-                temp_doctor=single_upload.doctor
+                temp_doctor = single_upload.doctor
                 upload_list.append({
                     'id': single_upload.upload_id,
                     'savename': single_upload.upload_savename,
@@ -289,8 +298,9 @@ def get_photo_info(request):
                         'age': temp_doctor.doctor_age,
                     }
                 })
+                return_object['photo_upload_list'] = upload_list
         else:
-            return_object['photo_upload'] = []
+            return_object['photo_upload_list'] = []
 
         return JsonResponse({'success': True, 'message': '返回list成功', 'photo': return_object}, status=200)
     else:
