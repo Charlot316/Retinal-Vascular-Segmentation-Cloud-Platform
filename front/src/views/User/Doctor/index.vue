@@ -2,17 +2,17 @@
   <div>
     <v-header />
     <div class="main-content">
-      <div class="left">
-        <el-affix :offset="80">
-          <my-menu :user="user" @changeSelectedMenu="changeSelectedMenu" />
-        </el-affix>
+      <div class="doctor-left">
+        <my-menu :user="user" @changeSelectedMenu="changeSelectedMenu" />
       </div>
-      <div class="right">
+      <div class="doctor-right">
+        <div class="right-content">
         <div v-if="selectedMenu == 0">
           <my-info @getInfo="getUserInfo" :user="user" />
         </div>
         <div v-if="selectedMenu == 1">
           <photo-list />
+        </div>
         </div>
       </div>
     </div>
@@ -70,16 +70,22 @@ export default {
   overflow: auto;
   height: calc(100vh - 70px);
   width: 100%;
+  min-width:1120px;
   background-color: #f0f0f0;
 }
-.left {
-  width: 450px;
+.doctor-left {
+  width: 200px;
   padding: 50px;
+
 }
-.right {
+.doctor-right {
   width: calc(100vw - 450px);
-  margin-left: 350px;
-  margin-top: -220px;
-  min-width: 800px;
+  float:left;
+  margin-top:-220px;
+  margin-left:300px;
+}
+.right-content{
+  width:940px;
+  margin: 0 auto;
 }
 </style>

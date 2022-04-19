@@ -78,7 +78,7 @@ export default {
               if (res.data.success == true) {
                 this.myParams.id = res.data.id;
                 this.$message.success(res.data.message);
-                this.$emit("next-step");
+                this.getPatientList();
               } else {
                 this.$message.error(res.data.message);
               }

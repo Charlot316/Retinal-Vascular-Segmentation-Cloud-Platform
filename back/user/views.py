@@ -9,10 +9,10 @@ from django.http import JsonResponse, FileResponse, StreamingHttpResponse
 from user.models import Doctor, Patient, Photo, Upload, Comment
 from django.contrib.auth.hashers import make_password, check_password
 
-BASEURL = "http://localhost:8000/media/test/"
+# BASEURL = "http://localhost:8000/media/test/"
 
 
-# BASEURL ="http://10.251.0.251:8001/media/test/"
+BASEURL ="http://10.251.0.251:8000/media/test/"
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
 #     unloader = transforms.ToPILImage()
@@ -163,7 +163,7 @@ def get_photo_list_for_doctor(request):
                 'age': patient.patient_age,
             }
             photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
-            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_promap.png'
             upload = Upload.objects.filter(doctor_id=u_id, photo_id=photo['photo_id'])
             if len(upload) > 0:
                 photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
@@ -220,7 +220,7 @@ def get_photo_list_for_patient(request):
                 'age': patient.patient_age,
             }
             photo['photo_origin'] = BASEURL + photo['photo_savename'] + '_origin.png'
-            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_origin.png'
+            photo['photo_promap'] = BASEURL + photo['photo_savename'] + '_promap.png'
             upload = Upload.objects.filter(doctor_id=d_id, photo_id=photo['photo_id'])
             if len(upload) > 0:
                 photo['photo_upload'] = BASEURL + upload[0].upload_savename + '_upload.png'
@@ -275,7 +275,7 @@ def get_photo_info(request):
         return_object['photo_savename'] = photo.photo_savename
         return_object['photo_realname'] = photo.photo_realname
         return_object['photo_origin'] = BASEURL + photo.photo_savename + '_origin.png'
-        return_object['photo_promap'] = BASEURL + photo.photo_savename + '_origin.png'
+        return_object['photo_promap'] = BASEURL + photo.photo_savename + '_promap.png'
         upload_single = Upload.objects.filter(doctor_id=d_id, photo_id=p_id)
         if len(upload_single) > 0:
             return_object['photo_upload'] = BASEURL + upload_single[0].upload_savename + '_upload.png'

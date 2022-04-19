@@ -86,7 +86,7 @@ def test():
     os.environ['CUDA_VISIBLE_DEVICES'] = '2,1,0,3'
     device = torch.device("cuda")
 
-    im_name = sys.argv[1]
+    im_name = 'media/test/'+sys.argv[1]
     img = cv2.imread(im_name)
     im_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
     cv2.imwrite(im_name, img)
