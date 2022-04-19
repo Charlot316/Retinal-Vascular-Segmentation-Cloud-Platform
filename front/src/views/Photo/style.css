@@ -52,7 +52,10 @@
     width: calc(50vw - 500px);
 }
 
-.body {
+.photo-body {
     width: 100%;
     min-width: 1200px;
+    height: calc(100vh - 70px);
+    background-color: #f0f0f0;
+    overflow: auto;
 }

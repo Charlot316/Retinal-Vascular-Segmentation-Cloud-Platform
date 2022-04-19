@@ -305,11 +305,47 @@ def get_photo_info(request):
                 return_object['photo_upload_list'] = upload_list
         else:
             return_object['photo_upload_list'] = []
+        return_object['comments']=[]
+        comments = Comment.objects.filter(photo_id=photo.photo_id)
+        for comment in comments:
+            temp_doctor = comment.doctor
+            if temp_doctor.doctor_realname is not None and temp_doctor.doctor_realname != '':
+                name = temp_doctor.doctor_realname
+            else:
+                name = temp_doctor.doctor_username
+            return_object['comments'].append({
+                'id': comment.comment_id,
+                'content': comment.content,
+                'doctor': {
+                    'id': temp_doctor.doctor_id,
+                    'name': name,
+                    'icon': get_doctor_icon(temp_doctor.doctor_id),
+                    'isDoctor': True,
+                    'age': temp_doctor.doctor_age,
+                }
+            })
 
         return JsonResponse({'success': True, 'message': '返回list成功', 'photo': return_object}, status=200)
     else:
         return JsonResponse({})
 
+
+def send_comment(request):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        photo_id = request.POST.get('photo_id')
+        doctor_id = request.POST.get('doctor_id')
+        if content is None or photo_id is None or doctor_id is None:
+            return JsonResponse({'success': False, 'message': '参数错误'}, status=400)
+        comment = Comment(
+            content=content,
+            photo_id=photo_id,
+            doctor_id=doctor_id
+        )
+        comment.save()
+        return JsonResponse({'success': True, 'message': '评论成功'}, status=200)
+    else:
+        return JsonResponse({})
 
 def receive_origin(request):
     if request.method == 'POST':

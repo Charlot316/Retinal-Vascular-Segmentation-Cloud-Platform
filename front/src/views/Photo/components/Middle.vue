@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="middle-container">
     <div v-loading="loadingNewPicture">
       <el-row :gutter="50">
         <el-col :span="8">
@@ -143,8 +143,11 @@ export default {
 };
 </script>
 
-<style>
+<style scope>
 .card-header {
   margin: 0 auto;
+}
+.middle-container{
+  background-color: white;
 }
 </style>

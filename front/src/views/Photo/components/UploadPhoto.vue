@@ -33,7 +33,7 @@
         <el-button
           type="text"
           class="button"
-          @click="downloadIamge(src, uploadImage.doctor.name + '_upload')"
+          @click="downloadIamge(uploadImage.photo_upload, uploadImage.doctor.name + '_upload')"
           >下载图片</el-button
         >
         <el-button

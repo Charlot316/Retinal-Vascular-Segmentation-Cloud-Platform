@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card-header">
+    <div class="head-container">
       <span
         style="display: flex;justify-content: space-between;align-items: center; width:500px;"
         ><span
@@ -67,7 +67,7 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import UserIcon from "@/components/Public/Icon";
 export default {
   props: ["image"],
-  components:{
+  components: {
     UserIcon,
   },
   data() {
@@ -107,13 +107,19 @@ export default {
         singleImage.photo_realname + "_origin"
       );
       this.downloadIamge(
-        singleImage.photo_upload,
-        singleImage.photo_realname + "_upload"
-      );
-      this.downloadIamge(
         singleImage.photo_promap,
         singleImage.photo_realname + "_promap"
       );
+      console.log(singleImage.photo_upload_list.length);
+      for (var i = 0; i < singleImage.photo_upload_list.length; i++) {
+        this.downloadIamge(
+          singleImage.photo_upload_list[i].photo_upload,
+          singleImage.photo_realname +
+            "_" +
+            singleImage.photo_upload_list[i].doctor.name +
+            "_upload"
+        );
+      }
     },
     async deleteASetOfImage(singleImage) {
       await new Promise((resolve) => {
@@ -193,4 +199,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.head-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    margin: 0 auto;
+    background-color: white;
+    padding:30px;
+}
+</style>
