@@ -53,7 +53,7 @@ def get_patient_icon(id):
     else:
         photo = Photo.objects.filter(photo_patient__patient_id=patient.patient_id)
         try:
-            return photo.last().photo_promap
+            return BASEURL + 'patient/' + photo.last().photo_savename + '.png'
         except:
             return ""
             pass
