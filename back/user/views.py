@@ -669,7 +669,7 @@ def edit_doctor_info(request):
             return JsonResponse({'success': False, 'message': '不存在该患者'}, status=404)
         else:
             doctor = Doctor.objects.get(doctor_id=doctor_id)
-            doctor.doctor_name = data_json.get('name')
+            doctor.doctor_realname = data_json.get('name')
             doctor.doctor_age = int(data_json.get('age'))
             doctor.doctor_phone = data_json.get('phone')
             doctor.doctor_email = data_json.get('email')
