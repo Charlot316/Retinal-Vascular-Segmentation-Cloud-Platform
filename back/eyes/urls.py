@@ -43,6 +43,7 @@ urlpatterns = [
     path('editDoctorInfo/', user.views.edit_doctor_info),
     path('getPhotoInfo/', user.views.get_photo_info),
     path('sendComment/', user.views.send_comment),
+    path('deleteComment/', user.views.delete_comment),
     # path('addPatient/', user.views.addPatient),
     # path('delePatient/', user.views.delePatient),
     # path('addDoctor/', user.views.addDoctor),

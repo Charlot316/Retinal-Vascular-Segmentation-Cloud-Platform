@@ -9,10 +9,11 @@ from django.http import JsonResponse, FileResponse, StreamingHttpResponse
 from user.models import Doctor, Patient, Photo, Upload, Comment
 from django.contrib.auth.hashers import make_password, check_password
 
-#BASEURL = "http://localhost:8000/media/test/"
+# BASEURL = "http://localhost:8000/media/test/"
 
 
-BASEURL ="http://10.251.0.251:8000/media/test/"
+BASEURL = "http://10.251.0.251:8000/media/test/"
+
 
 # if BASEURL == "http://10.251.0.251:8000/media/test/":
 #     unloader = transforms.ToPILImage()
@@ -253,6 +254,18 @@ def get_photo_info(request):
         return_object = {}
         patient = Photo.objects.get(photo_id=photo.photo_id).photo_patient
         doctor = Photo.objects.get(photo_id=photo.photo_id).photo_doctor
+        myself = Doctor.objects.get(doctor_id=d_id)
+        if myself.doctor_realname is not None and myself.doctor_realname != '':
+            name = myself.doctor_realname
+        else:
+            name = myself.doctor_username
+        return_object['me'] = {
+            'id': myself.doctor_id,
+            'name': name,
+            'icon': get_doctor_icon(myself.doctor_id),
+            'isDoctor': True,
+            'age': myself.doctor_age,
+        }
         return_object['patient'] = {
             'id': patient.patient_id,
             'name': patient.patient_name,
@@ -305,7 +318,7 @@ def get_photo_info(request):
                 return_object['photo_upload_list'] = upload_list
         else:
             return_object['photo_upload_list'] = []
-        return_object['comments']=[]
+        return_object['comments'] = []
         comments = Comment.objects.filter(photo_id=photo.photo_id)
         for comment in comments:
             temp_doctor = comment.doctor
@@ -336,9 +349,6 @@ def send_comment(request):
         content = data_json.get('content')
         photo_id = data_json.get('photo_id')
         doctor_id = data_json.get('doctor_id')
-        print(content)
-        print(photo_id)
-        print(doctor_id)
         if content is None or photo_id is None or doctor_id is None:
             return JsonResponse({'success': False, 'message': '参数错误'}, status=400)
         comment = Comment(
@@ -350,6 +360,23 @@ def send_comment(request):
         return JsonResponse({'success': True, 'message': '评论成功'}, status=200)
     else:
         return JsonResponse({})
+
+
+def delete_comment(request):
+    if request.method == 'POST':
+        data_json = json.loads(request.body)
+        comment_id = data_json.get('comment_id')
+        doctor_id = data_json.get('doctor_id')
+        if comment_id is None or doctor_id is None:
+            return JsonResponse({'success': False, 'message': '参数错误'}, status=400)
+        comment = Comment.objects.filter(comment_id=comment_id, doctor_id=doctor_id)
+        if comment.count() == 0:
+            return JsonResponse({'success': False, 'message': '评论不存在'}, status=400)
+        comment.delete()
+        return JsonResponse({'success': True, 'message': '删除成功'}, status=200)
+    else:
+        return JsonResponse({})
+
 
 def receive_origin(request):
     if request.method == 'POST':

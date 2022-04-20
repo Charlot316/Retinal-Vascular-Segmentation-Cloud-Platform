@@ -74,4 +74,4 @@ export default {
 
 <style scope>
 @import "style.css";
-</style>
+</style>                                                               
