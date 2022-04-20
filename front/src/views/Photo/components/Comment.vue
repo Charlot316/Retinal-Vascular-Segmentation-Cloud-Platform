@@ -48,10 +48,10 @@ export default {
           .then((res) => {
             {
               if (res.data.success == true) {
-                this.$message.success("评论发布成功");
+                this.$message.success("评论删除成功");
                 this.getPhotoInfo();
               } else {
-                this.$message.error("发布失败");
+                this.$message.error("删除失败");
               }
             }
           });
