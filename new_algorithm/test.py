@@ -114,6 +114,7 @@ def test():
 
     mask = Image.open('/home/zy/code/test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
+    image = Image.open(im_name)
     # in numpy convention
     original_sz = image.size[1], image.size[0]
     rsz = p_tr.Resize((512, 512))
