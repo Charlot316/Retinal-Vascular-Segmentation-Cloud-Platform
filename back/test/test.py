@@ -14,20 +14,6 @@ from models.get_model import get_arch
 from utils.model_saving_loading import load_model
 from utils import paired_transforms_tv04 as p_tr
 
-"""
-# argument parsing
-parser = argparse.ArgumentParser()
-required_named = parser.add_argument_group('required arguments')
-parser.add_argument('--config_file', type=str, default=None)
-# im_size overrides config file
-parser.add_argument('--experiment_path', help='experiments/. where checkpoint is', default=None)
-parser.add_argument('--im_size', help='delimited list input, could be 600,400', type=str, default='512')
-parser.add_argument('--im_name', help='the path of the image', type=str)
-parser.add_argument('--device', type=str, default='cpu',
-                    help='where to run the training code (e.g. "cpu" or "cuda:0") [default: %(default)s]')
-parser.add_argument('--result_path', type=str, default='results', help='path to save predictions (defaults to results')
-"""
-
 
 def flip_ud(tens):
     return torch.flip(tens, dims=[1])
@@ -73,18 +59,16 @@ def create_pred(model, tens, mask, coords_crop, original_sz, tta='no'):
     pred = pred.detach().cpu().numpy()[-1]  # this takes last channel in multi-class, ok for 2-class
     # Orders: 0: NN, 1: Bilinear(default), 2: Biquadratic, 3: Bicubic, 4: Biquartic, 5: Biquintic
     pred = resize(pred, output_shape=original_sz, order=3)
-    full_pred = pred
-    #full_pred = np.zeros_like(mask, dtype=float)
-    #full_pred[coords_crop[0]:coords_crop[2], coords_crop[1]:coords_crop[3]] = pred
-    #full_pred[~mask.astype(bool)] = 0
+    full_pred = np.zeros_like(mask, dtype=float)
+    full_pred[coords_crop[0]:coords_crop[2], coords_crop[1]:coords_crop[3]] = pred
+    full_pred[~mask.astype(bool)] = 0
 
     return full_pred
 
 
 def save_pred(full_pred, im_name):
-    im_name = im_name.rsplit('/', 1)[-1]
-    # save_name = '/media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png'
-    save_name = im_name[:-4] + '.png'
+    # im_name = im_name.rsplit('/', 1)[-1]
+    save_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_promap.png'
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         # this casts preds to int, loses precision but meh
@@ -98,26 +82,26 @@ def crop_to_fov(img, mask):
     return im_crop, [minr, minc, maxr, maxc]
 
 
-if __name__ == '__main__':
+def test():
     os.environ['CUDA_VISIBLE_DEVICES'] = '2,1,0,3'
     device = torch.device("cuda")
-    im_name = "picture.jpg"
-    print('* image name parsed: ' + im_name)
-    """
-    im_name = './media/test/' + sys.argv[1]
-    img = cv2.imread(im_name)
-    im_name = './media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
-    cv2.imwrite(im_name, img)
-    """
-    experiment_path = 'experiments/drive'
 
-    config_file = "experiments/drive/config.cfg"
+    im_name = sys.argv[1]
+    img = cv2.imread(im_name)
+    im_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
+    cv2.imwrite(im_name, img)
+    print(im_name + ' saved')
+
+    experiment_path = '/home/zy/code/experiments/drive'
+
+    config_file = "/home/zy/code/experiments/drive/config.cfg"
 
     im_size = (512, 512)
-    tg_size = im_size
+    tg_size = (512, 512)
 
     model_name = "unet"
     print('* Instantiating model  = ' + model_name)
+
     model = get_arch(model_name).to(device)
     print('* Loading trained weights...')
     try:
@@ -125,9 +109,10 @@ if __name__ == '__main__':
     except RuntimeError:
         sys.exit('---- bad config specification (check layers, n_classes, etc.) ---- ')
     model.eval()
+
     print('* Start predicting...')
 
-    mask = Image.open('test_mask.jpg').convert('L')
+    mask = Image.open('/home/zy/code/test_mask.jpg').convert('L')
     image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     image = Image.open(im_name)
     # in numpy convention
@@ -142,3 +127,7 @@ if __name__ == '__main__':
     print('* Saving predictions...')
     save_pred(full_pred,  im_name)
     print('* Done')
+
+
+if __name__ == '__main__':
+    test()
