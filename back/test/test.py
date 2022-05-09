@@ -61,7 +61,7 @@ def create_pred(model, tens, mask, coords_crop, original_sz, tta='no'):
     pred = resize(pred, output_shape=original_sz, order=3)
     full_pred = np.zeros_like(mask, dtype=float)
     full_pred[coords_crop[0]:coords_crop[2], coords_crop[1]:coords_crop[3]] = pred
-    full_pred[~mask.astype(bool)] = 0
+    #full_pred[~mask.astype(bool)] = 0
 
     return full_pred
 
@@ -76,17 +76,38 @@ def save_pred(full_pred, im_name):
 
 
 def crop_to_fov(img, mask):
-    mask = np.array(mask).astype(int)
-    minr, minc, maxr, maxc = regionprops(mask)[0].bbox
-    im_crop = Image.fromarray(np.array(img)[minr:maxr, minc:maxc])
-    return im_crop, [minr, minc, maxr, maxc]
+    img_g = np.array(img)
+    h,w,c = img_g.shape
+    for i in range(0,h):
+        summ = np.sum(img_g[i,:,:])
+        if summ!=0:
+            up_r = i
+            break
+    for i in range(0,w):
+        summ = np.sum(img_g[:,i,:])
+        if summ!=0:
+            left_r = i
+            break
+    for i in range(h-1,-1,-1):
+        summ = np.sum(img_g[i,:,:])
+        if summ!=0:
+            down_r = i
+            break
+    for i in range(w-1,-1,-1):
+        summ = np.sum(img_g[:,i,:])
+        if summ!=0:
+            right_r = i
+            break
+    new_img = img_g[up_r:down_r,left_r:right_r]
+    im_crop = Image.fromarray(new_img)
+    return im_crop, [up_r, left_r, down_r, right_r]
 
 
 def test():
-    os.environ['CUDA_VISIBLE_DEVICES'] = '2,1,0,3'
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1,0,3,2'
     device = torch.device("cuda")
 
-    im_name = sys.argv[1]
+    im_name = 'media/test/'+sys.argv[1]
     img = cv2.imread(im_name)
     im_name = 'media/test/' + os.path.splitext(sys.argv[1])[0] + '_origin.png'
     cv2.imwrite(im_name, img)
@@ -111,10 +132,9 @@ def test():
     model.eval()
 
     print('* Start predicting...')
-
-    mask = Image.open('/home/zy/code/test_mask.jpg').convert('L')
-    image, coords_crop = crop_to_fov(Image.open(im_name), mask)
     image = Image.open(im_name)
+    mask = np.zeros_like(np.array(image)[:,:,1], dtype=float)
+    image, coords_crop = crop_to_fov(image, mask)
     # in numpy convention
     original_sz = image.size[1], image.size[0]
     rsz = p_tr.Resize((512, 512))
